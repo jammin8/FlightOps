@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "usage: scripts/leak-check.sh [--staged | --tree DIR]" >&2
+  exit 2
+}
+
+mode=repo
+target=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+case "${1:-}" in
+  "") ;;
+  --staged) mode=staged ;;
+  --tree) [ $# -eq 2 ] || usage; mode=tree; target=$2 ;;
+  *) usage ;;
+esac
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+config="$root/.gitleaks.toml"
+denylist="${FLIGHTOPS_DENYLIST:-$root/.leak-denylist}"
+status=0
+
+if command -v gitleaks >/dev/null 2>&1; then
+  case $mode in
+    repo) gitleaks git --config "$config" --redact --no-banner "$target" || status=1 ;;
+    staged) gitleaks git --pre-commit --staged --config "$config" --redact --no-banner "$target" || status=1 ;;
+    tree) gitleaks dir --config "$config" --redact --no-banner "$target" || status=1 ;;
+  esac
+else
+  echo "leak-check: gitleaks not installed; running pattern checks only" >&2
+fi
+
+files() {
+  case $mode in
+    repo) git -C "$target" ls-files -z ;;
+    staged) git -C "$target" diff --cached --name-only --diff-filter=ACMR -z ;;
+    tree) (cd "$target" && find . -type f -not -path './.git/*' -print0) ;;
+  esac
+}
+
+patterns=(
+  '\b100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.[0-9]{1,3}\.[0-9]{1,3}\b'
+  '/(Users|home)/[A-Za-z0-9._-]+/'
+  '\b[A-Za-z0-9-]+\.ts\.net\b'
+  '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+)
+
+if [ -f "$denylist" ]; then
+  while IFS= read -r line; do
+    case $line in ''|'#'*) continue ;; esac
+    patterns+=("$line")
+  done < "$denylist"
+fi
+
+hits=0
+while IFS= read -r -d '' f; do
+  [ -f "$target/$f" ] || continue
+  case $f in ./.leak-denylist|.leak-denylist|./scripts/leak-check.sh|scripts/leak-check.sh|./.gitleaks.toml|.gitleaks.toml) continue ;; esac
+  for p in "${patterns[@]}"; do
+    if grep -IEniq -e "$p" "$target/$f" 2>/dev/null; then
+      grep -IEni -e "$p" "$target/$f" | cut -d: -f1 | sed "s|^|leak-check: $f:|; s|\$|: matches a private pattern|"
+      hits=$((hits + 1))
+    fi
+  done
+done < <(files)
+
+if [ "$hits" -gt 0 ] || [ "$status" -ne 0 ]; then
+  echo "leak-check: FAILED" >&2
+  exit 1
+fi
+echo "leak-check: clean"
