@@ -1,0 +1,5 @@
+# Copy to .leak-denylist (gitignored) and add one extended regex per line.
+# Put private words here that must never be published: company and project
+# names, hostnames, machine names, usernames, internal repo names.
+# example-company
+# my-build-server
