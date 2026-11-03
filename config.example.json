@@ -1,0 +1,12 @@
+{
+  "github_owner": "example-org",
+  "repos": {"backend": "example-backend", "web": "example-web", "ios": "example-ios"},
+  "linear_workspace": "example",
+  "linear_keychain_service": "flightops-linear",
+  "linear_initiative": "Launch",
+  "linear_team_key": "ENG",
+  "ssh_target": "flightops-vm",
+  "published_status": ".local/state/flightops/flightops-status.json",
+  "orchestrator_url": "http://127.0.0.1:3773",
+  "orchestrator_protocol_header": "x-orchestration-protocol"
+}

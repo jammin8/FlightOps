@@ -1,0 +1,39 @@
+{
+ "first_try": {
+  "candidate": {
+   "fail": 0,
+   "pass": 1,
+   "unknown": 0
+  },
+  "supported": {
+   "fail": 1,
+   "pass": 0,
+   "unknown": 0
+  },
+  "verified": {
+   "fail": 0,
+   "pass": 1,
+   "unknown": 1
+  }
+ },
+ "heads": 4,
+ "heads_complete": 4,
+ "now": 1792803600.0,
+ "prs": 4,
+ "r0": {
+  "candidate": 1,
+  "supported": 1,
+  "unknown": 0,
+  "verified": 2
+ },
+ "readiness_unknown": 1,
+ "since": 1792713600.0,
+ "trailer_labels": {
+  "claude-opus": 2,
+  "codex": 1,
+  "none": 1
+ },
+ "unknown_reasons": {
+  "cancelled": 1
+ }
+}

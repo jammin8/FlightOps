@@ -1,0 +1,13 @@
+{
+  "manifest_hash": "f96c747987da0fe21cbad4cc8d95b8ed3ee25803f490d250a57239c8947217f3",
+  "decision_hash": "c4a6c3dcf98260ae0eace9e310a4ecaaec99e72f4561e06fd395a7b481eef764",
+  "calls": {
+    "a": [
+      "Best"
+    ],
+    "b": [
+      "NeedsAttention"
+    ]
+  },
+  "purpose": "Synthetic implementation regression only; not an independent statistical oracle or source attestation."
+}
