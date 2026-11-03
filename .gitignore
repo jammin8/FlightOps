@@ -45,3 +45,6 @@ target/
 *.bundle
 *.log
 local/
+
+# Private leak-check terms
+.leak-denylist
