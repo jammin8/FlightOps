@@ -1,0 +1,315 @@
+{
+  "schema": "flightops-selected-ci-source-facts/1",
+  "repository": "example-org/example-backend",
+  "pr_number": 8383,
+  "sha": "fed2741d5176e43566e948c07ef64f2f56879ce1",
+  "head": {
+    "oid": "fed2741d5176e43566e948c07ef64f2f56879ce1",
+    "fetched": 1792987579,
+    "checkSuites": {
+      "totalCount": 4,
+      "pageInfo": {
+        "hasNextPage": false
+      },
+      "nodes": [
+        {
+          "databaseId": 108965583684,
+          "createdAt": "2026-10-25T14:43:19Z",
+          "app": {
+            "slug": "cursor",
+            "databaseId": 1210556
+          },
+          "checkRuns": {
+            "totalCount": 0,
+            "pageInfo": {
+              "hasNextPage": false
+            },
+            "nodes": []
+          }
+        },
+        {
+          "databaseId": 108965714730,
+          "createdAt": "2026-10-25T14:43:56Z",
+          "app": {
+            "slug": "github-actions",
+            "databaseId": 15368
+          },
+          "workflowRun": {
+            "databaseId": 40203610083,
+            "event": "pull_request",
+            "createdAt": "2026-10-25T14:43:56Z",
+            "runNumber": 1580,
+            "workflow": {
+              "name": "ci"
+            }
+          },
+          "checkRuns": {
+            "totalCount": 4,
+            "pageInfo": {
+              "hasNextPage": false
+            },
+            "nodes": [
+              {
+                "databaseId": 121304224870,
+                "name": "fast",
+                "status": "COMPLETED",
+                "conclusion": "SUCCESS",
+                "startedAt": "2026-10-25T15:22:45Z",
+                "completedAt": "2026-10-25T15:27:52Z",
+                "isRequired": true
+              },
+              {
+                "databaseId": 121304223728,
+                "name": "integration",
+                "status": "COMPLETED",
+                "conclusion": "SUCCESS",
+                "startedAt": "2026-10-26T02:50:18Z",
+                "completedAt": "2026-10-26T03:02:34Z",
+                "isRequired": true
+              },
+              {
+                "databaseId": 121210124124,
+                "name": "integration",
+                "status": "COMPLETED",
+                "conclusion": "FAILURE",
+                "startedAt": "2026-10-25T21:48:10Z",
+                "completedAt": "2026-10-25T22:00:30Z",
+                "isRequired": true
+              },
+              {
+                "databaseId": 121199775743,
+                "name": "fast",
+                "status": "COMPLETED",
+                "conclusion": "SUCCESS",
+                "startedAt": "2026-10-25T15:22:45Z",
+                "completedAt": "2026-10-25T15:27:52Z",
+                "isRequired": true
+              }
+            ]
+          }
+        },
+        {
+          "databaseId": 108965714962,
+          "createdAt": "2026-10-25T14:43:56Z",
+          "app": {
+            "slug": "github-actions",
+            "databaseId": 15368
+          },
+          "workflowRun": {
+            "databaseId": 40203610170,
+            "event": "pull_request_target",
+            "createdAt": "2026-10-25T14:43:56Z",
+            "runNumber": 5879,
+            "workflow": {
+              "name": "review-gate"
+            }
+          },
+          "checkRuns": {
+            "totalCount": 1,
+            "pageInfo": {
+              "hasNextPage": false
+            },
+            "nodes": [
+              {
+                "databaseId": 121199777287,
+                "name": "evaluate",
+                "status": "COMPLETED",
+                "conclusion": "SUCCESS",
+                "startedAt": "2026-10-25T14:44:39Z",
+                "completedAt": "2026-10-25T14:44:51Z",
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        {
+          "databaseId": 108965715350,
+          "createdAt": "2026-10-25T14:43:56Z",
+          "app": {
+            "slug": "github-actions",
+            "databaseId": 15368
+          },
+          "workflowRun": {
+            "databaseId": 40203610316,
+            "event": "pull_request_target",
+            "createdAt": "2026-10-25T14:43:56Z",
+            "runNumber": 5880,
+            "workflow": {
+              "name": "review-gate"
+            }
+          },
+          "checkRuns": {
+            "totalCount": 1,
+            "pageInfo": {
+              "hasNextPage": false
+            },
+            "nodes": [
+              {
+                "databaseId": 121199777740,
+                "name": "evaluate",
+                "status": "COMPLETED",
+                "conclusion": "SKIPPED",
+                "startedAt": "2026-10-25T14:43:57Z",
+                "completedAt": "2026-10-25T14:43:56Z",
+                "isRequired": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "contexts": [
+        {
+          "context": "review-gate",
+          "state": "SUCCESS",
+          "createdAt": "2026-10-25T15:38:54Z",
+          "isRequired": true,
+          "creator": {
+            "__typename": "Bot",
+            "login": "flightops-review-gate"
+          }
+        }
+      ]
+    }
+  },
+  "pr_readiness": {
+    "number": 8383,
+    "createdAt": "2026-10-25T14:43:53Z",
+    "isDraft": false,
+    "state": "MERGED",
+    "mergedAt": "2026-10-26T03:03:14Z",
+    "closedAt": "2026-10-26T03:03:14Z",
+    "fetched_at": 1792987579,
+    "baseRefName": "main",
+    "timelineItems": {
+      "totalCount": 11,
+      "pageInfo": {
+        "hasNextPage": false
+      },
+      "original_node_count": 2,
+      "nodes": [
+        {
+          "__typename": "MergedEvent",
+          "createdAt": "2026-10-26T03:03:14Z"
+        },
+        {
+          "__typename": "ClosedEvent",
+          "createdAt": "2026-10-26T03:03:14Z"
+        }
+      ],
+      "excluded_non_readiness_nodes": 0
+    }
+  },
+  "policy": {
+    "shape": 2,
+    "fetched": 1793285006.010581,
+    "read": 1793285006.010581,
+    "repository": "example-org/example-backend",
+    "base_branch": "main",
+    "rules": {
+      "branchProtectionRules": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "pattern": "main",
+            "requiresStatusChecks": true,
+            "requiredStatusCheckContexts": [
+              "fast",
+              "integration",
+              "review-gate"
+            ],
+            "requiredStatusChecks": [
+              {
+                "context": "fast",
+                "app": {
+                  "slug": "github-actions"
+                }
+              },
+              {
+                "context": "integration",
+                "app": {
+                  "slug": "github-actions"
+                }
+              },
+              {
+                "context": "review-gate",
+                "app": {
+                  "slug": "flightops-review-gate"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "rulesets": {
+        "pageInfo": {
+          "hasNextPage": false
+        },
+        "nodes": [
+          {
+            "enforcement": "ACTIVE",
+            "target": "BRANCH",
+            "conditions": {
+              "refName": {
+                "include": [
+                  "~DEFAULT_BRANCH"
+                ],
+                "exclude": []
+              }
+            },
+            "rules": {
+              "pageInfo": {
+                "hasNextPage": false
+              },
+              "nodes": [
+                {
+                  "type": "DELETION"
+                },
+                {
+                  "type": "NON_FAST_FORWARD"
+                },
+                {
+                  "type": "REQUIRED_LINEAR_HISTORY"
+                },
+                {
+                  "type": "PULL_REQUEST"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "opening_receipts": [
+    {
+      "id": "18162214939",
+      "repo": "backend",
+      "type": "PullRequestEvent",
+      "at": "2026-10-25T14:43:53Z",
+      "t": 1792939433.0,
+      "action": "opened",
+      "number": 8383,
+      "head_sha": "fed2741d5176e43566e948c07ef64f2f56879ce1",
+      "base_ref": "main"
+    }
+  ],
+  "event_coverage": {
+    "polled": 1793333979.578295,
+    "coverage": [
+      [
+        1792736139.0,
+        1793333979.578295
+      ]
+    ],
+    "gaps": []
+  },
+  "source_gaps": [],
+  "capture_time": "2026-10-30T04:21:41.747182+00:00",
+  "source_clock_semantics": "Capture time does not replace original read/fetched/event/policy clocks",
+  "limits": "One selected head; no model/producer/assignment link, caller authentication or cohort qualification",
+  "authentication": "Source custody only; adapter interpretation independently pending"
+}

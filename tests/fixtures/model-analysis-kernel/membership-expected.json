@@ -1,0 +1,104 @@
+{
+  "cohort_ids": [
+    "org/repo#2",
+    "org/repo#3",
+    "org/repo#4",
+    "org/repo#5",
+    "org/repo#6"
+  ],
+  "description_28d_ids": [
+    "org/repo#3",
+    "org/repo#4",
+    "org/repo#5",
+    "org/repo#6"
+  ],
+  "excluded": [
+    {
+      "pr_id": "org/repo#1",
+      "reason": "outside_first_ready_90d",
+      "first_ready_at": "2026-06-01T12:00:00Z"
+    }
+  ],
+  "populations": {
+    "a": {
+      "denominator_ids": [
+        "org/repo#2",
+        "org/repo#3"
+      ],
+      "potential_denominator_ids": [
+        "org/repo#4"
+      ],
+      "included_ids": [
+        "org/repo#2"
+      ],
+      "missing_ids": [
+        "org/repo#3"
+      ],
+      "reasons": {
+        "actual_setup_unknown": 1,
+        "missing_value": 1
+      },
+      "verified_numerator": 0,
+      "eligibility_ids": [
+        "org/repo#2",
+        "org/repo#3",
+        "org/repo#4"
+      ],
+      "excluded": [
+        {
+          "pr_id": "org/repo#5",
+          "reason": "different_exact_or_possible_setup"
+        },
+        {
+          "pr_id": "org/repo#6",
+          "reason": "different_exact_or_possible_setup"
+        },
+        {
+          "pr_id": "org/repo#1",
+          "reason": "outside_first_ready_90d",
+          "first_ready_at": "2026-06-01T12:00:00Z"
+        }
+      ]
+    },
+    "b": {
+      "denominator_ids": [
+        "org/repo#5",
+        "org/repo#6"
+      ],
+      "potential_denominator_ids": [
+        "org/repo#4"
+      ],
+      "included_ids": [
+        "org/repo#6"
+      ],
+      "missing_ids": [
+        "org/repo#5"
+      ],
+      "reasons": {
+        "actual_setup_unknown": 1,
+        "immature": 1
+      },
+      "verified_numerator": 1,
+      "eligibility_ids": [
+        "org/repo#5",
+        "org/repo#6",
+        "org/repo#4"
+      ],
+      "excluded": [
+        {
+          "pr_id": "org/repo#2",
+          "reason": "different_exact_or_possible_setup"
+        },
+        {
+          "pr_id": "org/repo#3",
+          "reason": "different_exact_or_possible_setup"
+        },
+        {
+          "pr_id": "org/repo#1",
+          "reason": "outside_first_ready_90d",
+          "first_ready_at": "2026-06-01T12:00:00Z"
+        }
+      ]
+    }
+  }
+}

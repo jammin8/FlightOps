@@ -1,0 +1,2424 @@
+{
+  "schema": "evidence-head-input/1",
+  "generated_at": 1793314980.820971,
+  "agent_evidence": {
+    "schema": "agent-evidence/2",
+    "deriver_version": "flightops-orch-native/1",
+    "origin": {
+      "kind": "synthetic-replay"
+    },
+    "source_identity": {
+      "snapshot_digest": "8913339981a35d227f67037459771f1fec4c310225952f3d492acfb46c192e9f",
+      "host": null,
+      "basis": "orch-native-readonly"
+    },
+    "generated_at": 1793314880.820971,
+    "acquired_at": 1793314880.820971,
+    "as_of": 1793314880.820971,
+    "window": {
+      "start": 1785538880.820971,
+      "end": 1793314880.820971
+    },
+    "sources": [
+      {
+        "id": "native-d2b1ad8883b81184b7b65b39",
+        "digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+        "snapshot_at": 1793314575.051,
+        "history_start": 1793309943.305,
+        "history_end": 1793314575.051,
+        "complete_through": null,
+        "gaps": [
+          "native-retention-unproven",
+          "unsupported-operation-binding"
+        ]
+      },
+      {
+        "id": "projection",
+        "digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+        "snapshot_at": 1793314880.820971,
+        "history_start": null,
+        "history_end": null,
+        "complete_through": null,
+        "gaps": [
+          "projection-retention-unproven"
+        ]
+      }
+    ],
+    "runs": [
+      {
+        "id": "codex:attempt:synthetic:1",
+        "native_run_id": "run:synthetic:3",
+        "attempt_id": "attempt:synthetic:1",
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "provider_namespace": "codex",
+        "parent": null,
+        "status": "complete",
+        "started_at": 1793312914.495,
+        "ended_at": 1793313607.14,
+        "turns": [
+          {
+            "native_turn_id": "22222222-2222-2222-2222-222222222222",
+            "requested": {
+              "provider": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "instance": {
+                "value": "codex",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              }
+            },
+            "reported": {
+              "provider": {
+                "value": "openai",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              },
+              "instance": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              }
+            },
+            "usage_scope": "main_agent",
+            "usage_status": "complete",
+            "has_subagents": false
+          }
+        ],
+        "expected_children": [],
+        "memberships": [],
+        "allocation": "unknown",
+        "evidence": {
+          "source_id": "projection",
+          "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+          "line": 1,
+          "at": 1793314880.820971
+        }
+      },
+      {
+        "id": "codex:attempt:synthetic-2",
+        "native_run_id": "run:synthetic:3",
+        "attempt_id": "attempt:synthetic-2",
+        "native_session_id": "session:synthetic-2",
+        "provider_namespace": "codex",
+        "parent": null,
+        "status": "complete",
+        "started_at": 1793312914.495,
+        "ended_at": 1793313607.14,
+        "turns": [
+          {
+            "native_turn_id": "22222222-2222-2222-2222-222222222222",
+            "requested": {
+              "provider": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "instance": {
+                "value": "codex",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              }
+            },
+            "reported": {
+              "provider": {
+                "value": "openai",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              },
+              "instance": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              }
+            },
+            "usage_scope": "main_agent",
+            "usage_status": "complete",
+            "has_subagents": false
+          }
+        ],
+        "expected_children": [],
+        "memberships": [],
+        "allocation": "unknown",
+        "evidence": {
+          "source_id": "projection",
+          "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+          "line": 1,
+          "at": 1793314880.820971
+        }
+      },
+      {
+        "id": "codex:attempt:synthetic-3",
+        "native_run_id": "run:synthetic:3",
+        "attempt_id": "attempt:synthetic-3",
+        "native_session_id": "session:synthetic-3",
+        "provider_namespace": "codex",
+        "parent": null,
+        "status": "complete",
+        "started_at": 1793312914.495,
+        "ended_at": 1793313607.14,
+        "turns": [
+          {
+            "native_turn_id": "22222222-2222-2222-2222-222222222222",
+            "requested": {
+              "provider": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "instance": {
+                "value": "codex",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "orch-request",
+                "evidence": {
+                  "source_id": "projection",
+                  "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+                  "line": 1,
+                  "at": 1793314880.820971
+                }
+              }
+            },
+            "reported": {
+              "provider": {
+                "value": "openai",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              },
+              "instance": {
+                "value": null,
+                "basis": "unknown",
+                "evidence": null
+              },
+              "model_id": {
+                "value": "gpt-6.1-sol",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "effort": {
+                "value": "xhigh",
+                "basis": "native-turn-context",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 607,
+                  "at": 1793312914.628
+                }
+              },
+              "service_tier": {
+                "value": "default",
+                "basis": "native-settings-applied",
+                "evidence": {
+                  "source_id": "native-d2b1ad8883b81184b7b65b39",
+                  "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+                  "line": 605,
+                  "at": 1793312914.586
+                }
+              }
+            },
+            "usage_scope": "main_agent",
+            "usage_status": "complete",
+            "has_subagents": false
+          }
+        ],
+        "expected_children": [],
+        "memberships": [],
+        "allocation": "unknown",
+        "evidence": {
+          "source_id": "projection",
+          "source_digest": "62a023baf9ba18e31a0aec6035ad736433322472fc87caf77b04c1d4b5357702",
+          "line": 1,
+          "at": 1793314880.820971
+        }
+      }
+    ],
+    "requests": [
+      {
+        "id": "codex:resp_synthetic_00",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_00",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793312921473,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 613,
+            "at": 1793312921.473
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 1154,
+            "cache_read": 254336,
+            "cache_write": 0,
+            "output": 272,
+            "reasoning": 0
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 255490,
+          "output_total": 272,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_01",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_01",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793312925681,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 621,
+            "at": 1793312925.681
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 11407,
+            "cache_read": 255360,
+            "cache_write": 0,
+            "output": 148,
+            "reasoning": 19
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 266767,
+          "output_total": 148,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_02",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_02",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793312996644,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 635,
+            "at": 1793312996.644
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 12032,
+            "cache_read": 266624,
+            "cache_write": 0,
+            "output": 2187,
+            "reasoning": 2070
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 278656,
+          "output_total": 2187,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_03",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_03",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313043552,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 643,
+            "at": 1793313043.552
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2549,
+            "cache_read": 278528,
+            "cache_write": 0,
+            "output": 2145,
+            "reasoning": 1034
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 281077,
+          "output_total": 2145,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_04",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_04",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313142935,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 658,
+            "at": 1793313142.935
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2319,
+            "cache_read": 280960,
+            "cache_write": 0,
+            "output": 4872,
+            "reasoning": 1905
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 283279,
+          "output_total": 4872,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_05",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_05",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313184611,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 667,
+            "at": 1793313184.611
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 5071,
+            "cache_read": 283136,
+            "cache_write": 0,
+            "output": 1486,
+            "reasoning": 1034
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 288207,
+          "output_total": 1486,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_06",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_06",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313225289,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 678,
+            "at": 1793313225.289
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 1948,
+            "cache_read": 288000,
+            "cache_write": 0,
+            "output": 1084,
+            "reasoning": 997
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 289948,
+          "output_total": 1084,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_07",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_07",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313271054,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 686,
+            "at": 1793313271.054
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 5059,
+            "cache_read": 289792,
+            "cache_write": 0,
+            "output": 1936,
+            "reasoning": 1034
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 294851,
+          "output_total": 1936,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_08",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_08",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313303052,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 695,
+            "at": 1793313303.052
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2187,
+            "cache_read": 294656,
+            "cache_write": 0,
+            "output": 1036,
+            "reasoning": 703
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 296843,
+          "output_total": 1036,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_09",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_09",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313323958,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 703,
+            "at": 1793313323.958
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2167,
+            "cache_read": 296704,
+            "cache_write": 0,
+            "output": 599,
+            "reasoning": 516
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 298871,
+          "output_total": 599,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_10",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_10",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313376359,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 713,
+            "at": 1793313376.359
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 3153,
+            "cache_read": 298752,
+            "cache_write": 0,
+            "output": 1895,
+            "reasoning": 1034
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 301905,
+          "output_total": 1895,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_11",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_11",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313437863,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 724,
+            "at": 1793313437.863
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2358,
+            "cache_read": 301696,
+            "cache_write": 0,
+            "output": 2967,
+            "reasoning": 919
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 304054,
+          "output_total": 2967,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_12",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_12",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313541977,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 735,
+            "at": 1793313541.977
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 3599,
+            "cache_read": 303872,
+            "cache_write": 0,
+            "output": 5205,
+            "reasoning": 1251
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 307471,
+          "output_total": 5205,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_13",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_13",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313602529,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 746,
+            "at": 1793313602.529
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 5595,
+            "cache_read": 307328,
+            "cache_write": 0,
+            "output": 2308,
+            "reasoning": 1233
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 312923,
+          "output_total": 2308,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      },
+      {
+        "id": "codex:resp_synthetic_14",
+        "provider_namespace": "codex",
+        "native_request_id": "resp_synthetic_14",
+        "original_run_id": "codex:attempt:synthetic:1",
+        "original_native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "revision": 1793313607106,
+        "copies": 1,
+        "conflict": false,
+        "final_sources": [
+          {
+            "source_id": "native-d2b1ad8883b81184b7b65b39",
+            "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+            "line": 752,
+            "at": 1793313607.106
+          }
+        ],
+        "reported": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "usage": {
+          "buckets": {
+            "fresh_input": 2649,
+            "cache_read": 312832,
+            "cache_write": 0,
+            "output": 230,
+            "reasoning": 0
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 315481,
+          "output_total": 230,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "allocation": "unknown"
+      }
+    ],
+    "operations": [],
+    "errors": [],
+    "snapshots": [
+      {
+        "source_id": "native-d2b1ad8883b81184b7b65b39",
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "bytes_read": null,
+        "device": null,
+        "inode": null,
+        "last_line": 755
+      }
+    ],
+    "links": [
+      {
+        "run_id": "codex:attempt:synthetic:1",
+        "thread_id": "thread:synthetic",
+        "project_id": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914",
+        "provider_thread_id": "provider:synthetic",
+        "attempt_id": "attempt:synthetic:1",
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "parent_thread_id": null,
+        "child_thread_ids": []
+      },
+      {
+        "run_id": "codex:attempt:synthetic-2",
+        "thread_id": "thread:synthetic",
+        "project_id": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914",
+        "provider_thread_id": "provider:synthetic",
+        "attempt_id": "attempt:synthetic-2",
+        "native_session_id": "session:synthetic-2",
+        "parent_thread_id": null,
+        "child_thread_ids": []
+      },
+      {
+        "run_id": "codex:attempt:synthetic-3",
+        "thread_id": "thread:synthetic",
+        "project_id": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914",
+        "provider_thread_id": "provider:synthetic",
+        "attempt_id": "attempt:synthetic-3",
+        "native_session_id": "session:synthetic-3",
+        "parent_thread_id": null,
+        "child_thread_ids": []
+      }
+    ],
+    "settings_observations": [
+      {
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "native_turn_id": null,
+        "at": 1793309943.305,
+        "settings": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-session",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 1,
+              "at": 1793309943.305
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "effort": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "service_tier": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          }
+        },
+        "evidence": {
+          "source_id": "native-d2b1ad8883b81184b7b65b39",
+          "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+          "line": 1,
+          "at": 1793309943.305
+        }
+      },
+      {
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "native_turn_id": null,
+        "at": 1793312914.586,
+        "settings": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 605,
+              "at": 1793312914.586
+            }
+          }
+        },
+        "evidence": {
+          "source_id": "native-d2b1ad8883b81184b7b65b39",
+          "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+          "line": 605,
+          "at": 1793312914.586
+        }
+      },
+      {
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "at": 1793312914.628,
+        "settings": {
+          "provider": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-turn-context",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 607,
+              "at": 1793312914.628
+            }
+          },
+          "service_tier": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          }
+        },
+        "evidence": {
+          "source_id": "native-d2b1ad8883b81184b7b65b39",
+          "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+          "line": 607,
+          "at": 1793312914.628
+        }
+      },
+      {
+        "native_session_id": "11111111-1111-1111-1111-111111111111",
+        "native_turn_id": null,
+        "at": 1793314575.047,
+        "settings": {
+          "provider": {
+            "value": "openai",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 755,
+              "at": 1793314575.047
+            }
+          },
+          "instance": {
+            "value": null,
+            "basis": "unknown",
+            "evidence": null
+          },
+          "model_id": {
+            "value": "gpt-6.1-sol",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 755,
+              "at": 1793314575.047
+            }
+          },
+          "effort": {
+            "value": "xhigh",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 755,
+              "at": 1793314575.047
+            }
+          },
+          "service_tier": {
+            "value": "default",
+            "basis": "native-settings-applied",
+            "evidence": {
+              "source_id": "native-d2b1ad8883b81184b7b65b39",
+              "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+              "line": 755,
+              "at": 1793314575.047
+            }
+          }
+        },
+        "evidence": {
+          "source_id": "native-d2b1ad8883b81184b7b65b39",
+          "source_digest": "3fb66fbe95bafa1eb50c941d3699faf3a8904339ca033157703d4efc3e3080ad",
+          "line": 755,
+          "at": 1793314575.047
+        }
+      }
+    ],
+    "reconciliation": [
+      {
+        "run_id": "codex:attempt:synthetic-2",
+        "native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "expected": {
+          "buckets": {
+            "fresh_input": null,
+            "cache_read": null,
+            "cache_write": null,
+            "output": null,
+            "reasoning": null
+          },
+          "known": {
+            "fresh_input": false,
+            "cache_read": false,
+            "cache_write": false,
+            "output": false,
+            "reasoning": false
+          },
+          "input_total": null,
+          "output_total": null,
+          "complete": false,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "observed": {
+          "buckets": {
+            "fresh_input": null,
+            "cache_read": null,
+            "cache_write": null,
+            "output": null,
+            "reasoning": null
+          },
+          "known": {
+            "fresh_input": false,
+            "cache_read": false,
+            "cache_write": false,
+            "output": false,
+            "reasoning": false
+          },
+          "input_total": null,
+          "output_total": null,
+          "complete": false,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "matches": {
+          "fresh_input": null,
+          "cache_read": null,
+          "cache_write": null,
+          "output": null,
+          "reasoning": null
+        },
+        "state": "unknown",
+        "request_count": 0
+      },
+      {
+        "run_id": "codex:attempt:synthetic-3",
+        "native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "expected": {
+          "buckets": {
+            "fresh_input": null,
+            "cache_read": null,
+            "cache_write": null,
+            "output": null,
+            "reasoning": null
+          },
+          "known": {
+            "fresh_input": false,
+            "cache_read": false,
+            "cache_write": false,
+            "output": false,
+            "reasoning": false
+          },
+          "input_total": null,
+          "output_total": null,
+          "complete": false,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "observed": {
+          "buckets": {
+            "fresh_input": null,
+            "cache_read": null,
+            "cache_write": null,
+            "output": null,
+            "reasoning": null
+          },
+          "known": {
+            "fresh_input": false,
+            "cache_read": false,
+            "cache_write": false,
+            "output": false,
+            "reasoning": false
+          },
+          "input_total": null,
+          "output_total": null,
+          "complete": false,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "matches": {
+          "fresh_input": null,
+          "cache_read": null,
+          "cache_write": null,
+          "output": null,
+          "reasoning": null
+        },
+        "state": "unknown",
+        "request_count": 0
+      },
+      {
+        "run_id": "codex:attempt:synthetic:1",
+        "native_turn_id": "22222222-2222-2222-2222-222222222222",
+        "expected": {
+          "buckets": {
+            "fresh_input": 63247,
+            "cache_read": 4312576,
+            "cache_write": 0,
+            "output": 28370,
+            "reasoning": 13749
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 4375823,
+          "output_total": 28370,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "observed": {
+          "buckets": {
+            "fresh_input": 63247,
+            "cache_read": 4312576,
+            "cache_write": 0,
+            "output": 28370,
+            "reasoning": 13749
+          },
+          "known": {
+            "fresh_input": true,
+            "cache_read": true,
+            "cache_write": true,
+            "output": true,
+            "reasoning": true
+          },
+          "input_total": 4375823,
+          "output_total": 28370,
+          "complete": true,
+          "semantics": "cache-inside-input/reasoning-inside-output"
+        },
+        "matches": {
+          "fresh_input": true,
+          "cache_read": true,
+          "cache_write": true,
+          "output": true,
+          "reasoning": true
+        },
+        "state": "match",
+        "request_count": 15
+      }
+    ],
+    "inventory": {
+      "projects": [
+        "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914"
+      ],
+      "run_count": 3,
+      "attempt_count": 3,
+      "turn_count": 3,
+      "native_snapshot_count": 1,
+      "compatible_turns": 1,
+      "unsupported_turns": 2,
+      "gaps": [
+        "native-retention-unproven",
+        "projection-retention-unproven",
+        "unsupported-operation-binding"
+      ]
+    },
+    "health": {
+      "state": "partial",
+      "reasons": [
+        "acquisition-gaps",
+        "coverage-unproven",
+        "source-gaps"
+      ],
+      "live_qualified": false,
+      "in_progress": []
+    }
+  },
+  "sources": [
+    {
+      "id": "join-fixture",
+      "digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+      "snapshot_at": 1793314980.820971,
+      "complete_through": null,
+      "gaps": [],
+      "origin": "synthetic",
+      "generated_at": 1793314980.820971
+    }
+  ],
+  "heads": [
+    {
+      "id": "head:1",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "repository": "flightops/example",
+      "pr": 1,
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "anchor": 1793312973.495,
+      "anchor_kind": "opened",
+      "observed": 1793312974.495,
+      "read": 1793313024.495,
+      "refresh_failed": null,
+      "complete": true,
+      "sync": false,
+      "r0_status": "verified",
+      "r0_receipt": "opened:1",
+      "r0_basis": "opened-event",
+      "policy_id": "policy:1",
+      "first_attempt": {
+        "outcome": "fail",
+        "reason": null,
+        "failed": [
+          "unit tests"
+        ]
+      },
+      "first_completed": {
+        "outcome": "fail",
+        "reason": null,
+        "failed": [
+          "unit tests"
+        ]
+      },
+      "latest": {
+        "outcome": "pass",
+        "reason": null,
+        "failed": []
+      },
+      "first_decided": true,
+      "gaps": [],
+      "policy_source": "rules",
+      "policy_read": 1793313024.495,
+      "required": [
+        "ci/unit tests"
+      ],
+      "replaced": false
+    }
+  ],
+  "policies": [
+    {
+      "id": "policy:1",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "repository": "flightops/example",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source": "rules",
+      "complete": true,
+      "required": [
+        {
+          "name": "unit tests",
+          "app_id": 1,
+          "app_slug": "ci",
+          "mechanism": "check_run"
+        }
+      ]
+    }
+  ],
+  "ci_attempts": [
+    {
+      "id": "check:1",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "repository": "flightops/example",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "name": "unit tests",
+      "app_id": 1,
+      "app_slug": "ci",
+      "mechanism": "check_run",
+      "check_id": 101,
+      "suite_id": 201,
+      "workflow_run_id": 300,
+      "workflow_id": "workflow:1",
+      "event": "pull_request",
+      "run_number": 99,
+      "run_attempt": 1,
+      "started_at": 1793312984.495,
+      "completed_at": 1793312985.495,
+      "status": "COMPLETED",
+      "conclusion": "FAILURE",
+      "history_complete": true
+    },
+    {
+      "id": "check:2",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "repository": "flightops/example",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "name": "unit tests",
+      "app_id": 1,
+      "app_slug": "ci",
+      "mechanism": "check_run",
+      "check_id": 102,
+      "suite_id": 202,
+      "workflow_run_id": 300,
+      "workflow_id": "workflow:1",
+      "event": "pull_request",
+      "run_number": 99,
+      "run_attempt": 2,
+      "started_at": 1793312994.495,
+      "completed_at": 1793312995.495,
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "history_complete": true
+    }
+  ],
+  "operations": [
+    {
+      "id": "operation:produce",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "run_id": "codex:attempt:synthetic:1",
+      "attempt_id": "attempt:synthetic:1",
+      "native_session_id": "11111111-1111-1111-1111-111111111111",
+      "native_turn_id": "22222222-2222-2222-2222-222222222222",
+      "actor_id": "produce",
+      "invocation_id": "invocation:produce",
+      "completion_id": "completion:produce",
+      "process_id": "process:produce",
+      "repository": "flightops/example",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "produce",
+      "terminal": "success",
+      "proof": "creation-witness",
+      "before_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "parents": [
+        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "destination_repository": null,
+      "destination_ref": null,
+      "invocation_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "completion_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "call_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312975.495
+      },
+      "completion_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312976.495
+      },
+      "repository_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312975.495
+      },
+      "completion_invocation_id": "invocation:produce",
+      "completion_process_id": "process:produce"
+    },
+    {
+      "id": "operation:publish",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "run_id": "codex:attempt:synthetic-2",
+      "attempt_id": "attempt:synthetic-2",
+      "native_session_id": "session:synthetic-2",
+      "native_turn_id": "22222222-2222-2222-2222-222222222222",
+      "actor_id": "publish",
+      "invocation_id": "invocation:publish",
+      "completion_id": "completion:publish",
+      "process_id": "process:publish",
+      "repository": "flightops/example",
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "publish",
+      "terminal": "success",
+      "proof": "publication-witness",
+      "before_sha": null,
+      "parents": [],
+      "destination_repository": "flightops/example",
+      "destination_ref": "refs/heads/topic",
+      "invocation_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "completion_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "call_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312975.495
+      },
+      "completion_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312976.495
+      },
+      "repository_evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793312975.495
+      },
+      "completion_invocation_id": "invocation:publish",
+      "completion_process_id": "process:publish"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "assignment:review",
+      "revision": 0,
+      "evidence": {
+        "source_id": "join-fixture",
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "line": 1,
+        "at": 1793313064.495
+      },
+      "task_id": "task:1",
+      "run_id": "codex:attempt:synthetic-3",
+      "native_turn_id": "22222222-2222-2222-2222-222222222222",
+      "actor_id": "reviewer",
+      "repository": "flightops/example",
+      "pr": 1,
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "role": "review",
+      "assigned_at": 1793313004.495,
+      "resolved_at": 1793313014.495,
+      "resolution": "completed",
+      "reviewed_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "review_outcome": "accepted",
+      "trigger": "initial",
+      "trigger_id": null,
+      "supersedes": null
+    }
+  ]
+}
