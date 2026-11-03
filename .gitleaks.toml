@@ -1,0 +1,16 @@
+title = "FlightOps"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "tailscale-ip"
+description = "Tailscale CGNAT address"
+regex = '''\b100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.\d{1,3}\.\d{1,3}\b'''
+tags = ["private-infra"]
+
+[[rules]]
+id = "private-home-path"
+description = "Absolute home directory path"
+regex = '''/(Users|home)/[A-Za-z0-9._-]+/'''
+tags = ["private-infra"]
