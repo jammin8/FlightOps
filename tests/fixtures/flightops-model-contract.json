@@ -1,0 +1,204 @@
+{
+  "good": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "output": 30
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    }
+  },
+  "malformedRecord": [
+    "bad"
+  ],
+  "mixedRuns": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "output": 30
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    },
+    "reviews": [
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      },
+      {
+        "run": "bad",
+        "model": "gpt-6.1-sol",
+        "tokens": {
+          "output": "oops"
+        }
+      },
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      }
+    ]
+  },
+  "malformedAggregate": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "input": "oops"
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    }
+  },
+  "duplicates": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "output": 30
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    },
+    "reviews": [
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      },
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      }
+    ]
+  },
+  "conflict": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "output": 30
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    },
+    "reviews": [
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      },
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 31
+        },
+        "allocation": "exclusive"
+      }
+    ]
+  },
+  "otherPR": {
+    "schema": "pr-models/2",
+    "history_complete": true,
+    "history_start": 0,
+    "tokens_complete": true,
+    "tokens": {
+      "output": 30
+    },
+    "built_confidence": "thread",
+    "built": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "harness": "codex",
+      "tokens": {
+        "output": 30
+      },
+      "tokens_complete": true
+    },
+    "reviews": [
+      {
+        "run": "review-one",
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "harness": "codex",
+        "tokens": {
+          "output": 30
+        },
+        "allocation": "exclusive"
+      }
+    ]
+  }
+}

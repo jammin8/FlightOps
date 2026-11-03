@@ -1,0 +1,41 @@
+{
+  "fixture_origin": "sanitized-shape-only",
+  "capture_basis": "guarded-current-thread-and-config",
+  "captured_at": "2026-01-01T00:00:00Z",
+  "thread": {
+    "thread": {
+      "threadId": "mcp:synthetic-thread",
+      "latestRunId": "run:thread:mcp%3Asynthetic-thread:ordinal:1",
+      "activeRunId": "run:thread:mcp%3Asynthetic-thread:ordinal:1",
+      "providerInstanceId": "codex",
+      "model": "thread-display-model",
+      "parentThreadId": null
+    },
+    "recentRuns": [
+      {
+        "runId": "run:thread:mcp%3Asynthetic-thread:ordinal:1",
+        "ordinal": 1,
+        "status": "running",
+        "providerInstanceId": "codex",
+        "model": "run-display-model",
+        "requestedAt": "2026-01-01T00:00:00Z",
+        "startedAt": "2026-01-01T00:00:01Z",
+        "completedAt": null
+      }
+    ],
+    "items": [],
+    "nextPosition": null,
+    "hasMore": false
+  },
+  "config": {
+    "threadId": "mcp:synthetic-thread",
+    "modelSelection": {
+      "instanceId": "codex",
+      "model": "current-selection-model",
+      "options": [
+        {"id": "reasoningEffort", "value": "xhigh"},
+        {"id": "serviceTier", "value": "default"}
+      ]
+    }
+  }
+}

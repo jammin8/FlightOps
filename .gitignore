@@ -48,3 +48,9 @@ local/
 
 # Private leak-check terms
 .leak-denylist
+
+# FlightOps
+build/
+*.iconset/
+# Local site config
+flightops.local.json

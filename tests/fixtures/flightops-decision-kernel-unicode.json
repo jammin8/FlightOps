@@ -1,0 +1,182 @@
+{
+  "schema": "flightops-decision/1",
+  "policy_version": "joint-strata-max-bootstrap/1",
+  "manifest_hash": "13a2fedf4fd78ca260bdbecbea9ae634a974797f3ab8098c0ec8c331abf2e34a",
+  "input_hash": "78109eafc8a1d927ea1bbe7eaa47271f93971b7ff550ca488c30d6641f1f7d2b",
+  "as_of": "2026-10-29T12:00:00Z",
+  "window_days": 90,
+  "scope": "among comparable setups on common joint-stratum support",
+  "qualification": "normalized assertions only; upstream authenticity not established by this kernel",
+  "policy": {
+    "version": "joint-strata-max-bootstrap/1",
+    "seed": 139,
+    "bootstrap_replicates": 199,
+    "calibration_simulations": 120,
+    "family": [
+      "\u00e9",
+      "e\u0301"
+    ],
+    "reference_setup": "\u00e9",
+    "reference_mix": [
+      {
+        "repo": "org/repo",
+        "task": "feature",
+        "size": "s",
+        "weight": 1.0
+      }
+    ]
+  },
+  "measures": {
+    "metric": {
+      "kind": "rate",
+      "unit": "fraction",
+      "direction": "higher",
+      "family": [
+        "\u00e9",
+        "e\u0301"
+      ],
+      "reference_setup": "\u00e9",
+      "independent_counts": {
+        "\u00e9": 0,
+        "e\u0301": 0
+      },
+      "populations": {
+        "\u00e9": {
+          "eligibility_ids": [],
+          "excluded": [],
+          "denominator_ids": [],
+          "potential_denominator_ids": [],
+          "included_ids": [],
+          "missing_ids": [],
+          "reasons": {},
+          "verified_numerator": 0
+        },
+        "e\u0301": {
+          "eligibility_ids": [],
+          "excluded": [],
+          "denominator_ids": [],
+          "potential_denominator_ids": [],
+          "included_ids": [],
+          "missing_ids": [],
+          "reasons": {},
+          "verified_numerator": 0
+        }
+      },
+      "gates": {
+        "inventory_complete": true,
+        "two_exact_reported_setups": true,
+        "independent_prs_at_least_20_each": false,
+        "common_support_at_least_70_percent": false,
+        "verified_measure_representation": false,
+        "calibration_false_flags_at_most_10_percent": false,
+        "precision": false
+      },
+      "common_support_fraction": 0,
+      "supported_mix": [],
+      "uncovered_strata": [
+        [
+          "org/repo",
+          "feature",
+          "s"
+        ]
+      ],
+      "groups": {
+        "\u00e9": {
+          "calls": [],
+          "unmet_gates": [
+            "independent_prs_at_least_20_each",
+            "common_support_at_least_70_percent",
+            "verified_measure_representation",
+            "calibration_false_flags_at_most_10_percent",
+            "precision",
+            "coverage_or_directional_worst_case"
+          ],
+          "status": "InsufficientEvidence",
+          "coverage": {
+            "included": 0,
+            "known_denominator": 0,
+            "possible_extra": 0,
+            "minimum_fraction": 0.0,
+            "threshold_pass": false
+          },
+          "gates": {
+            "inventory_complete": true,
+            "two_exact_reported_setups": true,
+            "independent_prs_at_least_20_each": false,
+            "common_support_at_least_70_percent": false,
+            "verified_measure_representation": false,
+            "calibration_false_flags_at_most_10_percent": false,
+            "precision": false,
+            "coverage_or_directional_worst_case": false
+          }
+        },
+        "e\u0301": {
+          "calls": [],
+          "unmet_gates": [
+            "independent_prs_at_least_20_each",
+            "common_support_at_least_70_percent",
+            "verified_measure_representation",
+            "calibration_false_flags_at_most_10_percent",
+            "precision",
+            "coverage_or_directional_worst_case"
+          ],
+          "status": "InsufficientEvidence",
+          "coverage": {
+            "included": 0,
+            "known_denominator": 0,
+            "possible_extra": 0,
+            "minimum_fraction": 0.0,
+            "threshold_pass": false
+          },
+          "gates": {
+            "inventory_complete": true,
+            "two_exact_reported_setups": true,
+            "independent_prs_at_least_20_each": false,
+            "common_support_at_least_70_percent": false,
+            "verified_measure_representation": false,
+            "calibration_false_flags_at_most_10_percent": false,
+            "precision": false,
+            "coverage_or_directional_worst_case": false
+          }
+        }
+      },
+      "calibration": {
+        "status": "not_computed",
+        "pass": false,
+        "reason": "prerequisites_failed"
+      },
+      "excluded_groups": [],
+      "comparisons": [],
+      "coverage": {
+        "\u00e9": {
+          "included": 0,
+          "known_denominator": 0,
+          "possible_extra": 0,
+          "minimum_fraction": 0.0,
+          "threshold_pass": false
+        },
+        "e\u0301": {
+          "included": 0,
+          "known_denominator": 0,
+          "possible_extra": 0,
+          "minimum_fraction": 0.0,
+          "threshold_pass": false
+        }
+      },
+      "coverage_threshold_pass": false,
+      "unmet_gates": [
+        "independent_prs_at_least_20_each",
+        "common_support_at_least_70_percent",
+        "verified_measure_representation",
+        "calibration_false_flags_at_most_10_percent",
+        "precision"
+      ]
+    }
+  },
+  "budget": {
+    "max_resampled_pr_draws": 45000000,
+    "estimated_draws": 0,
+    "max_wall_seconds": 45
+  },
+  "decision_hash": "6886798d018f8dcd9fd03e346eae4e7d3e1d8c42dc0ac6f1a5cab03db6471132"
+}

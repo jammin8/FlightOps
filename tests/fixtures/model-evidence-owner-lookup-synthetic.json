@@ -1,0 +1,132 @@
+{
+  "label": "SYNTHETIC",
+  "selector": {
+    "schema": "flightops-owner-lookup-selector/1",
+    "selection_id": "selection:SYNTHETIC",
+    "project_id": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914",
+    "target_thread_id": "thread:SYNTHETIC",
+    "orchestration_run_id": "run:SYNTHETIC",
+    "dispatch_event_id": "event:SYNTHETIC",
+    "assignment_id": "assignment:SYNTHETIC",
+    "recorder_id": "recorder:SYNTHETIC",
+    "recorder_epoch": "epoch:SYNTHETIC",
+    "dispatch_response_observed_at": 99990,
+    "as_of": 100000,
+    "window_start": 13600
+  },
+  "rows": {
+    "runs": [
+      {
+        "columns": {
+          "run_id": "run:SYNTHETIC",
+          "thread_id": "thread:SYNTHETIC"
+        },
+        "payload": {
+          "id": "run:SYNTHETIC",
+          "threadId": "thread:SYNTHETIC",
+          "providerThreadId": "provider:SYNTHETIC",
+          "providerInstanceId": "codex",
+          "status": "completed",
+          "requestedAt": 99980,
+          "startedAt": 99981,
+          "completedAt": 99989
+        },
+        "issues": []
+      }
+    ],
+    "threads": [
+      {
+        "columns": {
+          "thread_id": "thread:SYNTHETIC",
+          "project_id": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914"
+        },
+        "payload": {
+          "id": "thread:SYNTHETIC",
+          "projectId": "mcp:5cffed67-debf-4e5f-ace3-1d3ca260d914"
+        },
+        "issues": []
+      }
+    ],
+    "run_attempts": [
+      {
+        "columns": {
+          "attempt_id": "attempt:SYNTHETIC",
+          "run_id": "run:SYNTHETIC",
+          "provider_thread_id": "provider:SYNTHETIC"
+        },
+        "payload": {
+          "id": "attempt:SYNTHETIC",
+          "runId": "run:SYNTHETIC",
+          "providerThreadId": "provider:SYNTHETIC",
+          "providerInstanceId": "codex",
+          "nativeThreadId": "session:SYNTHETIC",
+          "status": "completed",
+          "startedAt": 99981,
+          "completedAt": 99989
+        },
+        "issues": []
+      }
+    ],
+    "provider_turns": [
+      {
+        "columns": {
+          "provider_turn_id": "turn:SYNTHETIC",
+          "run_attempt_id": "attempt:SYNTHETIC",
+          "provider_thread_id": "provider:SYNTHETIC"
+        },
+        "payload": {
+          "id": "turn:SYNTHETIC",
+          "providerThreadId": "provider:SYNTHETIC",
+          "runAttemptId": "attempt:SYNTHETIC",
+          "nativeTurnRef": {
+            "strength": "strong",
+            "driver": "codex",
+            "nativeId": "native-turn:SYNTHETIC"
+          },
+          "status": "completed",
+          "startedAt": 99982,
+          "completedAt": 99989
+        },
+        "issues": []
+      }
+    ],
+    "provider_threads": [
+      {
+        "columns": {
+          "provider_thread_id": "provider:SYNTHETIC",
+          "thread_id": "thread:SYNTHETIC"
+        },
+        "payload": {
+          "id": "provider:SYNTHETIC",
+          "appThreadId": "thread:SYNTHETIC",
+          "driver": "codex",
+          "providerInstanceId": "codex",
+          "nativeThreadRef": {
+            "strength": "strong",
+            "driver": "codex",
+            "nativeId": "session:SYNTHETIC"
+          }
+        },
+        "issues": []
+      }
+    ]
+  },
+  "acquisition_observations": {
+    "acquisition_started_at": null,
+    "acquisition_completed_at": null,
+    "database_before": null,
+    "database_after": null,
+    "transaction": "not-run",
+    "rows_seen": 5,
+    "row_limit_hit": false,
+    "table_states": {
+      "runs": "read",
+      "threads": "read",
+      "run_attempts": "read",
+      "provider_turns": "read",
+      "provider_threads": "read"
+    },
+    "query_gaps": [],
+    "code_leases": []
+  }
+}

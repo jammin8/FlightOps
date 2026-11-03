@@ -1,0 +1,641 @@
+{
+ "deriver": 3,
+ "generated": 1792803600,
+ "prs": {
+  "backend#1": {
+   "anchor": 1792800000.0,
+   "anchor_kind": "opened",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": {
+    "failed": [],
+    "family": "claude-opus",
+    "outcome": "pass",
+    "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+   },
+   "gaps": [],
+   "head_ref": "feat",
+   "heads": [
+    {
+     "complete": true,
+     "family": "claude-opus",
+     "first_attempt": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "observed": 1792800005.0,
+     "observed_via": "check suite",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+     "sync": false,
+     "trailers": [
+      "Claude Opus 5.5"
+     ],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [],
+   "inputs": "9ae350de7c3d2712",
+   "merged": null,
+   "number": 1,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "backend#1",
+   "r0": {
+    "delay_s": null,
+    "event": null,
+    "evidence": "opened event",
+    "family": "claude-opus",
+    "first_attempt": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "first_completed": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "observed_via": "check suite",
+    "receipt": "o1",
+    "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "status": "verified",
+    "sync": false,
+    "workflow": null
+   },
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "backend#2": {
+   "anchor": 1792800000.0,
+   "anchor_kind": "opened",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": null,
+   "gaps": [],
+   "head_ref": "two",
+   "heads": [
+    {
+     "complete": true,
+     "family": "claude-opus",
+     "first_attempt": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "cancelled"
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "cancelled"
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "cancelled"
+     },
+     "observed": 1792800005.0,
+     "observed_via": "check suite",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+     "sync": false,
+     "trailers": [
+      "Claude Opus 5.5"
+     ],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [],
+   "inputs": "f7bbf6337e3daa83",
+   "merged": null,
+   "number": 2,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "backend#2",
+   "r0": {
+    "delay_s": null,
+    "event": null,
+    "evidence": "opened event",
+    "family": "claude-opus",
+    "first_attempt": {
+     "failed": [],
+     "outcome": "unknown",
+     "reason": "cancelled"
+    },
+    "first_completed": {
+     "failed": [],
+     "outcome": "unknown",
+     "reason": "cancelled"
+    },
+    "observed_via": "check suite",
+    "receipt": "o2",
+    "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "status": "verified",
+    "sync": false,
+    "workflow": null
+   },
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "backend#3": {
+   "anchor": 1792800000.0,
+   "anchor_kind": "opened",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": {
+    "failed": [
+     "fast"
+    ],
+    "family": "codex",
+    "outcome": "fail",
+    "sha": "cccccccccccccccccccccccccccccccccccccccc"
+   },
+   "gaps": [],
+   "head_ref": "three",
+   "heads": [
+    {
+     "complete": true,
+     "family": "codex",
+     "first_attempt": {
+      "failed": [
+       "fast"
+      ],
+      "outcome": "fail",
+      "reason": null
+     },
+     "first_completed": {
+      "failed": [
+       "fast"
+      ],
+      "outcome": "fail",
+      "reason": null
+     },
+     "latest": {
+      "failed": [
+       "fast"
+      ],
+      "outcome": "fail",
+      "reason": null
+     },
+     "observed": 1792799970.0,
+     "observed_via": "push event",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "cccccccccccccccccccccccccccccccccccccccc",
+     "sync": false,
+     "trailers": [
+      "Codex"
+     ],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [],
+   "inputs": "74ff4d84d2993ae1",
+   "merged": null,
+   "number": 3,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "backend#3",
+   "r0": {
+    "delay_s": 30,
+    "event": null,
+    "evidence": "push events",
+    "family": "codex",
+    "first_attempt": {
+     "failed": [
+      "fast"
+     ],
+     "outcome": "fail",
+     "reason": null
+    },
+    "first_completed": {
+     "failed": [
+      "fast"
+     ],
+     "outcome": "fail",
+     "reason": null
+    },
+    "observed_via": "push event",
+    "receipt": "p0",
+    "sha": "cccccccccccccccccccccccccccccccccccccccc",
+    "status": "supported",
+    "sync": false,
+    "workflow": null
+   },
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "backend#7": {
+   "anchor": null,
+   "anchor_kind": "incomplete",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": {
+    "failed": [],
+    "family": null,
+    "outcome": "pass",
+    "sha": "gggggggggggggggggggggggggggggggggggggggg"
+   },
+   "gaps": [
+    "timelineItems not fully read"
+   ],
+   "head_ref": "seven",
+   "heads": [
+    {
+     "complete": true,
+     "family": null,
+     "first_attempt": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "observed": 1792800005.0,
+     "observed_via": "check suite",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "gggggggggggggggggggggggggggggggggggggggg",
+     "sync": false,
+     "trailers": [],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [
+    "readiness history not fully read",
+    "timelineItems not fully read"
+   ],
+   "inputs": "8d83b58efeb41d08",
+   "merged": null,
+   "number": 7,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "backend#7",
+   "r0": null,
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "ios#6": {
+   "anchor": 1790208000.0,
+   "anchor_kind": "opened",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": {
+    "failed": [],
+    "family": null,
+    "outcome": "pass",
+    "sha": "ffffffffffffffffffffffffffffffffffffffff"
+   },
+   "gaps": [],
+   "head_ref": "six",
+   "heads": [
+    {
+     "complete": true,
+     "family": null,
+     "first_attempt": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "observed": 1790208000.0,
+     "observed_via": "check suite",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "ffffffffffffffffffffffffffffffffffffffff",
+     "sync": false,
+     "trailers": [],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [],
+   "inputs": "b16359918fc4a2af",
+   "merged": null,
+   "number": 6,
+   "opened": 1790208000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "ios#6",
+   "r0": {
+    "delay_s": 0,
+    "event": "pull_request",
+    "evidence": "pull_request \"ci\" run on its branch",
+    "family": null,
+    "first_attempt": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "first_completed": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "observed_via": "check suite",
+    "receipt": 7,
+    "sha": "ffffffffffffffffffffffffffffffffffffffff",
+    "status": "candidate",
+    "sync": false,
+    "workflow": "ci"
+   },
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "web#4": {
+   "anchor": 1792800000.0,
+   "anchor_kind": "opened",
+   "base_ref": "main",
+   "closed": null,
+   "draft": false,
+   "fetched": null,
+   "first_decided": {
+    "failed": [],
+    "family": null,
+    "outcome": "pass",
+    "sha": "dddddddddddddddddddddddddddddddddddddddd"
+   },
+   "gaps": [],
+   "head_ref": "four",
+   "heads": [
+    {
+     "complete": true,
+     "family": null,
+     "first_attempt": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "pass",
+      "reason": null
+     },
+     "observed": 1792800030.0,
+     "observed_via": "check suite",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "dddddddddddddddddddddddddddddddddddddddd",
+     "sync": false,
+     "trailers": [],
+     "why": []
+    }
+   ],
+   "history_complete": 1,
+   "history_read": null,
+   "incomplete": [],
+   "inputs": "802fb9ae0710688a",
+   "merged": null,
+   "number": 4,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "web#4",
+   "r0": {
+    "delay_s": 30,
+    "event": "pull_request_target",
+    "evidence": "pull_request_target \"ci\" run on its branch",
+    "family": null,
+    "first_attempt": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "first_completed": {
+     "failed": [],
+     "outcome": "pass",
+     "reason": null
+    },
+    "observed_via": "check suite",
+    "receipt": 7,
+    "sha": "dddddddddddddddddddddddddddddddddddddddd",
+    "status": "candidate",
+    "sync": false,
+    "workflow": "ci"
+   },
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  },
+  "web#5": {
+   "anchor": null,
+   "anchor_kind": null,
+   "base_ref": "main",
+   "closed": null,
+   "draft": true,
+   "fetched": null,
+   "first_decided": null,
+   "gaps": [],
+   "head_ref": "five",
+   "heads": [
+    {
+     "complete": false,
+     "family": null,
+     "first_attempt": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "history not read yet"
+     },
+     "first_completed": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "history not read yet"
+     },
+     "latest": {
+      "failed": [],
+      "outcome": "unknown",
+      "reason": "history not read yet"
+     },
+     "observed": null,
+     "observed_via": "none",
+     "read": null,
+     "refresh_failed": null,
+     "replaced": false,
+     "sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+     "sync": false,
+     "trailers": [],
+     "why": [
+      "history not read yet"
+     ]
+    }
+   ],
+   "history_complete": 0,
+   "history_read": null,
+   "incomplete": [
+    "1 heads without complete history"
+   ],
+   "inputs": "2ec49d40df637204",
+   "merged": null,
+   "number": 5,
+   "opened": 1792800000.0,
+   "policy": "required",
+   "policy_source": "rules",
+   "pr": "web#5",
+   "r0": null,
+   "required": [
+    "github-actions/fast",
+    "github-actions/integration"
+   ],
+   "settled": false,
+   "size": {
+    "class": "S",
+    "files": 4,
+    "lines": 120
+   },
+   "state": "OPEN"
+  }
+ },
+ "schema": "pr-facts/2",
+ "sources": {
+  "events": {
+   "repos": {
+    "backend": {
+     "covered_since": 1792799400.0,
+     "gap_list": [
+      {
+       "after": 1792799100.0,
+       "before": 1792799400.0,
+       "detected": 1792799700.0
+      }
+     ],
+     "gaps": 1,
+     "polled": 1792803500.0
+    }
+   }
+  },
+  "facts": {
+   "discovered": 9,
+   "discovery_complete": true,
+   "due_heads": 0,
+   "last_clean_read": 1792803000.0,
+   "retry": {},
+   "stale": [
+    "backend#3"
+   ],
+   "unfetched": [
+    "web#8"
+   ],
+   "waiting": 2
+  },
+  "run": {
+   "at": 1792803600.0,
+   "errors": []
+  }
+ }
+}

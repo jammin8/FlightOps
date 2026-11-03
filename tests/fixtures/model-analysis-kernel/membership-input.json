@@ -1,0 +1,950 @@
+{
+  "schema": "flightops-normalized-pr/1",
+  "as_of": "2026-10-29T12:00:00Z",
+  "frozen_at": "2026-10-29T12:00:00Z",
+  "snapshot_id": "synthetic-only-1",
+  "previous_manifest_hash": null,
+  "policy": {
+    "version": "joint-strata-max-bootstrap/1",
+    "seed": 139,
+    "bootstrap_replicates": 199,
+    "calibration_simulations": 120,
+    "family": [
+      "a",
+      "b"
+    ],
+    "reference_setup": "a",
+    "reference_mix": [
+      {
+        "repo": "org/repo",
+        "task": "feature",
+        "size": "s",
+        "weight": 1.0
+      }
+    ]
+  },
+  "inventory": {
+    "status": "complete",
+    "source_ids": [
+      "source"
+    ]
+  },
+  "sources": [
+    {
+      "id": "source",
+      "schema": "synthetic-source/1",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "complete": true,
+      "gaps": [],
+      "snapshot_at": "2026-10-29T12:00:00Z",
+      "history_start": "2026-01-01T00:00:00Z",
+      "complete_through": "2026-10-29T12:00:00Z"
+    }
+  ],
+  "setups": [
+    {
+      "id": "a",
+      "provider": {
+        "value": "reported-provider",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#1:actual_setup",
+          "org/repo#2:actual_setup",
+          "org/repo#3:actual_setup"
+        ]
+      },
+      "model": {
+        "value": "a",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#1:actual_setup",
+          "org/repo#2:actual_setup",
+          "org/repo#3:actual_setup"
+        ]
+      },
+      "effort": {
+        "value": "reported-effort",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#1:actual_setup",
+          "org/repo#2:actual_setup",
+          "org/repo#3:actual_setup"
+        ]
+      },
+      "tier": {
+        "value": "reported-tier",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#1:actual_setup",
+          "org/repo#2:actual_setup",
+          "org/repo#3:actual_setup"
+        ]
+      }
+    },
+    {
+      "id": "b",
+      "provider": {
+        "value": "reported-provider",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#4:actual_setup",
+          "org/repo#5:actual_setup",
+          "org/repo#6:actual_setup"
+        ]
+      },
+      "model": {
+        "value": "b",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#4:actual_setup",
+          "org/repo#5:actual_setup",
+          "org/repo#6:actual_setup"
+        ]
+      },
+      "effort": {
+        "value": "reported-effort",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#4:actual_setup",
+          "org/repo#5:actual_setup",
+          "org/repo#6:actual_setup"
+        ]
+      },
+      "tier": {
+        "value": "reported-tier",
+        "basis": "reported",
+        "evidence_ids": [
+          "org/repo#4:actual_setup",
+          "org/repo#5:actual_setup",
+          "org/repo#6:actual_setup"
+        ]
+      }
+    }
+  ],
+  "measures": [
+    {
+      "id": "metric",
+      "kind": "rate",
+      "direction": "higher",
+      "semantics": "generic",
+      "required_claims": [
+        "measure_verified",
+        "exact_producer"
+      ],
+      "unit": "fraction"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "org/repo#1:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-06-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#1:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "setup_id": "a",
+      "reported_settings": {
+        "provider": "reported-provider",
+        "model": "a",
+        "effort": "reported-effort",
+        "tier": "reported-tier"
+      }
+    },
+    {
+      "id": "org/repo#1:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#1:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#1:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    },
+    {
+      "id": "org/repo#1:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#1",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    },
+    {
+      "id": "org/repo#2:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-09-10T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#2:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "setup_id": "a",
+      "reported_settings": {
+        "provider": "reported-provider",
+        "model": "a",
+        "effort": "reported-effort",
+        "tier": "reported-tier"
+      }
+    },
+    {
+      "id": "org/repo#2:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#2:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#2:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "204269071cd02ee691a9847a35b1a7a7cf57b4b75ea594be6f89b6e0afae6fb5"
+    },
+    {
+      "id": "org/repo#2:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#2",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "204269071cd02ee691a9847a35b1a7a7cf57b4b75ea594be6f89b6e0afae6fb5"
+    },
+    {
+      "id": "org/repo#3:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#3:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "setup_id": "a",
+      "reported_settings": {
+        "provider": "reported-provider",
+        "model": "a",
+        "effort": "reported-effort",
+        "tier": "reported-tier"
+      }
+    },
+    {
+      "id": "org/repo#3:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#3:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#3:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "c861c49916fda204f76ee04e568c5fb806778e9f82eb1e33cad8c43bd95698c2"
+    },
+    {
+      "id": "org/repo#3:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#3",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "c861c49916fda204f76ee04e568c5fb806778e9f82eb1e33cad8c43bd95698c2"
+    },
+    {
+      "id": "org/repo#4:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#4:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#4:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#4:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#4:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    },
+    {
+      "id": "org/repo#4:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#4",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    },
+    {
+      "id": "org/repo#5:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#5:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "setup_id": "b",
+      "reported_settings": {
+        "provider": "reported-provider",
+        "model": "b",
+        "effort": "reported-effort",
+        "tier": "reported-tier"
+      }
+    },
+    {
+      "id": "org/repo#5:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#5:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#5:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "204269071cd02ee691a9847a35b1a7a7cf57b4b75ea594be6f89b6e0afae6fb5"
+    },
+    {
+      "id": "org/repo#5:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#5",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "204269071cd02ee691a9847a35b1a7a7cf57b4b75ea594be6f89b6e0afae6fb5"
+    },
+    {
+      "id": "org/repo#6:first_ready",
+      "claim": "first_ready",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z"
+    },
+    {
+      "id": "org/repo#6:actual_setup",
+      "claim": "actual_setup",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "setup_id": "b",
+      "reported_settings": {
+        "provider": "reported-provider",
+        "model": "b",
+        "effort": "reported-effort",
+        "tier": "reported-tier"
+      }
+    },
+    {
+      "id": "org/repo#6:verified_anchor",
+      "claim": "verified_anchor",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "anchor_kind": "opened"
+    },
+    {
+      "id": "org/repo#6:anchored_size",
+      "claim": "anchored_size",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "changed_lines": 50
+    },
+    {
+      "id": "org/repo#6:measure_verified",
+      "claim": "measure_verified",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    },
+    {
+      "id": "org/repo#6:exact_producer",
+      "claim": "exact_producer",
+      "pr_id": "org/repo#6",
+      "anchor_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schema": "flightops-pr-proof/1",
+      "source_id": "source",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "qualified": true,
+      "effective_at": "2026-10-01T12:00:00Z",
+      "recorded_at": "2026-10-29T12:00:00Z",
+      "measure_id": "metric",
+      "value_hash": "661575a34d940747eabc5c1c753c1a904070568558116e11ebc9e2db920e58a2"
+    }
+  ],
+  "observations": [
+    {
+      "pr_id": "org/repo#1",
+      "repo": "org/repo",
+      "number": 1,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-06-01T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#1:first_ready"
+      ],
+      "setup_id": "a",
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#1:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-10-29T12:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#1:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#1:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#1"
+      ],
+      "measures": {
+        "metric": {
+          "value": 1,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#1:measure_verified",
+            "org/repo#1:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    },
+    {
+      "pr_id": "org/repo#2",
+      "repo": "org/repo",
+      "number": 2,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-09-10T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#2:first_ready"
+      ],
+      "setup_id": "a",
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#2:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-10-29T12:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#2:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#2:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#2"
+      ],
+      "measures": {
+        "metric": {
+          "value": 0,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#2:measure_verified",
+            "org/repo#2:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    },
+    {
+      "pr_id": "org/repo#3",
+      "repo": "org/repo",
+      "number": 3,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-10-01T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#3:first_ready"
+      ],
+      "setup_id": "a",
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#3:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-10-29T12:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#3:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#3:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#3"
+      ],
+      "measures": {
+        "metric": {
+          "value": null,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#3:measure_verified",
+            "org/repo#3:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    },
+    {
+      "pr_id": "org/repo#4",
+      "repo": "org/repo",
+      "number": 4,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-10-01T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#4:first_ready"
+      ],
+      "setup_id": null,
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#4:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-10-29T12:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#4:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#4:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#4"
+      ],
+      "measures": {
+        "metric": {
+          "value": 1,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#4:measure_verified",
+            "org/repo#4:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    },
+    {
+      "pr_id": "org/repo#5",
+      "repo": "org/repo",
+      "number": 5,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-10-01T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#5:first_ready"
+      ],
+      "setup_id": "b",
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#5:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-11-01T00:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#5:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#5:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#5"
+      ],
+      "measures": {
+        "metric": {
+          "value": 0,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#5:measure_verified",
+            "org/repo#5:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    },
+    {
+      "pr_id": "org/repo#6",
+      "repo": "org/repo",
+      "number": 6,
+      "revision": "normalized-revision-1",
+      "observed_at": "2026-10-29T12:00:00Z",
+      "first_ready_at": "2026-10-01T12:00:00Z",
+      "membership_evidence_ids": [
+        "org/repo#6:first_ready"
+      ],
+      "setup_id": "b",
+      "possible_setup_ids": [],
+      "setup_evidence_ids": [
+        "org/repo#6:actual_setup"
+      ],
+      "task": "feature",
+      "mature_at": "2026-10-29T12:00:00Z",
+      "anchor": {
+        "kind": "opened",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "evidence_ids": [
+          "org/repo#6:verified_anchor"
+        ]
+      },
+      "anchored_size": {
+        "base_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "r0_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "changed_lines": 50,
+        "evidence_ids": [
+          "org/repo#6:anchored_size"
+        ]
+      },
+      "shared": false,
+      "independence_keys": [
+        "request:org/repo#6"
+      ],
+      "measures": {
+        "metric": {
+          "value": 1,
+          "effective_at": "2026-10-01T12:00:00Z",
+          "evidence_ids": [
+            "org/repo#6:measure_verified",
+            "org/repo#6:exact_producer"
+          ],
+          "reason": null
+        }
+      }
+    }
+  ]
+}
