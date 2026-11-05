@@ -856,11 +856,16 @@ class Boundaries(unittest.TestCase):
         tracked = self.git_lines("ls-files", "--", *KERNEL)
         added = self.git_lines("ls-files", "--others", "--exclude-standard", "--", *KERNEL)
         present = set(tracked + added)
-        self.assertLessEqual(set(KERNEL_FROZEN), present)
-        self.assertLessEqual(present - set(KERNEL_FROZEN), set(KERNEL_PIN))
+        self.assertEqual(present, set(KERNEL_FROZEN) | set(KERNEL_PIN))
         for path, pin in {**KERNEL_FROZEN, **KERNEL_PIN}.items():
-            if path in present:
-                self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), pin, path)
+            self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), pin, path)
+
+    def test_a_removed_kernel_file_fails_the_guard(self):
+        expected = set(KERNEL_FROZEN) | set(KERNEL_PIN)
+        for path in expected:
+            with self.subTest(path=path), unittest.mock.patch.object(self, "git_lines", side_effect=[sorted(expected - {path}), []]):
+                with self.assertRaises(AssertionError):
+                    self.test_the_kernel_differs_from_the_frozen_base_only_by_the_pinned_content()
 
     def test_an_edit_inside_a_pinned_file_fails_the_guard(self):
         original = pathlib.Path.read_bytes
