@@ -176,7 +176,7 @@ enum Rules {
         let bad = state.lowercased().contains("critical")
         let healthy = state.uppercased() == "OK"
         let health: Health = bad ? .bad : !healthy || fact.reboot == true ? .warn : fact.hostKnown ? .ok : .unknown
-        return Check(id: id, label: label, detail: fact.line, health: health, source: .agents, alert: bad, observedAt: fact.updatedDate)
+        return Check(id: id, label: label, detail: fact.line, health: health, source: .agents, alert: !healthy, observedAt: fact.updatedDate)
     }
 
     static func percentUsed(_ pct: Int?, id: String, label: String, source: SourceID, fresh: Bool) -> Check {
@@ -328,8 +328,9 @@ enum Rules {
         let pct = Int(min(max(u.used_pct, 0), 1000).rounded())
         let detail = u.isWeekly ? "\(pct)% of week" : "\(pct)% of window"
 
-        if pct >= 95 { return Check(id: id, label: label, detail: detail + " · reviews on credits", health: .warn, source: .mac, observedAt: at) }
-        return Check(id: id, label: label, detail: detail, health: pct >= 90 ? .warn : .ok, source: .mac, observedAt: at)
+        if pct >= 95 { return Check(id: id, label: label, detail: detail + " · reviews on credits", health: .warn, source: .mac, alert: true, observedAt: at) }
+        if pct >= 90 { return Check(id: id, label: label, detail: detail, health: .warn, source: .mac, alert: true, observedAt: at) }
+        return Check(id: id, label: label, detail: detail, health: .ok, source: .mac, observedAt: at)
     }
 
 
