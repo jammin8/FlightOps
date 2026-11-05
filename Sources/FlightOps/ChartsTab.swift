@@ -34,6 +34,17 @@ struct ChartsTab: View {
 
 
 
+    static func mainSymbol(_ main: String?) -> String {
+        switch main {
+        case "failure": return "xmark.octagon.fill"
+        case "success": return "checkmark.circle.fill"
+        case "pending": return "clock.fill"
+        case "cancelled": return "slash.circle.fill"
+        case "not_applicable": return "minus.circle.fill"
+        default: return "questionmark.circle.fill"
+        }
+    }
+
     static let statusColor: [PRStatus: Color] = [.draft: Theme.gunmetal, .fixing: Theme.warning, .waitingCI: Theme.caution.opacity(0.55), .inCI: Theme.caution,
                                                  .review: Theme.cyan, .approved: Theme.hud.opacity(0.6), .merged: Theme.hud]
     private static let stages: [(key: String, label: String, color: Color)] = [
@@ -164,6 +175,7 @@ struct ChartsTab: View {
                     StackBar(label: repoLabel(key), trailing: rows.first { $0.name == key }.map { "\($0.open) " + (m.repos?.openInventoryComplete == true ? "open" : "observed open") } ?? "open unknown",
                              dot: main == "success" ? Theme.hud : main == "failure" ? Theme.warning : main == "pending" ? Theme.caution : Theme.gunmetal,
                              dotHelp: "main: \(main ?? "unknown")",
+                             dotSymbol: Self.mainSymbol(main),
                              parts: PRStatus.allCases.map { (Double(n[$0.rawValue] ?? 0), Self.statusColor[$0] ?? Theme.gunmetal) },
                              total: max(widest, 1),
                              detail: PRStatus.allCases.map { "\(n[$0.rawValue].map(String.init) ?? "unknown") \($0.label.lowercased())" }
@@ -295,6 +307,7 @@ struct StackBar: View {
 
     var dot: Color? = nil
     var dotHelp: String? = nil
+    var dotSymbol: String? = nil
     let parts: [(Double, Color)]
     let total: Double
 
@@ -308,8 +321,7 @@ struct StackBar: View {
             if !label.isEmpty || !trailing.isEmpty {
                 HStack {
                     if let dot {
-                        Image(systemName: dotHelp?.contains("failure") == true ? "xmark.octagon.fill"
-                              : dotHelp?.contains("success") == true ? "checkmark.circle.fill" : "clock.fill")
+                        Image(systemName: dotSymbol ?? "circle.fill")
                             .font(.caption2).foregroundStyle(dot).help(dotHelp ?? "").accessibilityLabel(dotHelp ?? "")
                     }
                     Text(label).font(.caption).lineLimit(1)
