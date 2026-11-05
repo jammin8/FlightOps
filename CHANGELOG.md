@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Collection
+
+- Enable only GitHub repository collection by default in the headless CLI on macOS and Linux. Host, orchestrator, issue-tracker, comparison and ledger integrations require explicit selection; absent private adapters no longer cause default collection failures.
+- Label omitted sources without retained inputs as disabled and unknown. Explicitly enabled missing adapters still fail visibly, while independent GitHub facts remain available. Retained inputs keep their original clocks and freshness rules.
+- Verify these defaults with optional-adapter sentinels and missing-source checks in the CLI suite. Native app onboarding remains separate work.
+
 ### Comparison publication
 
 - Encode oversized or whitespace-containing source-thread independence identities with stable, domain-separated hashes. Shared-thread PRs remain correlated; valid short keys and the comparison kernel's existing limits are unchanged.
