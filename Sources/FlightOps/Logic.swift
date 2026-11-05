@@ -1491,6 +1491,8 @@ enum Analytics {
 
 
 
+    static let projectionHorizon: Double = 365 * 86400
+
     static func projection(_ flow: [FlowSample], key: String, limit: Double, now: Double, window: Double = 6 * 3600) -> Double? {
         let pts = flow.filter { now - $0.t <= window }.compactMap { s in s.budgets?[key].map { (s.t, $0) } }
         guard pts.count >= 3 else { return nil }
@@ -1498,8 +1500,9 @@ enum Analytics {
         let num = pts.map { ($0.0 - mx) * ($0.1 - my) }.reduce(0, +), den = pts.map { pow($0.0 - mx, 2) }.reduce(0, +)
         guard den > 0 else { return nil }
         let slope = num / den, last = pts.last!.1
-        guard slope != 0, (limit - last) / slope > 0 else { return nil }
-        return (limit - last) / slope
+        let left = (limit - last) / slope
+        guard slope != 0, left.isFinite, left > 0, left < projectionHorizon else { return nil }
+        return left
     }
 
 
