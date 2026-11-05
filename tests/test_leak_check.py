@@ -105,6 +105,15 @@ class LeakCheckTests(unittest.TestCase):
         self.git("add", "report.zip")
         self.assert_refused(self.scan("--staged"))
 
+    def test_unsupported_bundles_are_refused_even_when_empty(self):
+        for suffix in (".app", ".bundle", ".framework", ".xcarchive"):
+            with self.subTest(suffix=suffix):
+                tree = self.root / ("artifact" + suffix)
+                tree.mkdir()
+                self.assert_refused(self.scan("--tree", str(tree)))
+                (tree / ("Payload" + suffix)).mkdir()
+                self.assert_refused(self.scan("--tree", str(self.root)))
+
     def test_unreadable_text_encoding_is_refused(self):
         (self.repo / "report.txt").write_bytes(b"\xff\xfe")
         self.git("add", "report.txt")

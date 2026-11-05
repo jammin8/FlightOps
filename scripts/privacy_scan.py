@@ -23,7 +23,7 @@ UNSUPPORTED_SUFFIXES = {
     ".jar", ".jpeg", ".jpg", ".key", ".mp3", ".mp4", ".o", ".pdf",
     ".pkg", ".png", ".ppt", ".pptx", ".rar", ".so", ".sqlite",
     ".sqlite3", ".tar", ".tgz", ".tif", ".tiff", ".wasm", ".webp",
-    ".xls", ".xlsx", ".xz", ".zip", ".zst",
+    ".xls", ".xlsx", ".xz", ".zip", ".zst", ".bundle", ".framework", ".xcarchive",
 }
 
 
@@ -84,12 +84,16 @@ def index_entries(target, mode):
 def tree_entries(target):
     if not target.is_dir():
         raise Refused("scan target is not a directory")
+    if target.suffix.lower() in UNSUPPORTED_SUFFIXES:
+        raise Refused("unsupported container format requires a separate privacy review")
     def unreadable(error):
         raise Refused("directory inventory could not be read")
 
     for directory, dirs, files in os.walk(target, followlinks=False, onerror=unreadable):
         dirs[:] = sorted(name for name in dirs if name != ".git")
         for name in dirs:
+            if Path(name).suffix.lower() in UNSUPPORTED_SUFFIXES:
+                raise Refused("unsupported container format requires a separate privacy review")
             if (Path(directory) / name).is_symlink():
                 raise Refused("symbolic links require a separate privacy review")
         for name in sorted(files):
