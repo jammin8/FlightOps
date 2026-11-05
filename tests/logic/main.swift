@@ -529,6 +529,9 @@ expect(sent.hasPrefix("In CI") || sent.hasPrefix("In review"), "sentence names t
 let bf = [FlowSample(t: 0, counts: [:], budgets: ["codex": 40]), FlowSample(t: 3600, counts: [:], budgets: ["codex": 50]),
           FlowSample(t: 7200, counts: [:], budgets: ["codex": 60])]
 expect(Analytics.projection(bf, key: "codex", limit: 100, now: 7200).map { Int($0) } == 14400, "10%/h from 60% reaches 100% in 4 h")
+let flat = [FlowSample(t: 0, counts: [:], budgets: ["codex": 50]), FlowSample(t: 3600, counts: [:], budgets: ["codex": 50]),
+            FlowSample(t: 7200, counts: [:], budgets: ["codex": 50.000000000001])]
+expect(Analytics.projection(flat, key: "codex", limit: 100, now: 7200) == nil, "a nearly flat pace projects nothing rather than an out-of-range time")
 expect(Analytics.mainRed([FlowSample(t: 0, counts: [:], main: ["web": "failure"]), FlowSample(t: 100, counts: [:], main: ["web": "success"])],
                          repo: "web", since: 0, now: 400) == 0.25, "main red by time: 100 s of 400")
 
