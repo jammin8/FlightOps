@@ -89,6 +89,12 @@ class Inventory(Base):
         self.assertEqual(ledger_prs.state_of(self.store, "web")["walk"]["after"], f"c{ledger_prs.PAGES_PER_PASS}")
         self.assertIn(f'after: "c{ledger_prs.PAGES_PER_PASS - 1}"', fake.queries[-1])
 
+    def test_a_missing_cursor_stays_a_gap(self):
+        self.inventory(node(), more=True, cursor=None)
+        kinds = {tuple(r) for r in self.store.db.execute("SELECT repo, kind FROM gaps WHERE closed_pass IS NULL")}
+        self.assertIn(("web", "read-failed"), kinds)
+        self.assertIsNone(ledger_prs.state_of(self.store, "web")["covered_to"])
+
     def test_a_truncated_timeline_is_explicit(self):
         self.inventory(node(timelineItems={"pageInfo": {"hasNextPage": True}, "nodes": []}))
         self.assertEqual(self.store.db.execute("SELECT kind FROM gaps WHERE source = 'prs'").fetchone()[0], "timeline-truncated")
