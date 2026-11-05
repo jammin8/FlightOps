@@ -34,6 +34,7 @@ cat > "$APP/Contents/Info.plist" <<EOF
 EOF
 codesign --force --deep -s - "$APP"
 
+mkdir -p "$HOME/Applications"
 DEST="$HOME/Applications/FlightOps.app"
 
 rm -rf "$HOME/Applications/Cockpit.app" "$HOME/Applications/Flight Ops.app"
