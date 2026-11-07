@@ -1,0 +1,438 @@
+{
+  "agent_evidence": null,
+  "boundary_snapshots": [
+    {
+      "as_of": 60,
+      "custody": "supplied-replay",
+      "events": [
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:1",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:1",
+          "evidence_refs": [],
+          "kind": "assignment_intent",
+          "operation_id": null,
+          "owner_binding_id": null,
+          "payload": {
+            "actor_binding_id": null,
+            "dispatcher_binding_id": "dispatcher:synthetic",
+            "input_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "memberships": [
+              {
+                "pr": 1,
+                "repository": "example/project",
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              {
+                "pr": 2,
+                "repository": "example/project",
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "pr": null,
+            "replaced": null,
+            "repository": "example/project",
+            "requested_owner_binding_id": null,
+            "reviewed_sha": null,
+            "revision": 0,
+            "role": "implementation",
+            "supersedes_assignment_id": null,
+            "target_thread_id": "thread:one",
+            "task_id": "work:one",
+            "task_kind": "implementation",
+            "trigger_id": null,
+            "trigger_kind": "initial"
+          },
+          "previous_event_digest": null,
+          "recorded_at": 10,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 1
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:2",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:2",
+          "evidence_refs": [],
+          "kind": "dispatch_observed",
+          "operation_id": null,
+          "owner_binding_id": null,
+          "payload": {
+            "child_thread_id": "thread:one",
+            "client_request_id": null,
+            "delivery_state": "queued",
+            "message_id": "message:one",
+            "orchestration_run_id": null,
+            "request_observed_at": 20,
+            "response_observed_at": 21,
+            "status": "queued",
+            "task_id_from_transport": "task:one",
+            "transport_kind": "guarded-orch-thread-send"
+          },
+          "previous_event_digest": "2faea837ab85120172ee004aa54b3341165e85523cf9978669c0d4954116b56d",
+          "recorded_at": 21,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 2
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:3",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:3",
+          "evidence_refs": [],
+          "kind": "owner_bound",
+          "operation_id": null,
+          "owner_binding_id": "owner:one",
+          "payload": {
+            "actor_binding_id": null,
+            "attempt_id": "attempt:one",
+            "attempt_run_id": "run:one",
+            "child_thread_id": "thread:one",
+            "native_session_id": "session:one",
+            "native_turn_id": "turn:one",
+            "orchestration_run_id": "run:one",
+            "original_source_refs": [
+              {
+                "artifact_id": "synthetic:metadata",
+                "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "ordinal": 1,
+                "source_at": 10
+              }
+            ],
+            "provider_namespace": "codex",
+            "task_id_from_transport": "task:one",
+            "turn_attempt_id": "attempt:one",
+            "turn_session_id": "session:one"
+          },
+          "previous_event_digest": "b8f99d53355867428c7c35ec77d616c274ef78c3afbe56b463f85e30ce64779a",
+          "recorded_at": 22,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 3
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:4",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:4",
+          "evidence_refs": [],
+          "kind": "execution_started",
+          "operation_id": "operation:one",
+          "owner_binding_id": null,
+          "payload": {
+            "before_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "destination_repository": null,
+            "intended_destination_ref": null,
+            "intended_object_sha": null,
+            "native_invocation_id": null,
+            "operation_kind": "git-create",
+            "parent_shas": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "process_identity": null,
+            "protocol": "unified-exec",
+            "recorder_invocation_id": "invocation:one",
+            "repository": "example/project",
+            "repository_binding_id": "repository:one",
+            "started_at": 30,
+            "tree_sha": "cccccccccccccccccccccccccccccccccccccccc"
+          },
+          "previous_event_digest": "f8eab633cdf44a8590ae0a09fc36768a64bc74a62bb86bd33b9736cb09d62f7c",
+          "recorded_at": 30,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 4
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:5",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:5",
+          "evidence_refs": [],
+          "kind": "execution_result",
+          "operation_id": "operation:one",
+          "owner_binding_id": null,
+          "payload": {
+            "completed_at": 40,
+            "exit_code": 0,
+            "native_completion_id": null,
+            "process_identity": null,
+            "protocol": "unified-exec",
+            "recorder_invocation_id": "invocation:one",
+            "result_source_refs": [
+              {
+                "artifact_id": "synthetic:metadata",
+                "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "ordinal": 1,
+                "source_at": 10
+              }
+            ],
+            "signal": null,
+            "terminal_state": "success",
+            "transport_session_id": null
+          },
+          "previous_event_digest": "3e0ee2b8037e64fa0dfa82a3c530e0b8dd4fb528268516f6bb45b1e6633323ed",
+          "recorded_at": 45,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 5
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:6",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:6",
+          "evidence_refs": [],
+          "kind": "git_result",
+          "operation_id": "operation:one",
+          "owner_binding_id": null,
+          "payload": {
+            "before_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "destination_ref": null,
+            "destination_repository": null,
+            "dry_run": false,
+            "object_existed_before": false,
+            "object_format": "sha1",
+            "outcome": "created",
+            "parent_shas": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "ref_before_sha": null,
+            "ref_result_sha": null,
+            "repository": "example/project",
+            "repository_binding_id": "repository:one",
+            "result_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "result_source_refs": [
+              {
+                "artifact_id": "synthetic:metadata",
+                "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "ordinal": 1,
+                "source_at": 10
+              }
+            ],
+            "tree_sha": "cccccccccccccccccccccccccccccccccccccccc",
+            "witness_kind": "object-construction"
+          },
+          "previous_event_digest": "723d4c6a662b7240d4e5c0934e18389d3244250b8cd00d0fd830c8e116f84f0e",
+          "recorded_at": 46,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 6
+        },
+        {
+          "assignment_id": "assignment:one",
+          "boundary_id": "boundary:7",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:7",
+          "evidence_refs": [],
+          "kind": "assignment_resolution",
+          "operation_id": null,
+          "owner_binding_id": null,
+          "payload": {
+            "observed_at": 51,
+            "resolution": "completed",
+            "resolved_at": 50,
+            "result_pr": 1,
+            "result_repository": "example/project",
+            "result_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "result_source_refs": [
+              {
+                "artifact_id": "synthetic:metadata",
+                "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                "ordinal": 1,
+                "source_at": 10
+              }
+            ],
+            "review_outcome": null,
+            "reviewed_sha": null,
+            "revision": 0,
+            "terminal_run_id": "run:one",
+            "trigger_id": null,
+            "worker_completed_at": 45,
+            "worker_started_at": 25,
+            "worker_terminal_state": "completed"
+          },
+          "previous_event_digest": "95fd33dff04a3caa219b4820fee13363d0c1a99d16a8ce24d8c875f33adc366b",
+          "recorded_at": 51,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 7
+        },
+        {
+          "assignment_id": null,
+          "boundary_id": "boundary:8",
+          "dependencies": [],
+          "effective_at": null,
+          "event_id": "event:8",
+          "evidence_refs": [],
+          "kind": "coverage_checkpoint",
+          "operation_id": null,
+          "owner_binding_id": null,
+          "payload": {
+            "expected_inventory_digest": null,
+            "explicit_gaps": [],
+            "first_sequence": 1,
+            "interval_end": 60,
+            "interval_start": 10,
+            "last_sequence": 7,
+            "pending_assignment_ids": [],
+            "pending_operation_ids": [],
+            "prior_checkpoint_id": null,
+            "scope_id": "scope:synthetic"
+          },
+          "previous_event_digest": "5188e839979e4ed6f97de6a82b8996cee98435208423da61f22e9f46b4aac107",
+          "recorded_at": 60,
+          "recorder_epoch": "epoch:synthetic",
+          "recorder_id": "recorder:synthetic",
+          "schema": "flightops-boundary-event/1",
+          "sequence": 8
+        }
+      ],
+      "gaps": [
+        "manifest-unavailable"
+      ],
+      "manifest": null,
+      "schema": "flightops-boundary-snapshot/1"
+    }
+  ],
+  "ci_attempts": [],
+  "generated_at": 1793314980.820971,
+  "heads": [
+    {
+      "anchor": 1793312973.495,
+      "anchor_kind": "opened",
+      "complete": true,
+      "evidence": {
+        "at": 1793313064.495,
+        "line": 1,
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "source_id": "join-fixture"
+      },
+      "first_attempt": {
+        "failed": [
+          "unit tests"
+        ],
+        "outcome": "fail",
+        "reason": null
+      },
+      "first_completed": {
+        "failed": [
+          "unit tests"
+        ],
+        "outcome": "fail",
+        "reason": null
+      },
+      "first_decided": true,
+      "gaps": [],
+      "id": "head:1",
+      "latest": {
+        "failed": [],
+        "outcome": "pass",
+        "reason": null
+      },
+      "observed": 1793312974.495,
+      "policy_id": "policy:1",
+      "policy_read": 1793313024.495,
+      "policy_source": "rules",
+      "pr": 1,
+      "predecessor_revision": null,
+      "r0_basis": "opened-event",
+      "r0_receipt": "opened:1",
+      "r0_status": "verified",
+      "read": 1793313024.495,
+      "refresh_failed": null,
+      "replaced": null,
+      "repository": "flightops/example",
+      "required": [
+        "ci/unit tests"
+      ],
+      "revision": 0,
+      "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sync": false
+    },
+    {
+      "anchor": 1793312973.495,
+      "anchor_kind": "opened",
+      "complete": true,
+      "evidence": {
+        "at": 1793313064.495,
+        "line": 1,
+        "source_digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+        "source_id": "join-fixture"
+      },
+      "first_attempt": {
+        "failed": [
+          "unit tests"
+        ],
+        "outcome": "fail",
+        "reason": null
+      },
+      "first_completed": {
+        "failed": [
+          "unit tests"
+        ],
+        "outcome": "fail",
+        "reason": null
+      },
+      "first_decided": true,
+      "gaps": [],
+      "id": "head:independent",
+      "latest": {
+        "failed": [],
+        "outcome": "pass",
+        "reason": null
+      },
+      "observed": 1793312974.495,
+      "policy_id": "policy:1",
+      "policy_read": 1793313024.495,
+      "policy_source": "rules",
+      "pr": 1,
+      "predecessor_revision": null,
+      "r0_basis": "opened-event",
+      "r0_receipt": "opened:1",
+      "r0_status": "verified",
+      "read": 1793313024.495,
+      "refresh_failed": null,
+      "replaced": false,
+      "repository": "independent/project",
+      "required": [
+        "ci/unit tests"
+      ],
+      "revision": 0,
+      "sha": "cccccccccccccccccccccccccccccccccccccccc",
+      "sync": false
+    }
+  ],
+  "origin": "synthetic",
+  "policies": [],
+  "schema": "evidence-head-input/2",
+  "selected_ci_inputs": [],
+  "sources": [
+    {
+      "complete_through": null,
+      "digest": "b141ad821bfd196da9a3ed99e35331c192f05cd3b1a28256c4e2ef0b65a0cc5e",
+      "gaps": [],
+      "generated_at": 1793314980.820971,
+      "id": "join-fixture",
+      "origin": "synthetic",
+      "snapshot_at": 1793314980.820971
+    }
+  ]
+}

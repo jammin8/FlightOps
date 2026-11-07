@@ -1,0 +1,173 @@
+{
+  "schema": "model-evidence-fixture/1",
+  "origin": {
+    "kind": "offline-fixture",
+    "fixture_id": "packet-a-demo"
+  },
+  "generated_at": 1000,
+  "as_of": 950,
+  "window": {
+    "start": 100,
+    "end": 950
+  },
+  "sources": [
+    {
+      "id": "fixture-native",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "snapshot_at": 950,
+      "history_start": 100,
+      "history_end": 950,
+      "complete_through": 950,
+      "gaps": []
+    }
+  ],
+  "runs": [
+    {
+      "provider_namespace": "codex",
+      "native_run_id": "r1",
+      "attempt_id": "attempt-1",
+      "native_session_id": "session-r1",
+      "parent": null,
+      "status": "complete",
+      "expected_children": [],
+      "turns": [
+        {
+          "native_turn_id": "turn-r1",
+          "requested": {
+            "model_id": {
+              "value": "requested-model",
+              "basis": "fixture-request",
+              "evidence": {
+                "source_id": "fixture-native",
+                "line": 1,
+                "at": 900
+              }
+            },
+            "effort": {
+              "value": "high",
+              "basis": "fixture-request",
+              "evidence": {
+                "source_id": "fixture-native",
+                "line": 1,
+                "at": 900
+              }
+            }
+          },
+          "reported": {
+            "model_id": {
+              "value": "reported-model",
+              "basis": "fixture-report",
+              "evidence": {
+                "source_id": "fixture-native",
+                "line": 1,
+                "at": 900
+              }
+            }
+          },
+          "usage_scope": "main_agent",
+          "usage_status": "complete",
+          "has_subagents": false
+        }
+      ],
+      "memberships": [
+        {
+          "repository": "flightops/demo",
+          "pr": 7,
+          "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "evidence": {
+            "source_id": "fixture-native",
+            "line": 1,
+            "at": 900
+          }
+        }
+      ],
+      "evidence": {
+        "source_id": "fixture-native",
+        "line": 1,
+        "at": 900
+      }
+    }
+  ],
+  "requests": [
+    {
+      "provider_namespace": "codex",
+      "native_request_id": "req-1",
+      "original_native_run_id": "r1",
+      "original_native_turn_id": "turn-r1",
+      "revision": 1,
+      "usage": {
+        "input_tokens": 100,
+        "cached_input_tokens": 20,
+        "cache_creation_tokens": 0,
+        "output_tokens": 30,
+        "reasoning_tokens": 5
+      },
+      "reported": {
+        "model_id": {
+          "value": "reported-model",
+          "basis": "fixture-report",
+          "evidence": {
+            "source_id": "fixture-native",
+            "line": 1,
+            "at": 900
+          }
+        }
+      },
+      "evidence": {
+        "source_id": "fixture-native",
+        "line": 1,
+        "at": 900
+      }
+    }
+  ],
+  "repositories": {
+    "flightops/demo": {
+      "worktree": "/fixture/work",
+      "objects": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "evidence": {
+        "source_id": "fixture-native",
+        "line": 1,
+        "at": 900
+      }
+    }
+  },
+  "calls": [
+    {
+      "provider_namespace": "codex",
+      "native_call_id": "call-1",
+      "native_session_id": "session-r1",
+      "native_run_id": "r1",
+      "native_turn_id": "turn-r1",
+      "command": "git commit -m \"fixture message\" && git rev-parse HEAD",
+      "repository": "flightops/demo",
+      "worktree": "/fixture/work",
+      "process_session_id": "process-1",
+      "evidence": {
+        "source_id": "fixture-native",
+        "line": 1,
+        "at": 900
+      }
+    }
+  ],
+  "completions": [
+    {
+      "provider_namespace": "codex",
+      "native_call_id": "call-1",
+      "native_session_id": "session-r1",
+      "completion_id": "completion-1",
+      "process_session_id": "process-1",
+      "exit_code": 0,
+      "final": true,
+      "output": "[main aaaaaaa] fixture message\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+      "evidence": {
+        "source_id": "fixture-native",
+        "line": 2,
+        "at": 910
+      }
+    }
+  ],
+  "observations": []
+}
