@@ -1904,8 +1904,8 @@ expect(liveAgedSeen.shownLiveModels(now: pubNow) == nil && liveAgedSeen.modelsPr
 expect(ModelSource(loadedAt: 1).statusLine(now: 2, live: nil, liveProblem: liveAgedSeen.modelsProblem).hasPrefix("Models: historical report · live Models feed stale"), "fallback stays labelled historical")
 let liveAbsent = liveImport(liveDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM())).data)
 expect(liveAbsent.shownLiveModels(now: pubNow) == nil && liveAbsent.modelsProblem?.hasPrefix("live Models feed missing") == true, "an absent fact falls back")
-func ledgerReport(_ ago: TimeInterval = 300, extra: String = "") -> Data {
-    Data(#"{"schema":"flightops-ledger-pass/1","generated":\#(pubNow.timeIntervalSince1970 - ago),"progress":{"backfill_heads_remaining":7,"heads_in_window":3,"heads_in_window_unread":2},"errors":[]\#(extra)}"#.utf8)
+func ledgerReport(_ ago: TimeInterval = 300, errors: String = "[]") -> Data {
+    Data(#"{"schema":"flightops-ledger-pass/1","generated":\#(pubNow.timeIntervalSince1970 - ago),"progress":{"backfill_heads_remaining":7,"heads_in_window":3,"heads_in_window_unread":2},"errors":\#(errors)}"#.utf8)
 }
 func ledgerFact(_ doc: (data: Data, kept: [String: [String: Any]])) -> [String: Any] {
     pubFact(try! JSONSerialization.jsonObject(with: doc.data) as! [String: Any], "ledger")
@@ -1923,7 +1923,7 @@ expect(ledgerFact(liveDocument(PublishedStatus.Input(repos: nil, vm: nil, ledger
 expect(PublishedStatus.ledgerOutput(nil, error: "collector failed").error == "collector failed" && PublishedStatus.ledgerOutput(Data("{}".utf8), error: nil).error == LiveModels.malformed, "a failed or foreign report is refused")
 let ledgerRefused = PublishedStatus.ledgerOutput(Data(#"{"schema":"flightops-ledger-pass/1","error":"ledger file is schema 1, this build needs 2"}"#.utf8), error: nil)
 expect(ledgerRefused.data == nil && ledgerRefused.error == "ledger file is schema 1, this build needs 2", "a refused ledger file is the source's error, in its own words")
-let ledgerStep = PublishedStatus.ledgerOutput(ledgerReport(extra: #","errors":["rules: RuntimeError"]"#), error: nil)
+let ledgerStep = PublishedStatus.ledgerOutput(ledgerReport(errors: #"["rules: RuntimeError"]"#), error: nil)
 expect(ledgerStep.data != nil && ledgerStep.error == "rules: RuntimeError", "a failed step keeps the report and names the step")
 let liveFailed = liveDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(), models: liveReport(), modelsError: "Orch unreachable"), now: pubLater, kept: liveGood.kept)
 let liveFailedFact = pubFact(try! JSONSerialization.jsonObject(with: liveFailed.data) as! [String: Any], "models")

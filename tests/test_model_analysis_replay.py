@@ -1,5 +1,6 @@
 import contextlib
 import difflib
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -11,6 +12,8 @@ from collectors.model_analysis.__main__ import main
 from collectors.model_analysis import build_manifest, decide, ContractError
 from collectors.model_analysis.contract import HISTORICAL_POLICY_VERSION, POLICY_VERSION, digest
 from test_model_analysis_support import missing, packet, rebind
+
+FROZEN_ENGINE = 'a5c1c24f23da65fe66667313d5f7a91298140a987fba4798c5164e8b740efc5c'
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -71,8 +74,9 @@ class HistoricalPolicy(unittest.TestCase):
         self.assertEqual(decision['measures']['metric']['groups']['a']['estimate'], 1.0000000000000002)
 
     def test_the_historical_engine_is_the_frozen_base_but_for_its_version_import(self):
-        base = subprocess.run(['git', 'show', 'e0a2a0a:collectors/model_analysis/engine.py'], cwd=ROOT, capture_output=True, text=True, check=True).stdout
         current = (ROOT/'collectors/model_analysis/engine_v1.py').read_text()
+        base = current.replace('from .contract import DECISION_SCHEMA, HISTORICAL_POLICY_VERSION as POLICY_VERSION, MANIFEST_SCHEMA, digest, require', 'from .contract import DECISION_SCHEMA, MANIFEST_SCHEMA, POLICY_VERSION, digest, require')
+        self.assertEqual(hashlib.sha256(base.encode()).hexdigest(), FROZEN_ENGINE)
         changed = [line for line in difflib.ndiff(base.splitlines(), current.splitlines()) if line[0] in '+-']
         self.assertEqual(changed, ['- from .contract import DECISION_SCHEMA, MANIFEST_SCHEMA, POLICY_VERSION, digest, require',
                                    '+ from .contract import DECISION_SCHEMA, HISTORICAL_POLICY_VERSION as POLICY_VERSION, MANIFEST_SCHEMA, digest, require'])
