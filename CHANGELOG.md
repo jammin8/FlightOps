@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Privacy checks
+
+- Check exact staged Git blobs and filenames, so changing or deleting the working copy cannot conceal private staged content. Preserve file paths for secret rules that depend on their location.
+- Require Gitleaks and refuse unavailable tools, unreadable inputs, links, unsupported binary or archive formats and inputs beyond bounded scan limits. Scanner output never prints matched content or filenames.
+- Add synthetic regressions, including real Gitleaks integration, for index/worktree divergence, path-sensitive rules, safe diagnostics and nonregular files. Source checks do not establish privacy of signed binaries or other unqualified artifacts.
+
 ### Collection
 
 - Enable only GitHub repository collection by default in the headless CLI on macOS and Linux. Host, orchestrator, issue-tracker, comparison and ledger integrations require explicit selection; absent private adapters no longer cause default collection failures.
