@@ -7,7 +7,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import settings  # noqa: E402
+import settings
 
 REPOSITORIES = {k: f"{settings.OWNER}/{v}".lower() for k, v in settings.REPOS.items()}
 REPO_KEYS = {v: k for k, v in REPOSITORIES.items()}
@@ -367,7 +367,7 @@ def observation(record, as_of, github_at):
     ids = {p["claim"]: p["id"] for p in proofs}
     pick = lambda *names: [ids[n] for n in names if n in ids]
     threads = sorted({link["thread"] for link in record["links"]} | {v["thread"] for v in record["verdicts"]})
-    keys = [f"cluster:thread:{thread}" for thread in threads] or [f"stack:pr:{record['pr']}"]
+    keys = [thread_independence_key(thread) for thread in threads] or [f"stack:pr:{record['pr']}"]
     measures = {m["id"]: {"value": None, "effective_at": as_of, "evidence_ids": pick(*m["required_claims"]), "reason": MEASURE_REASONS[m["id"]](record)} for m in MEASURES}
     row = {"pr_id": record["pr"], "repo": record["repo"], "number": record["number"], "revision": digest(record)[:32], "observed_at": github_at,
            "first_ready_at": ready_value(record), "membership_evidence_ids": pick("first_ready"), "setup_id": None, "possible_setup_ids": [],
@@ -375,6 +375,13 @@ def observation(record, as_of, github_at):
            "anchor": {"kind": "unknown", "r0_sha": None, "base_sha": None, "evidence_ids": pick("verified_anchor")},
            "anchored_size": None, "shared": record["thread_prs"] > 1, "independence_keys": keys, "measures": measures}
     return row, proofs
+
+
+def thread_independence_key(thread):
+    key = f"cluster:thread:{thread}"
+    if re.fullmatch(r"cluster:[^\s]{1,180}", key):
+        return key
+    return "cluster:thread-sha256:" + digest(["flightops-orch-thread-independence/1", thread])
 
 
 def normalized(records, sources, inventory, as_of, frozen_at, github_at):

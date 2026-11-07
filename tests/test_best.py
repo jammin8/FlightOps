@@ -178,6 +178,56 @@ class Links(unittest.TestCase):
         self.assertEqual(evidence.exact_links([self.row(host="example.com")])[2], 1)
 
 
+class IndependenceKeys(unittest.TestCase):
+    AS_OF = "2026-11-01T03:00:00Z"
+
+    def packet(self, records):
+        source = {"id": "github", "schema": "stand-in", "digest": "c" * 64, "snapshot_at": self.AS_OF,
+                  "history_start": "2026-01-01T00:00:00Z", "complete_through": self.AS_OF, "complete": False, "gaps": ["synthetic incomplete source"]}
+        sources = [source, source | {"id": "orch"}]
+        return evidence.normalized(records, sources, evidence.inventory_of(sources), self.AS_OF, self.AS_OF, self.AS_OF)
+
+    def test_a_long_source_identity_fits_the_contract_without_changing_eligibility(self):
+        linked = record(links=[{"thread": "synthetic-" + "a" * 247}])
+        packet = self.packet([linked])
+        manifest = best.build_manifest(packet)
+        self.assertEqual(manifest["rows"][0]["membership"], "potential")
+        self.assertTrue(all(not proof["qualified"] for proof in packet["evidence"]))
+        key = manifest["rows"][0]["independence_keys"][0]
+        self.assertLessEqual(len(key.partition(":")[2]), 180)
+        self.assertNotIn(linked["links"][0]["thread"], key)
+
+    def test_a_shared_long_thread_still_marks_the_two_prs_correlated(self):
+        thread = "synthetic-" + "a" * 247
+        packet = self.packet([record(links=[{"thread": thread}]),
+                              record(pr="example-org/example-ios#8", number=8, links=[{"thread": thread}])])
+        rows = best.build_manifest(packet)["rows"]
+        self.assertEqual(rows[0]["independence_keys"], rows[1]["independence_keys"])
+        self.assertEqual(rows[0]["correlated_keys"], rows[0]["independence_keys"])
+        self.assertEqual(rows[1]["correlated_keys"], rows[1]["independence_keys"])
+
+    def test_distinct_source_ids_stay_distinct_and_repeatably_encoded(self):
+        first, second = "a" * 257, "a" * 256 + "b"
+        self.assertEqual(evidence.thread_independence_key(first), evidence.thread_independence_key(first))
+        self.assertNotEqual(evidence.thread_independence_key(first), evidence.thread_independence_key(second))
+
+    def test_short_keys_and_existing_freeze_inputs_stay_unchanged(self):
+        self.assertEqual(evidence.thread_independence_key("synthetic-thread"), "cluster:thread:synthetic-thread")
+        self.assertEqual(evidence.thread_independence_key("a" * 173), "cluster:thread:" + "a" * 173)
+        self.assertTrue(evidence.thread_independence_key("a" * 174).startswith("cluster:thread-sha256:"))
+
+    def test_whitespace_is_encoded_and_cannot_break_the_contract(self):
+        for thread in ("synthetic thread", "synthetic\nthread", "synthetic\tthread"):
+            key = evidence.thread_independence_key(thread)
+            self.assertTrue(key.startswith("cluster:thread-sha256:"))
+            self.assertNotIn(thread, key)
+            self.assertTrue(best.build_manifest(self.packet([record(links=[{"thread": thread}])]))["rows"])
+
+    def test_hashed_and_literal_source_id_namespaces_cannot_alias(self):
+        hashed = evidence.thread_independence_key("a" * 257)
+        self.assertNotEqual(hashed, evidence.thread_independence_key(hashed.removeprefix("cluster:")))
+
+
 class Heads(unittest.TestCase):
     verdict = {"head": HEAD}
 
@@ -458,6 +508,31 @@ class Refusals(unittest.TestCase):
         with self.assertRaises(models.Failure):
             self.collect()
         self.assertNotIn("best-freeze", os.listdir(os.path.join(self.root, "cache")))
+
+    def test_a_contract_refusal_preserves_the_last_good_publication_and_freeze(self):
+        out = self.collect()
+        publication = pathlib.Path(self.root, "raw", "best.json")
+        publication.write_text(json.dumps(out))
+        paths = [publication, *pathlib.Path(self.root, "cache", "best-freeze").glob("*.json")]
+        before = {path: path.read_bytes() for path in paths}
+        with unittest.mock.patch.object(best.resource, "setrlimit"), unittest.mock.patch.object(best, "build_manifest", side_effect=best.ContractError("independence keys required")):
+            refused = best.run(self.root, support.StandInOrch(self.data), clock=lambda: self.data["capture"]["made_at"])
+        self.assertEqual(refused["failure_code"], "invalid_independence_keys")
+        self.assertNotIn("generated", refused)
+        self.assertEqual({path: path.read_bytes() for path in paths}, before)
+
+    def test_a_long_linked_thread_can_publish_with_the_original_source_clocks(self):
+        linked = {"id": "synthetic-" + "a" * 247, "title": "", "status": "completed", "pullRequests": [{"host": "github.com",
+                  "repository": "example-org/example-backend", "number": 6991, "url": "https://github.com/example-org/example-backend/pull/6991"}]}
+        self.data["shell"]["threads"].append(linked)
+        out = self.collect()
+        manifest = json.loads(out["manifest"])
+        source = next(row for row in manifest["sources"] if row["id"] == "github")
+        self.assertEqual(source["snapshot_at"], evidence.stamp(self.data["repos"]["fetched"]))
+        row = next(row for row in manifest["rows"] if row["pr_id"] == support.TARGET)
+        self.assertIn(evidence.thread_independence_key(linked["id"]), row["independence_keys"])
+        self.assertEqual(row["membership"], "potential")
+        self.assertEqual(out["generated"], self.data["capture"]["made_at"])
 
 
 class ReviewUsage(unittest.TestCase):
@@ -832,6 +907,33 @@ class Packaging(unittest.TestCase):
     def test_the_collector_runs_isolated_and_reports_why_it_stopped(self):
         answer = subprocess.run([sys.executable, "-I", str(ROOT / "collectors" / "best.py"), "/nonexistent"], capture_output=True, text=True, check=True)
         self.assertEqual(json.loads(answer.stdout), {"schema": "flightops-best/1", "error": "GitHub collection is missing"})
+
+
+class FailureDiagnostics(unittest.TestCase):
+    def refused(self, failure):
+        with unittest.mock.patch.object(best.resource, "setrlimit"), unittest.mock.patch.object(best, "collect", side_effect=failure):
+            return best.run("unused", None)
+
+    def test_the_known_independence_refusal_has_a_fixed_diagnostic_code(self):
+        out = self.refused(best.ContractError("independence keys required"))
+        self.assertEqual(out["failure_code"], "invalid_independence_keys")
+        self.assertIn("invalid independence keys", out["error"])
+
+    def test_unknown_contract_details_cannot_disclose_source_content(self):
+        private = "synthetic-private-source-id"
+        out = self.refused(best.ContractError("conflicting id: " + private))
+        self.assertEqual(out["failure_code"], "comparison_contract_refused")
+        self.assertNotIn(private, json.dumps(out))
+
+    def test_storage_errors_cannot_disclose_paths(self):
+        out = self.refused(PermissionError(13, "denied", "/synthetic-private/source.json"))
+        self.assertEqual(out["failure_code"], "storage_unavailable")
+        self.assertNotIn("synthetic-private", json.dumps(out))
+
+    def test_malformed_input_cannot_disclose_source_values(self):
+        out = self.refused(KeyError("synthetic-private-key"))
+        self.assertEqual(out["failure_code"], "malformed_input")
+        self.assertNotIn("synthetic-private", json.dumps(out))
 
 
 class Boundaries(unittest.TestCase):

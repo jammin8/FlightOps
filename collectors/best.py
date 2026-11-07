@@ -294,8 +294,13 @@ def run(data_dir, orch, clock=time.time):
         return {"schema": evidence.PUBLICATION_SCHEMA, "error": str(failure)}
     except MemoryError:
         return {"schema": evidence.PUBLICATION_SCHEMA, "error": f"input exceeds the {MEMORY_BYTES // MIB} MiB memory budget"}
-    except (ContractError, OSError, ValueError, KeyError, TypeError, AttributeError):
-        return {"schema": evidence.PUBLICATION_SCHEMA, "error": "evidence could not be frozen"}
+    except ContractError as failure:
+        reason = "invalid independence keys" if str(failure) == "independence keys required" else "comparison contract refused"
+        return {"schema": evidence.PUBLICATION_SCHEMA, "error": "evidence could not be frozen: " + reason, "failure_code": reason.replace(" ", "_")}
+    except OSError:
+        return {"schema": evidence.PUBLICATION_SCHEMA, "error": "evidence could not be frozen: storage unavailable", "failure_code": "storage_unavailable"}
+    except (ValueError, KeyError, TypeError, AttributeError):
+        return {"schema": evidence.PUBLICATION_SCHEMA, "error": "evidence could not be frozen: malformed input", "failure_code": "malformed_input"}
 
 
 def main():
