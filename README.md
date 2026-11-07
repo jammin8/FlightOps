@@ -216,6 +216,27 @@ use `tests/fixtures/site-config.json`.
 "Orch" in the code and UI is the agent orchestrator whose shell and thread API the Models and Agents views read;
 "Rig" is the CI host.
 
+## Headless CLI collection
+
+Build the CLI with `scripts/build-cli.sh`. On macOS and Linux, `flightops collect` enables only the
+GitHub collector, `repos`. Configure your GitHub repositories in the local configuration and authenticate
+GitHub CLI before collecting. The default does not contact a machine host, orchestrator, relay or issue
+tracker. Optional scripts are never enabled merely because they exist.
+
+Choose optional integrations explicitly with `FLIGHTOPS_COLLECTORS_ENABLED`, a comma-separated list that
+replaces the default. For example, `FLIGHTOPS_COLLECTORS_ENABLED=repos,linear flightops collect` adds Linear;
+`FLIGHTOPS_COLLECTORS_ENABLED=repos,ledger flightops collect --publish` also records GitHub evidence and
+publishes a local snapshot. Configure each selected source before enabling it. `pull`, `models` and `best`
+require their own supported integration and retained inputs. The `rig`, `vm` and `mac` host adapters are
+site-specific scripts absent from this public source tree; selecting one without supplying it reports
+`collector missing`.
+
+`flightops status --json` labels an omitted source with no retained input as
+`collector disabled (not configured)`. Its readings remain unknown. Retained inputs keep their original
+clocks and existing freshness rules. An optional source failure leaves independent GitHub facts usable.
+These defaults apply to the headless CLI; native app collection and onboarding remain separate follow-up
+work.
+
 ## Connect Linear
 
 Create a personal API key in Linear (Settings → Account → Security & access → Personal API keys, read
