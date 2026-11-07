@@ -501,6 +501,19 @@ class Budgeted(Base):
         self.run_pass(FakeGitHub(routes))
         self.assertEqual(self.gaps(), ["checks-truncated"])
 
+    def test_an_unchanged_truncated_listing_stays_truncated(self):
+        routes = self.routes([run_body(status="in_progress", conclusion=None)])
+        first = {"check_runs": [check_body(i) for i in range(100)]}
+        routes[CHECKS] = lambda p, e: http(304) if e else http(200, first, {"ETag": 'W/"c"'})
+        for page in (2, 3):
+            routes[f"{CHECKS}&page={page}"] = {"check_runs": [check_body(page * 1000 + i) for i in range(100)]}
+        fake = FakeGitHub(routes)
+        self.run_pass(fake)
+        fake.calls.clear()
+        self.run_pass(fake, NOW + ledger_ci.LIVE_EVERY)
+        self.assertEqual([c for c in fake.calls if c[0] == CHECKS], [(CHECKS, None)])
+        self.assertEqual(self.gaps(), ["checks-truncated"])
+
 
 if __name__ == "__main__":
     unittest.main()

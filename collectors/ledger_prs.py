@@ -121,6 +121,8 @@ def read_inventory(store, client, now):
                 elif not cursor or cursor == walk["after"]:
                     state["walk"] = None
                     store.open_gap(SOURCE, repo, "inventory", "read-failed", "missing or repeated cursor", now)
+                    store.set_cursor(f"prs:{repo}", state)
+                    continue
                 else:
                     walk["after"] = cursor
                     store.open_gap(SOURCE, repo, "inventory", "walk-open", f"unread older than {iso(oldest) if oldest else 'unknown'}", now)

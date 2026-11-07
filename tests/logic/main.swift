@@ -129,6 +129,12 @@ expect(Rules.checks(unknownOwner).first { $0.id == "ci-backend" }!.health == .wa
 
 var huge = w; huge.mac = decode(MacSnap.self, macJSON.replacingOccurrences(of: "\"used_pct\":37.5", with: "\"used_pct\":1e300"))
 expect(Rules.checks(huge).first { $0.id == "codex" } != nil, "a giant Codex percentage is judged without trapping")
+func codexAt(_ pct: Double) -> Check {
+    var cw = w; cw.mac = decode(MacSnap.self, macJSON.replacingOccurrences(of: "\"used_pct\":37.5", with: "\"used_pct\":\(pct)").replacingOccurrences(of: "\"fetched\":1000}", with: "\"fetched\":1000000}"))
+    return Rules.checks(cw).first { $0.id == "codex" }!
+}
+expect(codexAt(50).health == .ok && !codexAt(50).alert && codexAt(89).health == .ok, "Codex under 90% is fine: \(codexAt(50).detail)")
+expect(codexAt(93).health == .warn && codexAt(93).alert && codexAt(97).alert, "Codex over 90% is worth an interruption: \(codexAt(93).detail)")
 let bigTokens = decode(PRModels.Tokens.self, "{\"input\":9223372036854775807,\"output\":1}")!
 expect(bigTokens.fresh == nil, "overflowing token counts are unknown, never clamped")
 
@@ -523,6 +529,9 @@ expect(sent.hasPrefix("In CI") || sent.hasPrefix("In review"), "sentence names t
 let bf = [FlowSample(t: 0, counts: [:], budgets: ["codex": 40]), FlowSample(t: 3600, counts: [:], budgets: ["codex": 50]),
           FlowSample(t: 7200, counts: [:], budgets: ["codex": 60])]
 expect(Analytics.projection(bf, key: "codex", limit: 100, now: 7200).map { Int($0) } == 14400, "10%/h from 60% reaches 100% in 4 h")
+let flat = [FlowSample(t: 0, counts: [:], budgets: ["codex": 50]), FlowSample(t: 3600, counts: [:], budgets: ["codex": 50]),
+            FlowSample(t: 7200, counts: [:], budgets: ["codex": 50.000000000001])]
+expect(Analytics.projection(flat, key: "codex", limit: 100, now: 7200) == nil, "a nearly flat pace projects nothing rather than an out-of-range time")
 expect(Analytics.mainRed([FlowSample(t: 0, counts: [:], main: ["web": "failure"]), FlowSample(t: 100, counts: [:], main: ["web": "success"])],
                          repo: "web", since: 0, now: 400) == 0.25, "main red by time: 100 s of 400")
 
@@ -1449,6 +1458,8 @@ expect(storageOK.rigStatus?.updated != nil, "the host's microsecond time parses"
 let storageReboot = storageWorld(storageJSON("OK", ago: 600, reboot: "true"))
 expect(Rules.rigState(storageReboot).health == .warn && storageReboot.storageFact.line.contains("reboot needed"), "a needed reboot is a warning")
 expect(Rules.rigState(storageWorld(storageJSON("HOLD", ago: 600))).health == .warn && Rules.rigState(storageWorld(storageJSON("CRITICAL", ago: 600))).health == .bad, "non-OK states are never healthy")
+expect(Rules.rigState(storageWorld(storageJSON("HOLD", ago: 600))).alert && Rules.rigState(storageWorld(storageJSON("CRITICAL", ago: 600))).alert, "every non-OK storage state is worth an interruption")
+expect(!Rules.rigState(storageOK).alert && !Rules.rigState(storageReboot).alert, "an OK storage state does not interrupt")
 for (label, w) in [("missing", storageWorld(nil)), ("over 2 hours old", storageWorld(storageJSON("OK", ago: 7300))), ("from the future", storageWorld(storageJSON("OK", ago: -3600))),
                    ("unreadable time", storageWorld(#"{"storage_state":"OK","updated_at":"soon"}"#))] {
     let doc = StatusExport.document(w, checks: [], needs: Needs())

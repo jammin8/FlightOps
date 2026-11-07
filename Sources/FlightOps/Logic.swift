@@ -176,7 +176,7 @@ enum Rules {
         let bad = state.lowercased().contains("critical")
         let healthy = state.uppercased() == "OK"
         let health: Health = bad ? .bad : !healthy || fact.reboot == true ? .warn : fact.hostKnown ? .ok : .unknown
-        return Check(id: id, label: label, detail: fact.line, health: health, source: .agents, alert: bad, observedAt: fact.updatedDate)
+        return Check(id: id, label: label, detail: fact.line, health: health, source: .agents, alert: !healthy, observedAt: fact.updatedDate)
     }
 
     static func percentUsed(_ pct: Int?, id: String, label: String, source: SourceID, fresh: Bool) -> Check {
@@ -328,8 +328,9 @@ enum Rules {
         let pct = Int(min(max(u.used_pct, 0), 1000).rounded())
         let detail = u.isWeekly ? "\(pct)% of week" : "\(pct)% of window"
 
-        if pct >= 95 { return Check(id: id, label: label, detail: detail + " · reviews on credits", health: .warn, source: .mac, observedAt: at) }
-        return Check(id: id, label: label, detail: detail, health: pct >= 90 ? .warn : .ok, source: .mac, observedAt: at)
+        if pct >= 95 { return Check(id: id, label: label, detail: detail + " · reviews on credits", health: .warn, source: .mac, alert: true, observedAt: at) }
+        if pct >= 90 { return Check(id: id, label: label, detail: detail, health: .warn, source: .mac, alert: true, observedAt: at) }
+        return Check(id: id, label: label, detail: detail, health: .ok, source: .mac, observedAt: at)
     }
 
 
@@ -1490,6 +1491,8 @@ enum Analytics {
 
 
 
+    static let projectionHorizon: Double = 365 * 86400
+
     static func projection(_ flow: [FlowSample], key: String, limit: Double, now: Double, window: Double = 6 * 3600) -> Double? {
         let pts = flow.filter { now - $0.t <= window }.compactMap { s in s.budgets?[key].map { (s.t, $0) } }
         guard pts.count >= 3 else { return nil }
@@ -1497,8 +1500,9 @@ enum Analytics {
         let num = pts.map { ($0.0 - mx) * ($0.1 - my) }.reduce(0, +), den = pts.map { pow($0.0 - mx, 2) }.reduce(0, +)
         guard den > 0 else { return nil }
         let slope = num / den, last = pts.last!.1
-        guard slope != 0, (limit - last) / slope > 0 else { return nil }
-        return (limit - last) / slope
+        let left = (limit - last) / slope
+        guard slope != 0, left.isFinite, left > 0, left < projectionHorizon else { return nil }
+        return left
     }
 
 

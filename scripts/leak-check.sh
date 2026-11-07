@@ -7,13 +7,16 @@ usage() {
 }
 
 mode=repo
-target=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+target=
 case "${1:-}" in
   "") ;;
   --staged) mode=staged ;;
   --tree) [ $# -eq 2 ] || usage; mode=tree; target=$2 ;;
   *) usage ;;
 esac
+if [ "$mode" != tree ]; then
+  target=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "leak-check: not inside a git checkout; use --tree DIR" >&2; exit 2; }
+fi
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 config="$root/.gitleaks.toml"
@@ -46,23 +49,35 @@ patterns=(
 )
 
 if [ -f "$denylist" ]; then
-  while IFS= read -r line; do
+  while IFS= read -r line || [ -n "$line" ]; do
     case $line in ''|'#'*) continue ;; esac
     patterns+=("$line")
   done < "$denylist"
 fi
 
+content() {
+  if [ "$mode" = staged ]; then
+    git -C "$target" show ":$1"
+  else
+    cat "$target/$1"
+  fi
+}
+
+listed=$(mktemp)
+trap 'rm -f "$listed"' EXIT
+files > "$listed" || { echo "leak-check: could not list files to check" >&2; exit 2; }
+
 hits=0
 while IFS= read -r -d '' f; do
-  [ -f "$target/$f" ] || continue
+  [ "$mode" = staged ] || [ -f "$target/$f" ] || continue
   case $f in ./.leak-denylist|.leak-denylist|./scripts/leak-check.sh|scripts/leak-check.sh|./.gitleaks.toml|.gitleaks.toml) continue ;; esac
   for p in "${patterns[@]}"; do
-    if grep -IEniq -e "$p" "$target/$f" 2>/dev/null; then
-      grep -IEni -e "$p" "$target/$f" | cut -d: -f1 | sed "s|^|leak-check: $f:|; s|\$|: matches a private pattern|"
+    if content "$f" 2>/dev/null | grep -IEni -e "$p" >/dev/null; then
+      content "$f" | grep -IEni -e "$p" | cut -d: -f1 | sed "s|^|leak-check: $f:|; s|\$|: matches a private pattern|"
       hits=$((hits + 1))
     fi
   done
-done < <(files)
+done < "$listed"
 
 if [ "$hits" -gt 0 ] || [ "$status" -ne 0 ]; then
   echo "leak-check: FAILED" >&2
