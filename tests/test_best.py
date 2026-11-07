@@ -30,8 +30,50 @@ KERNEL_PIN = {
     "collectors/model_analysis/contract.py": "c84cd1139aff77c9dea757d9a0a80164428c8870dc25911e1004f68b90571587",
     "collectors/model_analysis/engine.py": "8399c04b001b76cb4a5826101209538b220c0c0ac647268fa2e6aeb47650df8b",
     "collectors/model_analysis/engine_v1.py": "919dad2ce4084f80b611508ca611c7073152050820a21392a235e2d95d0a7f49",
-    "collectors/model_evidence/adapter.py": "ce330ef172bc8325f300d8ca187b80caf191e918af992e5311c27621e9750b5d",
-    "collectors/model_evidence/joins_v2.py": "01c0269fbd07690525e056b19601429e012e6ccf4a74686a831eec502aed1379",
+    "collectors/model_evidence/adapter.py": "d784ff19c2026626011126c9fb6960960899954a2c85e5181732aff0ba48b915",
+    "collectors/model_evidence/joins_v2.py": "c30c767dd8c1836a4fbeaa754b39f0a43fcaa0203b25deae4dcd2f564c7679b9",
+}
+
+KERNEL_FROZEN = {
+    "collectors/model_analysis/__init__.py": "d6fd9a0acdddf8a6611f862a26f7bf328167090b2e7e2f224364da6d50b52438",
+    "collectors/model_evidence/__init__.py": "9a6f599bcab40b256f0345b568f58601aadd13697926c152496810a1107f5ff6",
+    "collectors/model_evidence/__main__.py": "d507b9ee94184f3bf4c3ceb19fa6f22d0d57086a691ec45373f880121b8d39d4",
+    "collectors/model_evidence/acquire_cli.py": "cceb8caba070a9cce29079495b094ed5a9e5a197832b6f21b97cb898f8c09daf",
+    "collectors/model_evidence/acquisition.py": "506de89e6e9bfdf24330dc18d95b085aec4da9e8d64045fb558fe4c9100db98a",
+    "collectors/model_evidence/agent-evidence-v2.schema.json": "1260a8208013397556c5ff20b5a2a6de23ab647d05ffd67bcf3c3ae2ce84c9bb",
+    "collectors/model_evidence/agent-evidence.schema.json": "f5b92e8b2f8e1c54d3d5814af6d71316f3fc7af432cfff32d53c386895203e76",
+    "collectors/model_evidence/capture_boundary.py": "97fd5f64dcc69090d292e951fac3c00f3ee30f508f755120aef904cf24ccc8d9",
+    "collectors/model_evidence/capture_cli.py": "6ece3f99c4cff6e8d34004d91c5291554e72f0f376c7a22e400df2d80e8f8ea7",
+    "collectors/model_evidence/capture_contract.py": "b826384bf38d5e0b3919f5ce002b652a6ebb324fd3511dd62d5b337b7afd663e",
+    "collectors/model_evidence/capture_ledger.py": "e7793e9338b7676ab1b5932ff9fca62d7ecccb0288636453bedebed479587b7f",
+    "collectors/model_evidence/capture_projection.py": "4fb711f4ebcbbe7458735d661ee6162b897167805448efc2fe76cfff2940e577",
+    "collectors/model_evidence/contract.py": "595d8c1aa3e1ae68aa3299785b6dec3a91ba5bcaa3a02b630fc154865e9c71c0",
+    "collectors/model_evidence/evidence-head-input-v1.schema.json": "b9592c426970ff21f671240feb910e973afdc7b1fc539eaa34bfa88d4eecc50e",
+    "collectors/model_evidence/evidence-head-input-v2.schema.json": "58c5c944ef0e447fef28f207c2897ff11351eedd937cc5e4299d44f86ec3d57c",
+    "collectors/model_evidence/evidence-head-output-v1.schema.json": "aac0cea832757883a7a0114b4802539d7759aba37364983ce548090fd1179fee",
+    "collectors/model_evidence/evidence-head-output-v2.schema.json": "1541c9b8aebfe10e9bee1025fde8b7c24770b3d77c9e6fb0d519de869f807bee",
+    "collectors/model_evidence/exporter.py": "eebf90924176b7adad34c3941f05ec35836345b5b332581472cfbfc1b1db1b0f",
+    "collectors/model_evidence/ingest.py": "0a1222936b240be936e7135695b794eb13fa97194d600bc503bbbfc73347d3e8",
+    "collectors/model_evidence/join_contract.py": "477c8a00b2932c1cd7d1f237d3e7fd018df784e132d0ba27628db5f865fefd36",
+    "collectors/model_evidence/join_contract_v2.py": "41fa6e238c457f7402712d30186d9fbaae490df4221d5eb7d43f1b6b0c897124",
+    "collectors/model_evidence/joins.py": "e1fc098b6cbc56bce8cca0e42051da94e4a560950f395ddb5dedfb03e9ea37f4",
+    "collectors/model_evidence/native.py": "cf6968e76c789619622a9bdc65da17e33c8ed938d155972440aa9e1887a312f2",
+    "collectors/model_evidence/observed_contract.py": "cb856bdaf57aba6336185c447527c49d4dd615b32f8fa2831aa2833fcd578796",
+    "collectors/model_evidence/operations.py": "f431076cc75d0ff6616e802f9bcfee1b825e509237533bf1905fe72e05a4cb0e",
+    "collectors/model_evidence/owner_lookup.py": "4823840f926003df4a96af9fab3f9cafc8bf0f0ca0f12da5f10b007736ef7ba1",
+    "collectors/model_evidence/owner_lookup_cli.py": "d09b20150542a81699a6f0338b3d48f42d399272ab96875ca59233cc9b3f6a85",
+    "collectors/model_evidence/owner_lookup_contract.py": "aa057966c03360e0bc43e32c91c1243a426b1a254d4e11b4d47c0e16f48d035b",
+    "collectors/model_evidence/primary_owner_composition.py": "71ffac58a0c03dc77dd76a1a1975a113783634988a77daffae3d68e39a9abb40",
+    "collectors/model_evidence/primary_owner_contract.py": "1c908e3ba0012eef3c64f2689648580f70ad1788032ea3b04feacbae46add9e5",
+    "collectors/model_evidence/projection.py": "dc4f7f4a28868ec2d85aadb5402753d9867bb1e0cb556a20749460ace9537201",
+    "collectors/model_evidence/replay.py": "04812a49579bfef2de61064a372b660e6a5d95afe6bf72c4d9afbdc703b29d14",
+    "collectors/model_evidence/schema.py": "1e1c67116860e0544f87ddf121d613eca624a82eae5dc59fc8c89f05e1e8bd57",
+    "collectors/model_evidence/selected-ci-normalized-v1.schema.json": "fe59714f4898c6f7061050fc31eb382e9a0d5209d6a9cc52c1386dc3ab536430",
+    "collectors/model_evidence/selected-ci-source-v1.schema.json": "817b3839a7672b9a257e25f498bfa1a663d57db886a6d6eef90d032788c18f98",
+    "collectors/model_evidence/selected_ci.py": "de36f009da542fb0874d9ddf051faeff9004995c3283d4aa135d3d7b1353b0be",
+    "collectors/model_evidence/selected_ci_contract.py": "9c993d9ce8d6cf5db41a74ea75a96643e17d196bbb58b0b76355f68f5bf02f20",
+    "collectors/model_evidence/shell.py": "84ae81105e0948486c3e7d9ab0e756435b14f42792e7e10006e920bdf7a874e2",
+    "collectors/model_evidence/usage.py": "5f751e839ffcf602ca7fa5e3a67b6ade824fef3ca74c9cda994c96d1345dc9c8",
 }
 
 
@@ -811,11 +853,19 @@ class Boundaries(unittest.TestCase):
         return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split()
 
     def test_the_kernel_differs_from_the_frozen_base_only_by_the_pinned_content(self):
-        changed = self.git_lines("diff", "--name-only", "e0a2a0a", "--", *KERNEL)
+        tracked = self.git_lines("ls-files", "--", *KERNEL)
         added = self.git_lines("ls-files", "--others", "--exclude-standard", "--", *KERNEL)
-        self.assertEqual(set(changed + added), set(KERNEL_PIN))
-        for path, pin in KERNEL_PIN.items():
+        present = set(tracked + added)
+        self.assertEqual(present, set(KERNEL_FROZEN) | set(KERNEL_PIN))
+        for path, pin in {**KERNEL_FROZEN, **KERNEL_PIN}.items():
             self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), pin, path)
+
+    def test_a_removed_kernel_file_fails_the_guard(self):
+        expected = set(KERNEL_FROZEN) | set(KERNEL_PIN)
+        for path in expected:
+            with self.subTest(path=path), unittest.mock.patch.object(self, "git_lines", side_effect=[sorted(expected - {path}), []]):
+                with self.assertRaises(AssertionError):
+                    self.test_the_kernel_differs_from_the_frozen_base_only_by_the_pinned_content()
 
     def test_an_edit_inside_a_pinned_file_fails_the_guard(self):
         original = pathlib.Path.read_bytes
