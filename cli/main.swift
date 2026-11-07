@@ -26,11 +26,7 @@ func enabledCollectors() -> [String] {
     if let list = environment("FLIGHTOPS_COLLECTORS_ENABLED") {
         return list.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { collectorOrder.contains($0) || $0 == ledgerName }
     }
-    #if os(macOS)
-    return ["pull", "rig", "mac", "repos", "linear"]
-    #else
-    return ["vm", "repos", "failures", "models", "best", ledgerName]
-    #endif
+    return ["repos"]
 }
 
 func rawURL(_ name: String, _ suffix: String) -> URL {
@@ -212,9 +208,13 @@ func ledgerProblem(reserved: Date?, started: Date) -> String? {
 func replay(now: Date) -> Collected {
     var c = Collected()
     let enabled = enabledCollectors()
-    for (name, source) in [("rig", SourceID.rig), ("mac", .mac), ("linear", .linear)]
-    where !enabled.contains(name) && !FileManager.default.fileExists(atPath: rawURL(name, ".json").path) {
-        c.fail(source, "not collected on this machine")
+    let providers: [(SourceID, [String])] = [
+        (.rig, ["rig"]), (.agents, ["rig", "vm", "pull"]), (.mac, ["mac"]),
+        (.repos, ["repos", "pull"]), (.linear, ["linear"])
+    ]
+    for (source, names) in providers
+    where !names.contains(where: enabled.contains) && !names.contains(where: { FileManager.default.fileExists(atPath: rawURL($0, ".json").path) }) {
+        c.fail(source, "collector disabled (not configured)")
     }
     for name in collectorOrder {
         if name == "pull" {
