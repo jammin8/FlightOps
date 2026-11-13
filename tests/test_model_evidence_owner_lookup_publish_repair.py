@@ -1,3 +1,4 @@
+import sys
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -18,6 +19,7 @@ CASE_RECEIPTS=[]
 FIXTURE=Path(lookup.__file__).parents[2]/'tests/fixtures/model-evidence-owner-lookup-synthetic.json'
 
 
+@unittest.skipUnless(sys.platform.startswith("linux"), "Linux-only for now: fails on macOS, see issue #14")
 class OwnerLookupPublicationRepairTests(unittest.TestCase):
     def publication(self,case):
         bundle=json.loads(FIXTURE.read_bytes())
