@@ -15,6 +15,9 @@ from collectors.model_evidence.capture_ledger import Ledger,write_output,read_in
 from collectors.model_evidence.capture_projection import project
 from collectors.model_evidence.capture_cli import main
 from test_model_evidence_capture_contract import fixture,rechained
+import os as _os
+import tempfile as _tempfile
+_tempfile.tempdir = _os.path.realpath(_tempfile.gettempdir())
 
 
 class Crash(BaseException):

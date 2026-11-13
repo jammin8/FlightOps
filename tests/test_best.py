@@ -90,6 +90,11 @@ def stand_in_snapshot(**overrides):
     return {"projection": projection | overrides}
 
 
+
+def address_space_capped(limit=160 * 1024 * 1024):
+    probe = f"import resource; resource.setrlimit(resource.RLIMIT_AS, ({limit}, {limit}))"
+    return subprocess.run([sys.executable, "-I", "-c", probe], capture_output=True).returncode == 0
+
 class Verdicts(unittest.TestCase):
     def test_a_finished_recipe_review_binds_repository_head_run_attempt_and_turn(self):
         record, why = evidence.verdict_of(stand_in_snapshot(), THREAD)
@@ -515,7 +520,7 @@ class Refusals(unittest.TestCase):
         publication.write_text(json.dumps(out))
         paths = [publication, *pathlib.Path(self.root, "cache", "best-freeze").glob("*.json")]
         before = {path: path.read_bytes() for path in paths}
-        with unittest.mock.patch.object(best.resource, "setrlimit"), unittest.mock.patch.object(best, "build_manifest", side_effect=best.ContractError("independence keys required")):
+        with unittest.mock.patch.object(best, "cap_memory"), unittest.mock.patch.object(best, "build_manifest", side_effect=best.ContractError("independence keys required")):
             refused = best.run(self.root, support.StandInOrch(self.data), clock=lambda: self.data["capture"]["made_at"])
         self.assertEqual(refused["failure_code"], "invalid_independence_keys")
         self.assertNotIn("generated", refused)
@@ -696,6 +701,7 @@ class Budget(unittest.TestCase):
         best.read_reviews([row], entries, orch, lambda: 2)
         self.assertEqual(orch.thread.call_count, 1)
 
+    @unittest.skipUnless(address_space_capped(), "this OS refuses an address-space limit")
     def test_a_pass_past_the_memory_ceiling_refuses_and_leaves_the_caches_alone(self):
         script = f"""
 import json, sys
@@ -911,7 +917,7 @@ class Packaging(unittest.TestCase):
 
 class FailureDiagnostics(unittest.TestCase):
     def refused(self, failure):
-        with unittest.mock.patch.object(best.resource, "setrlimit"), unittest.mock.patch.object(best, "collect", side_effect=failure):
+        with unittest.mock.patch.object(best, "cap_memory"), unittest.mock.patch.object(best, "collect", side_effect=failure):
             return best.run("unused", None)
 
     def test_the_known_independence_refusal_has_a_fixed_diagnostic_code(self):

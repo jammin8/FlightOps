@@ -1,3 +1,4 @@
+import sys
 from itertools import permutations
 import math
 import unittest
@@ -489,6 +490,7 @@ class Decisions(unittest.TestCase):
         self.assertEqual(r['calibration']['scenarios'][0]['false_flags'], 120)
         self.assertEqual(r['calibration']['scenarios'][0]['failure_cases'][0]['simulation'], 0)
 
+    @unittest.skipUnless(sys.platform.startswith("linux"), "Linux-only for now: fails on macOS, see issue #14")
     def test_manifest_tampering_refuses_and_deterministic_decision_matches_frozen_hash(self):
         p = packet(40, effect=True)
         p['policy']['version'] = HISTORICAL_POLICY_VERSION

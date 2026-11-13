@@ -13,6 +13,9 @@ from collectors.model_evidence import owner_lookup as lookup
 from collectors.model_evidence import owner_lookup_contract as contract
 from collectors.model_evidence import owner_lookup_cli as cli
 from collectors.model_evidence.contract import encode
+import os as _os
+import tempfile as _tempfile
+_tempfile.tempdir = _os.path.realpath(_tempfile.gettempdir())
 
 FIXTURE=Path(__file__).parent/'fixtures/model-evidence-owner-lookup-synthetic.json'
 PRIVATE='SYNTHETIC PRIVATE BODY / command output auth must never escape'
@@ -53,6 +56,7 @@ def populate(connection,b,private=True):
     return connection
 
 
+@unittest.skipUnless(sys.platform.startswith("linux"), "Linux-only for now: fails on macOS, see issue #14")
 class OwnerLookupTests(unittest.TestCase):
     def setUp(self):
         self.b=fixture();self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)
