@@ -502,6 +502,9 @@ class ReadOnlyAcquisition(unittest.TestCase):
             script='''
 import sys,time
 from collectors.model_evidence import acquire_cli,acquisition
+import os as _os
+import tempfile as _tempfile
+_tempfile.tempdir = _os.path.realpath(_tempfile.gettempdir())
 original=acquisition.project_record
 def stalled(*a,**kw):
  time.sleep(2)

@@ -286,9 +286,17 @@ def collect(data_dir, orch, clock=time.time):
     return out
 
 
-def run(data_dir, orch, clock=time.time):
+def cap_memory():
     try:
         resource.setrlimit(resource.RLIMIT_AS, (MEMORY_BYTES, MEMORY_BYTES))
+    except (ValueError, OSError):
+        return False
+    return True
+
+
+def run(data_dir, orch, clock=time.time):
+    cap_memory()
+    try:
         return collect(data_dir, orch, clock)
     except models.Failure as failure:
         return {"schema": evidence.PUBLICATION_SCHEMA, "error": str(failure)}
