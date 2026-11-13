@@ -14,7 +14,7 @@ panel with four tabs (⌘1–⌘4), built from cards; cards with a chevron open 
 - **Home**: the *launch* (target and countdown, on track /
   tight / at risk, progress, the finish range and how it moved in a week; opens to the launch projects); one
   line of activity (agents, CI jobs, PRs in review, merges in the last 24 h); *Agents and CI* (opens to every
-  Orch turn and CI job).
+  Orchestrator turn and CI job).
 - **Plan**: the launch forecast first (chance by the target, finish range, burn-up with the projection, the
   assumptions in view), then initiatives by priority (open to their projects), other projects, the
   company-wide total, issues in flight and recently done.
@@ -24,7 +24,7 @@ panel with four tabs (⌘1–⌘4), built from cards; cards with a chevron open 
   *Ready* means GitHub proved the current head mergeable with every requirement met (CLEAN/HAS_HOOKS);
   approved PRs with a blocker or without that proof are "approved, not ready". A failed check keeps a PR (or
   main) failing while other checks still run.
-- **Systems**: health (exceptions first, opens to every check, one per CI lane), the Rig (CPU and temperature
+- **Systems**: health (exceptions first, opens to every check, one per CI lane), the CI host (CPU and temperature
   sparklines, memory and storage bars, opening to history), the virtual machines, the accounts (GitHub API
   budget, Codex usage) and *Sources*: when each source last answered and why it didn't.
 
@@ -39,7 +39,7 @@ Dismissing only acknowledges: the health stays, and the line says "acknowledged"
 - Unknown is never healthy or zero. A number whose source is out of date shows "–"; a missing heartbeat or
   sensor reading is unknown; stale data says how old it is; the footer shows a dot per source (grey: current,
   orange: out of date, hollow: never seen). "All clear" is only said when everything it depends on is known:
-  every source current, no unknown check, a current Orch agent list, no part a collector couldn't read, no list
+  every source current, no unknown check, a current Orchestrator agent list, no part a collector couldn't read, no list
   cut off, readiness proven for every approved PR. Otherwise the header adds "partial data" (Copy Status lists
   the gaps).
 - A failed command on the Mac is an error, not an empty answer (pgrep's "no match" is a real empty answer);
@@ -58,7 +58,7 @@ exports every tier.
 
 | Tier | What |
 |---|---|
-| Now | failed checks and warnings worth an interruption (CI host unreachable or its network down, a CI lane without a heartbeat for 30 min, a lane not loaded, Orch down, its collector token expiring or expired, a Rig storage state that isn't OK, GitHub budget under 500, Codex over 90%, a disk over 85%, a failing main branch); agents waiting for you |
+| Now | failed checks and warnings worth an interruption (CI host unreachable or its network down, a CI lane without a heartbeat for 30 min, a lane not loaded, Orchestrator down, its collector token expiring or expired, a CI host storage state that isn't OK, GitHub budget under 500, Codex over 90%, a disk over 85%, a failing main branch); agents waiting for you |
 | Today | other warnings; PRs proven merge-ready for 2 hours (by the head's own checks) that haven't merged, as one row; owner actions overdue, due within a week or urgent |
 | Later | other owner actions; PRs failing for over a day that no agent is working on ("ownership unknown" while the agent list is) |
 
@@ -133,7 +133,7 @@ makes no call the data can't back (Models design, Phase 0):
   PRs counts in none. The PR card counts every run linked to the PR; the Models tab counts the builder thread, and
   only when it ran one setup (a follow-up on another model or effort is never credited to the builder's).
 - `pr-models.json` version 2 (`"schema": "pr-models/2"`) reports each run's own model, effort and usage, read from
-  the agent logs by Orch's turn ids (`agent-tokens.py` version 3 on the agents VM), and whether the PR's history is
+  the agent logs by Orchestrator's turn ids (`agent-tokens.py` version 3 on the agents VM), and whether the PR's history is
   complete. Version 1 files still load; their setups and tokens show as inferred.
 
 GitHub's own records (Models design, Phase 1; `pr-facts.json`, written by `collectors/prfacts.py`):
@@ -179,7 +179,7 @@ GitHub's own records (Models design, Phase 1; `pr-facts.json`, written by `colle
 
 | Collector | Source | Every |
 |---|---|---|
-| host collectors | site-specific and not part of this repository: the app runs `collectors/rig.py` (CI host and agents VM over SSH), `collectors/vm.py` (VM-side snapshot) and `collectors/mac.py` (local CI lanes, GitHub and Codex budgets) when they exist, and shows their sources as never seen otherwise. Their JSON shapes are the ones `Ingest.swift` decodes. | 20–30 s |
+| host collectors | site-specific: the app runs `collectors/rig.py` (CI host and agents VM), `collectors/vm.py` (VM-side snapshot) and `collectors/mac.py` (local CI lanes, GitHub and Codex budgets) when they exist, and shows their sources as never seen otherwise. Stand-ins live in `collectors/examples` (see *Host collectors*). Their JSON shapes are the ones `Ingest.swift` decodes. | 20–30 s |
 | `collectors/linear.py` | Linear GraphQL API: every issue's state and project, initiatives, the launch (cached 30 min) | 15 min |
 | `collectors/repos.py` | one GitHub GraphQL query for all three repos: PR checks (latest attempt per check), review gate, merge state, queued CI jobs (cached 15 min; not the REST budget the CI hosts use), plus GitHub `rate_limit` on every run, so the budget needs no Mac | 15 min |
 | `collectors/prfacts.py` | GitHub receipts for the Models tab and PR cards: the repository events feed (`ghevents.py`: `If-None-Match`, so a quiet poll is a free 304; at most 36 requests an hour, each counted before it's sent and refunded only for a confirmed 304; receipts on disk before the state that acknowledges them; a gap is recorded when more events arrive between polls than the pages read), main's required checks (daily), PR facts and full check history (`ghfacts.py`: discovery every 15 min; an open PR again when it changed, with every head's history; running, empty or incomplete histories every 15 min, the current head hourly; a merged PR once, sealed only when everything came back whole; at most 100 GraphQL points an hour, each query reserving its documented cost before it's sent, under a lock shared with `verify.py --refresh`, with older ledger lines and a line cut short still charged; a run held by the budget doesn't count as a GitHub read, and the head histories it held are reported), then `receipts.py` writes `pr-facts.json`. Stored in `~/Library/Application Support/FlightOps/github-events` and `github-facts`; commit messages keep only their headline and trailers | 5 min |
@@ -206,6 +206,29 @@ nothing in this repository assumes a particular host.
 Optional: `defaults write io.github.jammin8.flightops orchThreadURL 'https://<orch host>/thread/{id}'` makes agent rows and
 notifications open the thread; without it they copy the thread id.
 
+## Host collectors
+
+The real host collectors depend on your own machines, so they are not in this repository. `collectors/examples`
+has stand-ins with the same JSON shapes that report only what they can measure on the machine they run on and
+leave everything else unknown:
+
+| Stand-in | Reports | Leaves unknown |
+|---|---|---|
+| `rig.py` | this machine as the CI host: CPU, memory, load, uptime, disk | temperature, fan, swap, network, CI guests and lanes, the agents VM |
+| `vm.py` | this machine as the agents VM: memory, load, CPUs, disk | the orchestrator, its token, agent sessions and the agent list |
+| `mac.py` | the GitHub API budget through `gh api rate_limit` | local CI jobs, Codex usage, agent counts |
+
+To use them, copy them next to the other collectors (the copies are gitignored, so a site-specific version never
+gets committed by accident) and enable the ones you want:
+
+```
+cp collectors/examples/{machine,rig,vm,mac}.py collectors/
+FLIGHTOPS_COLLECTORS_ENABLED=repos,rig,vm,mac flightops collect
+```
+
+Replace a stand-in with your own script when you have a real source; keep the same output shape and leave
+anything you can't read out (or `null`) rather than reporting zero.
+
 ## Configuration
 
 Site-specific names live in a local JSON file that is never committed. The collectors read, in order,
@@ -213,8 +236,10 @@ Site-specific names live in a local JSON file that is never committed. The colle
 `~/.config/flightops/config.json`; every key is optional and falls back to `config.example.json`. Tests ignore all of these and
 use `tests/fixtures/site-config.json`.
 
-"Orch" in the code and UI is the agent orchestrator whose shell and thread API the Models and Agents views read;
-"Rig" is the CI host.
+The UI says "CI host" for the machine that runs self-hosted CI and "Orchestrator" for the agent orchestrator whose
+shell and thread API the Models and Agents views read. Internally, and in the JSON the collectors exchange, these
+are still `rig` and `orch` (source ids, check ids and keys such as `rig_status` or `vm.orch`), so existing
+collectors and readers of the published status keep working.
 
 ## Headless CLI collection
 
@@ -228,8 +253,8 @@ replaces the default. For example, `FLIGHTOPS_COLLECTORS_ENABLED=repos,linear fl
 `FLIGHTOPS_COLLECTORS_ENABLED=repos,ledger flightops collect --publish` also records GitHub evidence and
 publishes a local snapshot. Configure each selected source before enabling it. `pull`, `models` and `best`
 require their own supported integration and retained inputs. The `rig`, `vm` and `mac` host adapters are
-site-specific scripts absent from this public source tree; selecting one without supplying it reports
-`collector missing`.
+site-specific scripts absent from `collectors/` (stand-ins are in `collectors/examples`); selecting one without
+supplying it reports `collector missing`.
 
 `flightops status --json` labels an omitted source with no retained input as
 `collector disabled (not configured)`. Its readings remain unknown. Retained inputs keep their original

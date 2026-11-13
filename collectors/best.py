@@ -116,13 +116,13 @@ class LiveOrch:
 
     def shell(self):
         if not orch_api.LOOPBACK.fullmatch(self.base):
-            raise models.Failure("Orch address is not local")
+            raise models.Failure("Orchestrator address is not local")
         self.token = orch_api.read_token(self.token_file)
         if self.token is None:
-            raise models.Failure("Orch read token unavailable")
+            raise models.Failure("Orchestrator read token unavailable")
         shell = orch_api.get(self.base, self.token, orch_api.SHELL, orch_api.open_local, SOURCE_BYTES)
         if evidence.STAND_IN_MARK in shell:
-            raise models.Failure("Orch answered with a stand-in recording")
+            raise models.Failure("Orchestrator answered with a stand-in recording")
         return shell
 
     def thread(self, thread_id):
@@ -177,13 +177,13 @@ def shell_rows(orch):
         names = orch_api.project_names(shell)
         rows = shell["threads"] + shell["archivedThreads"]
     except orch_api.Down:
-        raise models.Failure("Orch unreachable") from None
+        raise models.Failure("Orchestrator unreachable") from None
     except orch_api.TooLarge:
-        raise models.Failure(f"Orch shell exceeds {SOURCE_BYTES // MIB} MiB") from None
+        raise models.Failure(f"Orchestrator shell exceeds {SOURCE_BYTES // MIB} MiB") from None
     except orch_api.Refused as refused:
-        raise models.Failure(f"Orch answered {refused.code}") from None
+        raise models.Failure(f"Orchestrator answered {refused.code}") from None
     except (orch_api.Malformed, KeyError, TypeError, AttributeError):
-        raise models.Failure("Orch answered malformed data") from None
+        raise models.Failure("Orchestrator answered malformed data") from None
     return rows, names, "olderSettled" not in shell
 
 
@@ -239,7 +239,7 @@ def compute(repos, repos_bytes, report, report_bytes, orch_schema, rows, verdict
     cohort = evidence.cohort_rows(repos)
     links, counts, refused_links = evidence.exact_links(rows)
     records = evidence.join(cohort, links, counts, verdicts, ledger, report["runs"], ledger_rows)
-    gaps = orch_gaps + ([] if projects_complete else ["Orch shell omitted settled threads"])
+    gaps = orch_gaps + ([] if projects_complete else ["Orchestrator shell omitted settled threads"])
     if unread:
         gaps.append(f"{unread} review threads unread")
     orch_digest = evidence.digest({"verdicts": verdicts, "links": links})

@@ -1,4 +1,4 @@
-# Current Orch/Codex read-only adapter
+# Current Orchestrator/Codex read-only adapter
 
 This packet implements acquisition, rather than merely specifying it. It does not
 activate a collector, replace a feed/cache, join PRs, compute cohorts or make Best /
@@ -76,7 +76,7 @@ cannot be proven absent just because a projection query returned successfully.
 
 Source digest is over selected projected metadata, **not** a hash of a changing main
 SQLite file that omits WAL state. No claim is made that an active SQLite file's bytes
-remain unchanged while other actors use Orch. Synthetic tests establish that this
+remain unchanged while other actors use Orchestrator. Synthetic tests establish that this
 reader cannot mutate the test DB, denies unrelated tables, and retains one snapshot
 across a concurrent WAL update.
 
@@ -164,7 +164,7 @@ reader for v2; its unchanged default preserves v1 behavior.
 
 ## Processed usage and completion gaps
 
-Orch provider_turn.tokenUsage is context occupancy/last-response detail. This adapter
+Orchestrator provider_turn.tokenUsage is context occupancy/last-response detail. This adapter
 never substitutes it for processed turnTokenUsage. It normalizes each native response
 usage, canonicalizes copies/revisions/conflicts and compares all five sums against
 complete main_agent turnTokenUsage. Missing optional cache writes remain unknown,

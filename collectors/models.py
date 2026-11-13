@@ -42,17 +42,17 @@ class Failure(Exception):
 
 def shell_projects(base, token, opener):
     if not orch_api.LOOPBACK.fullmatch(base):
-        raise Failure("Orch address is not local")
+        raise Failure("Orchestrator address is not local")
     if token is None:
-        raise Failure("Orch read token unavailable")
+        raise Failure("Orchestrator read token unavailable")
     try:
         shell = orch_api.get(base, token, orch_api.SHELL, opener)
     except orch_api.Down:
-        raise Failure("Orch unreachable") from None
+        raise Failure("Orchestrator unreachable") from None
     except orch_api.Refused as refused:
-        raise Failure(f"Orch answered {refused.code}") from None
+        raise Failure(f"Orchestrator answered {refused.code}") from None
     except orch_api.Malformed:
-        raise Failure("Orch answered malformed data") from None
+        raise Failure("Orchestrator answered malformed data") from None
     try:
         names = orch_api.project_names(shell)
         foreign = {project["id"] for project in shell["projects"]
@@ -60,7 +60,7 @@ def shell_projects(base, token, opener):
         threads = {row["id"]: names.get(row["projectId"]) or (FOREIGN if row["projectId"] in foreign else None)
                    for row in shell["threads"] + shell["archivedThreads"]}
     except (KeyError, TypeError, AttributeError):
-        raise Failure("Orch answered malformed data") from None
+        raise Failure("Orchestrator answered malformed data") from None
     return threads, "olderSettled" not in shell
 
 
@@ -82,7 +82,7 @@ def agent_tokens(cache, script=None, run=capture.run):
     if not isinstance(data, dict) or data.get("schema") != TOKENS_SCHEMA:
         raise Failure("agent-tokens is an unexpected version")
     if data.get("orch") != "ok":
-        raise Failure("agent-tokens could not read Orch")
+        raise Failure("agent-tokens could not read Orchestrator")
     if type(data.get("generated")) is not int or data["generated"] <= 0 or not isinstance(data.get("runs"), list):
         raise Failure("agent-tokens gave unreadable output")
     return data

@@ -278,11 +278,11 @@ expect(open(models_runs).read().splitlines()[0] == store, "the Models collector 
 models_passes = len(open(models_runs).read().splitlines())
 subprocess.run([binary, "collect", "--publish"], env=publish_env, capture_output=True, text=True)
 expect(len(open(models_runs).read().splitlines()) == models_passes and json.load(open(status_file))["facts"]["models"]["at"] == models_fact["at"], "inside 15 minutes the Models pass does not run and its clock stands")
-open(os.path.join(fake, "models.py"), "w").write("import json, sys\njson.dump({'schema': 'flightops-models/1', 'error': 'Orch unreachable'}, sys.stdout)\n")
+open(os.path.join(fake, "models.py"), "w").write("import json, sys\njson.dump({'schema': 'flightops-models/1', 'error': 'Orchestrator unreachable'}, sys.stdout)\n")
 open(os.path.join(store, "raw", "models.attempt"), "w").write(str(time.time() - 901))
 code = subprocess.run([binary, "collect", "--publish"], env=publish_env, capture_output=True, text=True).returncode
 held = json.load(open(status_file))["facts"]["models"]
-expect(code == 3 and held["at"] == models_fact["at"] and held["state"] == "stale" and held["error"] == "Orch unreachable" and held["value"] == models_fact["value"], "a failed Models pass keeps last-good bytes and the original clock: %s" % held["state"])
+expect(code == 3 and held["at"] == models_fact["at"] and held["state"] == "stale" and held["error"] == "Orchestrator unreachable" and held["value"] == models_fact["value"], "a failed Models pass keeps last-good bytes and the original clock: %s" % held["state"])
 open(os.path.join(fake, "models.py"), "w").write("import json, sys, time\njson.dump({'schema': 'flightops-models/1', 'generated': time.time()}, sys.stdout)\n")
 open(os.path.join(store, "raw", "models.attempt"), "w").write(str(time.time() - 901))
 kept_bytes = open(os.path.join(store, "raw", "models.json"), "rb").read()
@@ -301,11 +301,11 @@ expect(open(best_runs).read().splitlines()[0] == store, "the Best collector is h
 best_passes = len(open(best_runs).read().splitlines())
 subprocess.run([binary, "collect", "--publish"], env=publish_env, capture_output=True, text=True)
 expect(len(open(best_runs).read().splitlines()) == best_passes, "inside 15 minutes the Best pass does not run")
-open(os.path.join(fake, "best.py"), "w").write("import json, sys\njson.dump({'schema': 'flightops-best/1', 'error': 'Orch unreachable'}, sys.stdout)\n")
+open(os.path.join(fake, "best.py"), "w").write("import json, sys\njson.dump({'schema': 'flightops-best/1', 'error': 'Orchestrator unreachable'}, sys.stdout)\n")
 open(os.path.join(store, "raw", "best.attempt"), "w").write(str(time.time() - 901))
 code = subprocess.run([binary, "collect", "--publish"], env=publish_env, capture_output=True, text=True).returncode
 held = json.load(open(status_file))["facts"]["best"]
-expect(code == 3 and held["error"] == "Orch unreachable" and held["value"] == good_best and held["state"] == "stale" and held["at"] == best_fact["at"], "a failed Best pass keeps the last good generation with its clock and reason")
+expect(code == 3 and held["error"] == "Orchestrator unreachable" and held["value"] == good_best and held["state"] == "stale" and held["at"] == best_fact["at"], "a failed Best pass keeps the last good generation with its clock and reason")
 mixed = dict(good_best, presentation=good_best["presentation"].replace(json.loads(good_best["presentation"])["decision_hash"], "0" * 64))
 open(os.path.join(fake, "best.py"), "w").write("import sys\nsys.stdout.write(%r)\n" % json.dumps(mixed))
 open(os.path.join(store, "raw", "best.attempt"), "w").write(str(time.time() - 901))
@@ -556,14 +556,14 @@ put("rig", {"vms_complete": True, "host": {"merge_publisher": {"timer": "active"
              "rig_status": {"storage_state": "OK", "guest_free_gib": 75.5, "srv_vm_free_gib": 66.9, "reboot_needed": False, "updated_at": stamp, "checked_at": stamp}, "collected": time.time()})
 s = status_now()
 expect(s["rig"]["state"] == "OK" and s["rig"]["guest_free_gib"] == 75.5 and s["rig"]["srv_vm_free_gib"] == 66.9 and s["rig"]["reboot_needed"] is False and s["rig"]["updated_at"] == stamp,
-       "status --json carries the Rig storage facts")
+       "status --json carries the CI host storage facts")
 expect(s["merge_publisher"] == {"state": "dry_run", "detail": "dry run, not publishing", "required": False}, "the publisher shows separately and is not required")
 expect(s["counts"]["agents_working"] == 1 and s["counts"]["agents_working_vm"] == 1 and "agents_working_mac" not in s["counts"], "VM agents count with the Mac off")
 expect(not any(p["id"] == "github" for p in s["attention"]["problems"]), "the GitHub budget is observed with the Mac off")
 expect(not any(p["id"] == "pipeline" for p in s["attention"]["problems"]), "the retired coordinator is not a problem")
 put("rig", {"host": {}, "vm": vm_ok, "vms_complete": True, "vms": [], "rig_status_error": "rig-status.json missing", "collected": time.time()})
 s = status_now()
-expect(s["rig"]["state"] == "unknown" and "storage_state" not in s["rig"] and "guest_free_gib" not in s["rig"], "a missing Rig status file is unknown in status --json")
+expect(s["rig"]["state"] == "unknown" and "storage_state" not in s["rig"] and "guest_free_gib" not in s["rig"], "a missing CI host status file is unknown in status --json")
 hang_dir = os.path.join(os.path.dirname(data), "hang-collectors")
 hang_store = os.path.join(os.path.dirname(data), "hang-data")
 os.makedirs(hang_dir)
@@ -729,6 +729,21 @@ expect(json.load(open(ledger_status))["schema"] == "flightops-snapshot/1", "a hu
 github_due()
 fake_ledger(ledger_stub)
 expect(ledger_collect() == 0 and not os.path.exists(os.path.join(ledger_store, "raw", "ledger.error")), "a ledger that recovers clears its error")
+import shutil
+standins = os.path.join(os.path.dirname(data), "standins")
+os.makedirs(standins)
+for name in os.listdir("collectors"):
+    if name.endswith(".py"):
+        os.symlink(os.path.abspath(os.path.join("collectors", name)), os.path.join(standins, name))
+for name in ("machine", "rig", "vm"):
+    shutil.copy(os.path.join("collectors", "examples", name + ".py"), standins)
+standin_store = os.path.join(os.path.dirname(data), "standin-data")
+standin_env = dict(env, FLIGHTOPS_DATA_DIR=standin_store, FLIGHTOPS_COLLECTORS=standins, FLIGHTOPS_COLLECTORS_ENABLED="rig,vm")
+subprocess.run([binary, "collect"], env=standin_env, capture_output=True, text=True)
+standin_status = json.loads(subprocess.run([binary, "status", "--json"], env=standin_env, capture_output=True, text=True, check=True).stdout)
+expect(source(standin_status, "rig")["state"] == "fresh", "the stand-in CI host collector is read as a fresh host: %s" % source(standin_status, "rig"))
+expect(all(os.path.exists(os.path.join(standin_store, "raw", n + ".json")) and not os.path.exists(os.path.join(standin_store, "raw", n + ".error")) for n in ("rig", "vm")),
+       "the stand-in collectors run without errors")
 print(f"CLI OK ({checks[0]} assertions)" if not failures else "\n".join("FAIL: " + f for f in failures) + f"\n{len(failures)} FAILED ({checks[0]} assertions)")
 sys.exit(1 if failures else 0)
 PY
