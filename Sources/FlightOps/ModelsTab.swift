@@ -311,7 +311,7 @@ struct ModelsTab: View {
             if rows.isEmpty {
                 Text("No PRs in this window").font(.subheadline).foregroundStyle(.secondary)
             } else if exact.isEmpty {
-                Text(m.liveModels == nil ? "No builder seen on its PR's head branch yet" : "Orch records don't name builders").font(.subheadline).foregroundStyle(.secondary)
+                Text(m.liveModels == nil ? "No builder seen on its PR's head branch yet" : "Orchestrator records don't name builders").font(.subheadline).foregroundStyle(.secondary)
             } else {
                 bars(exact, metric: mt)
             }
@@ -402,7 +402,7 @@ struct ModelsTab: View {
         let rows = Analytics.agentStats(m.timelines, models: m.shownModels, since: since, now: now, reworks: reworks, linked: linked)
         let top = max(rows.compactMap(\.tokensPerPR).max() ?? 1, 1)
         VStack(alignment: .leading, spacing: 8) {
-            Text(live ? "Review roles are title hints. Title hints alone allocate no tokens. Settings are as requested. ~ is an estimate from one Orch link; exclusive use is unproven."
+            Text(live ? "Review roles are title hints. Title hints alone allocate no tokens. Settings are as requested. ~ is an estimate from one Orchestrator link; exclusive use is unproven."
                  : "Historical usage only; freshness unknown. Runs without IDs counted as reported; shared usage excluded.").font(.caption).foregroundStyle(.secondary)
             Picker("", selection: $role) {
                 Text("Review").tag("Review")
@@ -410,7 +410,7 @@ struct ModelsTab: View {
             }
             .pickerStyle(.segmented).labelsHidden().controlSize(.small).frame(maxWidth: 200)
             if rows.isEmpty {
-                Text(live && reworks ? "Rework is unknown from Orch records" : linked ? "No linked runs in this window" : reworks ? "No readable rework runs in this window" : "No readable review runs in this window").font(.subheadline).foregroundStyle(.secondary)
+                Text(live && reworks ? "Rework is unknown from Orchestrator records" : linked ? "No linked runs in this window" : reworks ? "No readable rework runs in this window" : "No readable review runs in this window").font(.subheadline).foregroundStyle(.secondary)
             } else {
                 ForEach(rows) { r in
                     HStack(spacing: 8) {

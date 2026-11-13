@@ -89,7 +89,7 @@ struct BestPresentation: Decodable {
     }
 
     var summary: String {
-        "\(counts.prs) PRs · \(counts.merged) merged, \(counts.open) open · \(counts.withOrchLink) on Orch links · \(counts.withReviewRecord) with a bound review · \(counts.headExact) exact heads · \(counts.ciObserved) with CI seen · \(counts.firstReadySeen) with first-ready · \(counts.headAtOpenExact) exact heads at open"
+        "\(counts.prs) PRs · \(counts.merged) merged, \(counts.open) open · \(counts.withOrchLink) on Orchestrator links · \(counts.withReviewRecord) with a bound review · \(counts.headExact) exact heads · \(counts.ciObserved) with CI seen · \(counts.firstReadySeen) with first-ready · \(counts.headAtOpenExact) exact heads at open"
     }
     var refused: String? {
         let total = counts.reviewsRefused.values.reduce(0, +) + counts.linksRefused

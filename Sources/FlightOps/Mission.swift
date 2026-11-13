@@ -100,7 +100,7 @@ struct MissionTab: View {
         let host = m.fresh(.rig) ? m.host : nil
         return VStack(spacing: 6) {
             HStack(alignment: .top, spacing: 6) {
-                tile("rig", "Rig", "cpu", face: host?.temp_c.map { "\($0)°C" }) {
+                tile("rig", "CI host", "cpu", face: host?.temp_c.map { "\($0)°C" }) {
                     if let h = host {
                         Text("CPU \(h.cpu.map { "\($0)%" } ?? "–") · load \(h.load?.first ?? "–")")
                         Text("Memory \(h.mem_used_gb.map { String(format: "%.0f", $0) } ?? "–") of \(h.mem_total_gb.map(String.init) ?? "–") GB")
@@ -123,14 +123,14 @@ struct MissionTab: View {
                     Text("Merge publisher: \(m.world.publisherFact.detail)")
                 }
             }
-            LaneCard(title: "Backend CI", symbol: "server.rack", host: "Rig", check: check("ci-backend"),
+            LaneCard(title: "Backend CI", symbol: "server.rack", host: "CI host", check: check("ci-backend"),
                      jobs: FlowBoard.linked(m.fresh(.rig) ? LaneTiming.backend(m.rigCIGuests, lanes?.backend, age: rigAge) : [], m.world),
                      idle: m.ciGuestsKnown ? LaneTiming.idle(lastDone: lanes?.backend?.last_done, now: now) : nil,
                      typical: [lanes?.backend?.fast_s.map { "fast ~\(duration($0))" },
                                lanes?.backend?.integration_s.map { "integration ~\(duration($0))" },
                                lanes?.backend?.fast_queue_s.map { "queue ~\(duration($0))" },
                                FlowBoard.rigCapacity(m.world).note].compactMap { $0 })
-            LaneCard(title: "Web CI", symbol: "globe", host: "Rig", check: check("ci-web"),
+            LaneCard(title: "Web CI", symbol: "globe", host: "CI host", check: check("ci-web"),
                      jobs: FlowBoard.linked(m.fresh(.rig) ? LaneTiming.web(m.rigCIGuests, lanes?.web, age: rigAge) : [], m.world),
                      idle: m.ciGuestsKnown ? LaneTiming.idle(lastDone: lanes?.web?.last_done, now: now) : nil,
                      typical: [lanes?.web?.run_s.map { "run ~\(duration($0))" },
