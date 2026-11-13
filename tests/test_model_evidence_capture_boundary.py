@@ -11,6 +11,9 @@ from collectors.model_evidence.capture_boundary import BoundaryRecorder,Boundary
 from collectors.model_evidence.capture_ledger import Ledger
 from collectors.model_evidence.capture_projection import project,import_supplied
 from test_model_evidence_capture_contract import fixture,rechained
+import os as _os
+import tempfile as _tempfile
+_tempfile.tempdir = _os.path.realpath(_tempfile.gettempdir())
 
 
 class Crash(BaseException):

@@ -19,6 +19,11 @@ def run_row(run_id, attempt=1, conclusion="failure", **more):
                  "updated_at": f"2026-10-05T0{attempt}:00:00Z", "display_title": "SECRET é"}, **more)
 
 
+
+def address_space_capped(limit=160 * 1024 * 1024):
+    probe = f"import resource; resource.setrlimit(resource.RLIMIT_AS, ({limit}, {limit}))"
+    return subprocess.run([sys.executable, "-I", "-c", probe], capture_output=True).returncode == 0
+
 class Import(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -133,6 +138,7 @@ class Import(unittest.TestCase):
         self.run_import()
         self.assertEqual(self.rows("SELECT state, rows_bad, rows_new FROM import_files"), [("done", 0, ledger_import.COMMIT_EVERY + 2)])
 
+    @unittest.skipUnless(address_space_capped(), "this OS refuses an address-space limit")
     def test_a_large_file_stays_inside_a_small_address_space(self):
         path = self.snapshot("2026-10-24", [])
         with open(path, "w") as f:
