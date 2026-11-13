@@ -92,7 +92,7 @@ def main():
     threads = {row["id"] for row in kept}
     runs = {rid: {key: run.get(key) for key in ("thread", "tokens", "model", "effort", "harness", "status")} for rid, run in report["runs"].items() if run.get("thread") in threads}
     store.rollback()
-    out = {"capture": {"made_at": int(time.time()), "how": "read-only sqlite projection of Orch, the evidence ledger's witness rows and the collector's own raw files; no Orch HTTP and no GitHub call",
+    out = {"capture": {"made_at": int(time.time()), "how": "read-only sqlite projection of Orchestrator, the evidence ledger's witness rows and the collector's own raw files; no Orchestrator HTTP and no GitHub call",
                        "not_real": ["project repositoryIdentity is filled from the project title", "thread status is set to completed because the projection row has no shell status",
                                     "recent holds the rows of both collection generations"],
                        "omitted": "message text past the brief header and the report header; run fields not read by the adapter; turn items other than assistant messages"},

@@ -54,3 +54,8 @@ build/
 *.iconset/
 # Local site config
 flightops.local.json
+# Site-specific host collectors (start from collectors/examples)
+/collectors/rig.py
+/collectors/vm.py
+/collectors/mac.py
+/collectors/machine.py

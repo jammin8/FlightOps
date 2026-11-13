@@ -65,7 +65,7 @@ struct FlightOpsApp: App {
                 if notice { Circle().frame(width: 4, height: 4) }
             } else {
                 Image(systemName: "exclamationmark.triangle.fill")
-                Text("Rig offline")
+                Text("CI host offline")
             }
         }
         .font(.system(size: 13, weight: .medium))

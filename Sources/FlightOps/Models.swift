@@ -847,7 +847,7 @@ enum SourceID: String, CaseIterable, Codable {
 
     var label: String {
         switch self {
-        case .rig: return "Rig"
+        case .rig: return "CI host"
         case .agents: return "Agents VM"
         case .mac: return "Mac"
         case .repos: return "GitHub"

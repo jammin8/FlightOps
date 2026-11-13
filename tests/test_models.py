@@ -345,7 +345,7 @@ class Sources(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             env = dict(os.environ, FLIGHTOPS_ORCH_URL="http://example.com:1")
             out = subprocess.run([sys.executable, "-I", str(ROOT / "collectors" / "models.py"), d], env=env, capture_output=True, text=True, check=True)
-        self.assertEqual(json.loads(out.stdout), {"schema": models.SCHEMA, "error": "Orch address is not local"})
+        self.assertEqual(json.loads(out.stdout), {"schema": models.SCHEMA, "error": "Orchestrator address is not local"})
 
 
 class Boundaries(unittest.TestCase):

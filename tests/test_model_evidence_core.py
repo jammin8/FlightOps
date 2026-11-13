@@ -57,7 +57,7 @@ class Golden(unittest.TestCase):
     def test_live_origin_and_claimed_host_fail(self):
         b = bundle(); b['origin']['kind'] = 'live'
         with self.assertRaises(ContractError): export_bundle(b)
-        e = export_bundle(bundle()); e['source_identity']['host'] = 'Rig'
+        e = export_bundle(bundle()); e['source_identity']['host'] = 'CI host'
         with self.assertRaises(ContractError): accept_envelope(e)
 
     def test_json_duplicates_nonfinite_oversize(self):

@@ -83,7 +83,7 @@ expect(Rules.checks(webBusy).first { $0.id == "ci-backend" }!.health == .ok, "a 
 var backendBusy = w; backendBusy.rigCI = RigCIHealth(watch_age_s: 900, web_age_s: 900, heavy_job: true, health_age_s: 10, heavy_owner: "ci-watcher")
 expect(Rules.checks(backendBusy).first { $0.id == "ci-web" }!.health != .ok, "backend holding the lock does not excuse a silent web lane")
 var stale = w; stale.now = now.addingTimeInterval(200)
-expect(Rules.checks(stale).first { $0.id == "rig" }!.health == .unknown, "stale Rig is unknown, not online")
+expect(Rules.checks(stale).first { $0.id == "rig" }!.health == .unknown, "stale CI host is unknown, not online")
 var down = World(now: now); down.status[.rig] = SourceStatus(sampleAt: nil, observedAt: now, failures: 2, unreachable: true, error: "x")
 expect(Rules.checks(down).first { $0.id == "rig" }!.health == .bad, "unreachable twice is bad")
 var decodeFail = World(now: now); decodeFail.status[.rig] = SourceStatus(sampleAt: nil, observedAt: nil, failures: 3, unreachable: false, error: "unreadable")
@@ -120,7 +120,7 @@ aged.rigCI = RigCIHealth(watch_age_s: 250, web_age_s: 100, heavy_job: false, hea
 expect(Rules.checks(aged).first { $0.id == "ci-backend" }!.health == .warn, "a heartbeat that aged past 300 s since the sample is late")
 
 var future = w; future.status[.rig] = SourceStatus(sampleAt: now.addingTimeInterval(86400), observedAt: now)
-expect(!future.fresh(.rig), "a Rig sample a day ahead of the clock is not fresh")
+expect(!future.fresh(.rig), "a CI host sample a day ahead of the clock is not fresh")
 future.agents = []; future.agentsAt = now.addingTimeInterval(86400)
 expect(!future.agentsKnown, "a future agent-list time is not known")
 
@@ -169,7 +169,7 @@ expect(!Rules.needs(partial, checks: [], threadURL: { _ in nil }).complete, "mis
 var empty = World(now: nw.now)
 for s in SourceID.allCases { empty.status[s] = SourceStatus(sampleAt: empty.now, observedAt: empty.now) }
 let emptyNeeds = Rules.needs(empty, checks: Rules.checks(empty), threadURL: { _ in nil })
-expect(!emptyNeeds.complete && emptyNeeds.gaps.contains("Orch agent list"), "absent fields are gaps: \(emptyNeeds.gaps)")
+expect(!emptyNeeds.complete && emptyNeeds.gaps.contains("Orchestrator agent list"), "absent fields are gaps: \(emptyNeeds.gaps)")
 var noJobs = nw; noJobs.mac = decode(MacSnap.self, "{\"services\":{\"watcher_loaded\":true,\"light_loaded\":true,\"ios_watch_age_s\":10,\"light_age_s\":10},\"pipeline\":true,\"errors\":{\"ios_ci\":\"pgrep timed out\"}}")
 expect(Rules.needs(noJobs, checks: Rules.checks(noJobs), threadURL: { _ in nil }).gaps.contains("Mac CI jobs"), "unknown Mac jobs are a gap, not zero")
 
@@ -198,14 +198,14 @@ expect(unknownReady.approved && !unknownReady.mergeReady, "approved but unproven
 
 let t0 = Date(timeIntervalSince1970: 2_000_000)
 func ob(_ id: String, _ state: AlertObservation.State, _ at: TimeInterval?) -> AlertObservation {
-    AlertObservation(id: id, state: state, text: id == "rig" ? "Rig: unreachable" : "\(id): bad", at: at.map { t0.addingTimeInterval($0) })
+    AlertObservation(id: id, state: state, text: id == "rig" ? "CI host: unreachable" : "\(id): bad", at: at.map { t0.addingTimeInterval($0) })
 }
 func input(_ t: TimeInterval, _ observations: [AlertObservation], canDeliver: Bool = true, waiting: [WaitingAgent]? = nil) -> AlertInput {
     AlertInput(now: t0.addingTimeInterval(t), observations: observations, waiting: waiting, canDeliver: canDeliver)
 }
 
 var st = AlertState(); st.episodeStart = t0.addingTimeInterval(-3600); st.lastPost = t0.addingTimeInterval(-3600)
-st.announced["rig"] = "Rig: unreachable"
+st.announced["rig"] = "CI host: unreachable"
 var eng = AlertEngine.restored(try! JSONEncoder().encode(st), now: t0)
 expect(eng.step(input(1, [ob("rig", .unknown, nil)])).isEmpty, "no spurious all clear before the source reports")
 expect(eng.state.episodeStart != nil, "episode kept")
@@ -215,7 +215,7 @@ expect(e2.step(input(1, [ob("rig", .problem, 1)])).isEmpty, "first sighting quie
 expect(e2.step(input(2, [ob("rig", .problem, 1)])).isEmpty, "same evidence again: still quiet")
 expect(e2.step(input(25, [ob("rig", .problem, 21)])).isEmpty, "two pieces 20 s apart: still quiet")
 let n1 = e2.step(input(70, [ob("rig", .problem, 61)]))
-expect(n1.count == 1 && n1[0].kind == .incident && n1[0].title == "Rig: unreachable", "confirmed after 60 s: \(n1.map(\.title))")
+expect(n1.count == 1 && n1[0].kind == .incident && n1[0].title == "CI host: unreachable", "confirmed after 60 s: \(n1.map(\.title))")
 
 expect(e2.step(input(100, [ob("rig", .unknown, nil)])).isEmpty, "unknown: no all clear")
 expect(e2.step(input(110, [ob("rig", .clear, 101)])).isEmpty, "one clean piece: not yet")
@@ -275,7 +275,7 @@ func freshWorld(_ t: TimeInterval) -> World {
     return w
 }
 var diskState = AlertState(); diskState.episodeStart = t0.addingTimeInterval(-3600); diskState.lastPost = t0.addingTimeInterval(-3600)
-diskState.announced["disk"] = "Rig storage: 91% full"
+diskState.announced["disk"] = "CI host storage: 91% full"
 var diskEngine = AlertEngine(state: diskState)
 func adapter(_ w: World) -> AlertInput {
     AlertInput(now: w.now, observations: Rules.alertObservations(Rules.checks(w)), waiting: nil, canDeliver: true)
@@ -329,7 +329,7 @@ expect(!Rules.coverageGaps(mainWorld(1, "not_applicable"), checks: Rules.checks(
 
 
 var diskOnly = AlertState(); diskOnly.episodeStart = t0.addingTimeInterval(-3600); diskOnly.lastPost = t0.addingTimeInterval(-3600)
-diskOnly.announced["disk"] = "Rig storage: 91% full"
+diskOnly.announced["disk"] = "CI host storage: 91% full"
 var debouncing = AlertEngine(state: diskOnly)
 _ = debouncing.step(input(10, [ob("disk", .clear, 10)]))
 let early = debouncing.step(input(140, [ob("disk", .clear, 140), ob("ci-web", .problem, 140)]))
@@ -352,7 +352,7 @@ expect(muted.state.owedAllClear == nil && muted.state.episodeStart != nil, "mute
 
 func heldEngine() -> AlertEngine {
     var s = AlertState(); s.episodeStart = t0.addingTimeInterval(-3600); s.lastPost = t0.addingTimeInterval(-3600)
-    s.announced["disk"] = "Rig storage: 91% full"
+    s.announced["disk"] = "CI host storage: 91% full"
     var e = AlertEngine(state: s)
     _ = e.step(input(10, [ob("disk", .clear, 10)]))
     _ = e.step(input(140, [ob("disk", .clear, 140), ob("ci-web", .problem, 140)]))
@@ -1404,9 +1404,9 @@ func vmWorld(orch: String, expires: Int?) -> World {
     return w
 }
 let expired = vmWorld(orch: "active", expires: Int(t0.timeIntervalSince1970) - 10)
-expect(Rules.orch(expired).health == .ok && Rules.orchToken(expired).health == .bad, "an expired collector token does not read as Orch down")
+expect(Rules.orch(expired).health == .ok && Rules.orchToken(expired).health == .bad, "an expired collector token does not read as Orchestrator down")
 let orchDown = vmWorld(orch: "failed", expires: Int(t0.timeIntervalSince1970) + 90 * 86400)
-expect(Rules.orch(orchDown).health == .bad && Rules.orchToken(orchDown).health == .ok, "Orch down does not read as a token problem")
+expect(Rules.orch(orchDown).health == .bad && Rules.orchToken(orchDown).health == .ok, "Orchestrator down does not read as a token problem")
 
 var macOff = freshWorld(0)
 macOff.status[.mac] = nil
@@ -1414,7 +1414,7 @@ macOff.vm = decode(VMSnap.self, #"{"orch":"active","orch_token_expires":null}"#)
 macOff.agents = [agentRow("a", "running", pr: 1), agentRow("b", "running", pr: 2), agentRow("c", "waiting", pr: 3)]
 macOff.agentsAt = macOff.now
 expect(macOff.agentsWorking == 2 && macOff.agentsWorkingVM == 2 && macOff.agentsWorkingMac == nil, "VM agents stay counted with the Mac off, and the Mac stays unobserved")
-expect(Rules.orch(macOff).health == .ok, "Orch health needs no Mac data")
+expect(Rules.orch(macOff).health == .ok, "Orchestrator health needs no Mac data")
 macOff.repos = decode(RepoSnap.self, #"{"repos":[],"prs":[],"fetched":1,"github_budget":{"value":{"core":4000,"core_limit":5000,"core_reset":1,"graphql":1},"fetched":\#(macOff.now.timeIntervalSince1970)}}"#)
 expect(Rules.github(macOff).detail == "4000 of 5000 left" && Rules.github(macOff).health == .ok && Rules.github(macOff).source == .repos, "the GitHub budget needs no Mac data")
 var bothBudgets = macOff
@@ -1488,14 +1488,14 @@ expect(vmWorld.fresh(.agents) && vmWorld.agentsKnown && vmWorld.agentsWorking ==
 expect(vmOnly.world(now: vmNow.addingTimeInterval(301), timelines: [:]).agentsKnown == false, "VM agents expire at read time when the timer stops")
 expect(vmWorld.freshness(.rig) == .missing && vmWorld.status[.rig] == nil, "the VM adapter claims nothing about the host")
 expect(Rules.backendCI(vmWorld).health == .unknown && Rules.rig(vmWorld).health == .unknown && vmWorld.ciRunning == nil, "lanes, CPU and guests stay unknown from the VM")
-expect(Rules.orch(vmWorld).detail == "running" && Rules.vmDisk(vmWorld).detail == "40% used", "Orch and VM health come from the local adapter")
+expect(Rules.orch(vmWorld).detail == "running" && Rules.vmDisk(vmWorld).detail == "40% used", "Orchestrator and VM health come from the local adapter")
 var vmDown = vmOnly
-vmDown.applyVM(Data(#"{"collected":1800000100,"vm":{"orch":"unreachable"},"agents":null,"agents_error":"Orch unreachable"}"#.utf8), now: vmNow.addingTimeInterval(100))
+vmDown.applyVM(Data(#"{"collected":1800000100,"vm":{"orch":"unreachable"},"agents":null,"agents_error":"Orchestrator unreachable"}"#.utf8), now: vmNow.addingTimeInterval(100))
 let vmDownWorld = vmDown.world(now: vmNow.addingTimeInterval(100), timelines: [:])
-expect(vmDownWorld.agentsWorking == nil && vmDown.agentsError == "Orch unreachable", "agents lost to a Orch outage are unknown at once")
-expect(Rules.orch(vmDownWorld).health == .bad && Rules.orchToken(vmDownWorld).detail == "expiry unknown", "a Orch outage is apart from the token's expiry")
+expect(vmDownWorld.agentsWorking == nil && vmDown.agentsError == "Orchestrator unreachable", "agents lost to an orchestrator outage are unknown at once")
+expect(Rules.orch(vmDownWorld).health == .bad && Rules.orchToken(vmDownWorld).detail == "expiry unknown", "an orchestrator outage is apart from the token's expiry")
 var vmRefused = vmOnly
-vmRefused.applyVM(Data(#"{"collected":1800000100,"vm":{"orch":"active"},"agents":null,"agents_error":"Orch answered 401"}"#.utf8), now: vmNow.addingTimeInterval(100))
+vmRefused.applyVM(Data(#"{"collected":1800000100,"vm":{"orch":"active"},"agents":null,"agents_error":"Orchestrator answered 401"}"#.utf8), now: vmNow.addingTimeInterval(100))
 expect(Rules.orch(vmRefused.world(now: vmNow.addingTimeInterval(100), timelines: [:])).health == .ok, "a refused token leaves the service healthy")
 var vmUntimed = Collected()
 vmUntimed.applyVM(Data(#"{"vm":{"orch":"active"},"agents":[]}"#.utf8), now: vmNow)
@@ -1532,11 +1532,11 @@ func pubFact(_ doc: [String: Any], _ name: String) -> [String: Any] { (doc["fact
 let pubGood = pubBuild(PublishedStatus.Input(repos: pubRepos(), vm: pubVM()))
 expect(pubFact(pubGood.document, "agents")["state"] as? String == "fresh" && pubFact(pubGood.document, "github")["state"] as? String == "fresh", "fresh sources publish fresh")
 expect(pubFact(pubGood.document, "github")["at"] as? String == pubStamp(120) && pubFact(pubGood.document, "agents")["at"] as? String == pubStamp(60), "facts keep their source clocks")
-expect(pubFact(pubGood.document, "rig_host")["clock"] as? String == "checked_at" && pubFact(pubGood.document, "rig_cleanup")["clock"] as? String == "last_cleanup" && pubFact(pubGood.document, "rig_local")["clock"] as? String == "updated_at", "Rig facts name their own clocks")
+expect(pubFact(pubGood.document, "rig_host")["clock"] as? String == "checked_at" && pubFact(pubGood.document, "rig_cleanup")["clock"] as? String == "last_cleanup" && pubFact(pubGood.document, "rig_local")["clock"] as? String == "updated_at", "CI host facts name their own clocks")
 let pubLater = pubNow.addingTimeInterval(120)
-let pubOutage = pubBuild(PublishedStatus.Input(repos: pubRepos(), reposError: "collector failed", vm: pubVM(0, agents: "null", extra: #","agents_error":"Orch unreachable""#)), kept: pubGood.lastGood, now: pubLater)
+let pubOutage = pubBuild(PublishedStatus.Input(repos: pubRepos(), reposError: "collector failed", vm: pubVM(0, agents: "null", extra: #","agents_error":"Orchestrator unreachable""#)), kept: pubGood.lastGood, now: pubLater)
 let keptAgents = pubFact(pubOutage.document, "agents")
-expect(keptAgents["error"] as? String == "Orch unreachable" && keptAgents["state"] as? String == "stale" && keptAgents["at"] as? String == pubStamp(60), "lost agents keep last-good bytes, the error and the original clock")
+expect(keptAgents["error"] as? String == "Orchestrator unreachable" && keptAgents["state"] as? String == "stale" && keptAgents["at"] as? String == pubStamp(60), "lost agents keep last-good bytes, the error and the original clock")
 expect((keptAgents["value"] as? [Any])?.count == 1, "the last-good agent list is retained")
 expect(pubFact(pubOutage.document, "github")["error"] as? String == "collector failed" && pubFact(pubOutage.document, "github")["state"] as? String == "stale", "a failed GitHub refresh keeps its bytes as stale")
 let pubStaleRepos = pubBuild(PublishedStatus.Input(repos: pubRepos(extra: #","stale_reason":"gh down""#), vm: pubVM()))
@@ -1595,7 +1595,7 @@ expect(PublishedStatus.read(pubPatched { $0["expires_at"] = pubStamp(1) }, now: 
 expect(PublishedStatus.read(pubGoodFile, now: pubNow.addingTimeInterval(601)).facts.values.allSatisfy { $0.state != "fresh" }, "no fact outlives its file")
 let pubStretched = pubPatchedFact("agents") { $0["stale_after_s"] = 999999; $0["at"] = pubStamp(301) }
 expect(PublishedStatus.read(pubStretched, now: pubNow).facts["agents"]?.state == "stale", "a file cannot lengthen its own freshness limit")
-expect(PublishedStatus.read(pubPatchedFact("agents") { $0["state"] = "fresh"; $0["error"] = "Orch down" }, now: pubNow).facts["agents"]?.state == "stale", "a fact with an error is never fresh, whatever it declares")
+expect(PublishedStatus.read(pubPatchedFact("agents") { $0["state"] = "fresh"; $0["error"] = "Orchestrator down" }, now: pubNow).facts["agents"]?.state == "stale", "a fact with an error is never fresh, whatever it declares")
 expect(PublishedStatus.read(pubPatchedFact("agents") { $0["at"] = pubStamp(-120) }, now: pubNow).facts["agents"]?.state == "invalid", "a fact from the future is invalid")
 expect(PublishedStatus.read(pubPatchedFact("agents") { $0["at"] = NSNull() }, now: pubNow).facts["agents"]?.state == "invalid", "a fact without a clock is invalid")
 
@@ -1665,7 +1665,7 @@ expect(Rules.feed(partialImport.world(now: pubNow, timelines: [:]))?.detail == "
 let noRigFile = pubBuild(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(rig: "null", extra: #","rig_status_error":"rig-status.json missing""#)))
 var noRig = Collected()
 _ = noRig.importSnapshot(pubFile(noRigFile.document), now: pubNow)
-expect(noRig.feed?.owned == [.repos, .agents] && noRig.rigStatus == nil, "a missing Rig status leaves only storage unknown")
+expect(noRig.feed?.owned == [.repos, .agents] && noRig.rigStatus == nil, "a missing CI host status leaves only storage unknown")
 let tornClock = pubPatchedFact("github") { $0["at"] = pubStamp(500) }
 var torn = Collected()
 _ = torn.importSnapshot(tornClock, now: pubNow)
@@ -1684,7 +1684,7 @@ expect(Ingest.validTime(edgeNow.timeIntervalSince1970 + 5, now: edgeNow) != nil 
 expect(Ingest.validTime(edgeNow.timeIntervalSince1970 + 5.5, now: edgeNow) == nil, "half a second past the tolerance is rejected")
 let edgeStatus = { (ahead: TimeInterval) in SourceStatus(sampleAt: edgeNow.addingTimeInterval(ahead)).freshness(.repos, now: edgeNow) }
 expect(edgeStatus(5) == .fresh && edgeStatus(6) == .stale, "source freshness stops at five seconds ahead")
-expect(StorageFact.clock(edgeStamp(5), now: edgeNow).why == nil && StorageFact.clock(edgeStamp(6), now: edgeNow).why == "time in the future", "Rig clocks stop at five seconds ahead")
+expect(StorageFact.clock(edgeStamp(5), now: edgeNow).why == nil && StorageFact.clock(edgeStamp(6), now: edgeNow).why == "time in the future", "CI host clocks stop at five seconds ahead")
 expect(Feed(state: "fresh", publishedAt: edgeNow.addingTimeInterval(5)).live(now: edgeNow) && !Feed(state: "fresh", publishedAt: edgeNow.addingTimeInterval(6)).live(now: edgeNow), "the feed stops at five seconds ahead")
 expect(PublishedStatus.clockProblem(edgeStamp(5), now: edgeNow) == nil && PublishedStatus.clockProblem(edgeStamp(6), now: edgeNow) == "clock in the future", "the producer stops at five seconds ahead")
 expect(PublishedStatus.clockProblem(edgeStamp(5) .replacingOccurrences(of: "Z", with: ".900000+00:00"), now: edgeNow) == "clock in the future", "a fraction cannot slip past the producer's tolerance")
@@ -1701,7 +1701,7 @@ expect(edgeFact(PublishedStatus.Input(repos: edgeRepos(5.9)), "github")["error"]
 func edgeRig(_ ahead: TimeInterval) -> Data {
     Data(#"{"collected":\#(edgeNow.timeIntervalSince1970),"vm":{"orch":"active"},"agents":[],"rig_status":{"storage_state":"OK","updated_at":"\#(edgeStamp(0))","checked_at":"\#(edgeStamp(ahead))","last_cleanup":"\#(edgeStamp(ahead))"}}"#.utf8)
 }
-expect(edgeFact(PublishedStatus.Input(vm: edgeRig(5)), "rig_host")["state"] as? String == "fresh" && edgeFact(PublishedStatus.Input(vm: edgeRig(6)), "rig_host")["error"] as? String == "clock in the future", "the producer rejects a Rig clock past five seconds")
+expect(edgeFact(PublishedStatus.Input(vm: edgeRig(5)), "rig_host")["state"] as? String == "fresh" && edgeFact(PublishedStatus.Input(vm: edgeRig(6)), "rig_host")["error"] as? String == "clock in the future", "the producer rejects a CI host clock past five seconds")
 func edgeFile(published: TimeInterval = 0, fact: TimeInterval = 0) -> Data {
     var doc = PublishedStatus.build(PublishedStatus.Input(repos: pubRepos(0), vm: pubVM(0)), delivery: [:], lastGood: [:], now: pubNow, includeText: false).document
     doc["published_at"] = StatusExport.iso(pubNow.addingTimeInterval(published))
@@ -1880,7 +1880,7 @@ let liveShown = liveSeen.shownLiveModels(now: pubNow)
 expect(liveShown?.records["backend#12"]?.isRunLevel == true && liveShown?.records["backend#12"]?.threadBuilder == nil, "a live record is run-level and names no builder")
 expect(liveShown?.records["backend#12"]?.reviews?.first?.label == "Codex Terra 6.1 · high (requested)", "a live review label says its settings were requested")
 expect(liveShown?.records["backend#12"]?.reworks == nil, "live rework stays unknown, not none")
-expect(liveShown?.statusLine(now: pubNow.timeIntervalSince1970).hasPrefix("Models: live from VM · 1 PRs on Orch records · 3 of 4 GitHub PRs unknown · GitHub age") == true, "the status line carries live coverage and the GitHub age")
+expect(liveShown?.statusLine(now: pubNow.timeIntervalSince1970).hasPrefix("Models: live from VM · 1 PRs on Orchestrator records · 3 of 4 GitHub PRs unknown · GitHub age") == true, "the status line carries live coverage and the GitHub age")
 expect(liveShown?.statusLine(now: pubNow.timeIntervalSince1970 + 1201).contains("GitHub coverage unknown (stale)") == true, "GitHub coverage ages on its own clock at read time")
 let liveOldGitHub = LiveModels.GitHubCoverage(at: Date(timeIntervalSince1970: 2), state: "stale", prs: nil, unknown: nil)
 expect(liveOldGitHub.line(now: 5000) == "GitHub coverage unknown (stale)", "unusable GitHub coverage shows no counts")
@@ -1925,12 +1925,12 @@ let ledgerRefused = PublishedStatus.ledgerOutput(Data(#"{"schema":"flightops-led
 expect(ledgerRefused.data == nil && ledgerRefused.error == "ledger file is schema 1, this build needs 2", "a refused ledger file is the source's error, in its own words")
 let ledgerStep = PublishedStatus.ledgerOutput(ledgerReport(errors: #"["rules: RuntimeError"]"#), error: nil)
 expect(ledgerStep.data != nil && ledgerStep.error == "rules: RuntimeError", "a failed step keeps the report and names the step")
-let liveFailed = liveDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(), models: liveReport(), modelsError: "Orch unreachable"), now: pubLater, kept: liveGood.kept)
+let liveFailed = liveDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(), models: liveReport(), modelsError: "Orchestrator unreachable"), now: pubLater, kept: liveGood.kept)
 let liveFailedFact = pubFact(try! JSONSerialization.jsonObject(with: liveFailed.data) as! [String: Any], "models")
-expect(liveFailedFact["at"] as? String == pubStamp(300) && liveFailedFact["state"] as? String == "stale" && liveFailedFact["error"] as? String == "Orch unreachable", "a failed refresh keeps the original clock and last-good value")
+expect(liveFailedFact["at"] as? String == pubStamp(300) && liveFailedFact["state"] as? String == "stale" && liveFailedFact["error"] as? String == "Orchestrator unreachable", "a failed refresh keeps the original clock and last-good value")
 let liveVMDown = liveDocument(PublishedStatus.Input(repos: pubRepos(), vmError: "collector failed", models: liveReport()))
 expect(pubFact(try! JSONSerialization.jsonObject(with: liveVMDown.data) as! [String: Any], "models")["state"] as? String == "fresh", "a failed VM collector does not take the Models fact with it")
-expect(PublishedStatus.modelsOutput(Data(#"{"schema":"flightops-models/1","error":"Orch unreachable"}"#.utf8), error: nil).error == "Orch unreachable", "the collector's reason is kept")
+expect(PublishedStatus.modelsOutput(Data(#"{"schema":"flightops-models/1","error":"Orchestrator unreachable"}"#.utf8), error: nil).error == "Orchestrator unreachable", "the collector's reason is kept")
 expect(PublishedStatus.modelsOutput(Data(#"{"schema":"pr-models/2","generated":5}"#.utf8), error: nil).data == nil, "another schema is refused")
 func liveRefused(_ text: String) -> Bool { PublishedStatus.modelsOutput(Data(text.utf8), error: nil) == (nil, LiveModels.malformed) }
 let liveGoodText = String(decoding: liveReport(), as: UTF8.self)
@@ -2150,10 +2150,10 @@ expect(budgetsAt2000(budgetMac(1990)) == ["github": 0.8, "codex": 37.5], "a curr
 var failedRigAgents = Collected()
 let rigPayload = { (t: Int, agents: String) in Data(#"{"host":{"cpu":1},"vm":{"orch":"active"},"vms":[],"vms_complete":true,\#(agents),"collected":\#(t)}"#.utf8) }
 failedRigAgents.applyRig(rigPayload(1990, #""agents":[{"id":"t1","status":"running"}]"#), now: Date(timeIntervalSince1970: 1990))
-failedRigAgents.applyRig(rigPayload(2000, #""agents":null,"agents_error":"Orch answered 503""#), now: Date(timeIntervalSince1970: 2000))
+failedRigAgents.applyRig(rigPayload(2000, #""agents":null,"agents_error":"Orchestrator answered 503""#), now: Date(timeIntervalSince1970: 2000))
 let failedRigWorld = failedRigAgents.world(now: Date(timeIntervalSince1970: 2000), timelines: [:])
 expect(!failedRigWorld.agentsKnown && failedRigWorld.agentsWorking == nil, "a failed agent read leaves the list unknown, not the old list")
-expect(failedRigAgents.agentsError == "Orch answered 503", "the failure keeps its reason")
+expect(failedRigAgents.agentsError == "Orchestrator answered 503", "the failure keeps its reason")
 
 let hostScopeNow = Date(timeIntervalSince1970: 2000)
 var hostFailure = Collected()
@@ -2161,7 +2161,7 @@ hostFailure.applyVM(Data(#"{"collected":1995,"vm":{"orch":"active"},"agents":[]}
 hostFailure.applyRig(nil, now: hostScopeNow, hostOnly: true)
 hostFailure.applyRig(Data("{".utf8), now: hostScopeNow, hostOnly: true)
 expect(hostFailure.status[.agents]?.freshness(.agents, now: hostScopeNow) == .fresh && hostFailure.status[.agents]?.error == nil, "a host-only failure leaves the VM snapshot alone")
-expect(hostFailure.status[.rig]?.failures == 2, "the failure still lands on the Rig host")
+expect(hostFailure.status[.rig]?.failures == 2, "the failure still lands on the CI host")
 var bothFailure = Collected()
 bothFailure.applyVM(Data(#"{"collected":1995,"vm":{"orch":"active"},"agents":[]}"#.utf8), now: hostScopeNow)
 bothFailure.applyRig(nil, now: hostScopeNow)
@@ -2218,13 +2218,13 @@ expect(recovered == nil, "an equal clock adds no history")
 let noStorageFile = pubFile(pubBuild(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(extra: #","rig_status_error":"rig-status.json missing""#).replacingRig())).document)
 var noStorage = Collected()
 _ = noStorage.importSnapshot(noStorageFile, now: pubNow)
-expect(noStorage.feed?.owned == [.repos, .agents] && noStorage.agents?.count == 1 && noStorage.vm?.orch == "active", "a missing Rig file leaves the fresh VM facts importable")
+expect(noStorage.feed?.owned == [.repos, .agents] && noStorage.agents?.count == 1 && noStorage.vm?.orch == "active", "a missing CI host file leaves the fresh VM facts importable")
 expect(noStorage.rigStatus == nil && viaOf(noStorage, .agents, at: pubNow) == ("snapshot", "fresh"), "storage alone is unknown")
-let noAgentsFile = pubFile(pubBuild(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(agents: "null", orch: #""unreachable""#, extra: #","agents_error":"Orch unreachable""#))).document)
+let noAgentsFile = pubFile(pubBuild(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(agents: "null", orch: #""unreachable""#, extra: #","agents_error":"Orchestrator unreachable""#))).document)
 var noAgents = Collected()
 _ = noAgents.importSnapshot(noAgentsFile, now: pubNow)
 expect(noAgents.vm?.orch == "unreachable" && noAgents.vm?.disk_pct == 40 && noAgents.rigStatus != nil, "an outage keeps the VM's own observation of it")
-expect(noAgents.agents == nil && noAgents.agentsError == "Orch unreachable", "the list is unknown with the VM's reason")
+expect(noAgents.agents == nil && noAgents.agentsError == "Orchestrator unreachable", "the list is unknown with the VM's reason")
 expect(noAgents.status[.agents]?.freshness(.agents, now: pubNow) == .fresh && noAgents.status[.agents]?.origin == PublishedStatus.origin, "the independent facts stay fresh, as the snapshot's")
 expect(noAgents.feed?.owned == [.repos], "without the list the Mac still falls back for it")
 _ = noAgents.importSnapshot(noAgentsFile, now: pubNow.addingTimeInterval(30))
@@ -2325,13 +2325,13 @@ expect(!verdictUnknownAck.headline.contains("All systems go") && !verdictUnknown
 expect(verdictUnknownAck.headline.hasSuffix("acknowledged") && verdictUnknownAck.open.isEmpty, "dismissal only acknowledges")
 expect(StatusExport.document(verdictMissing, checks: verdictMissingChecks, needs: verdictMissingNeeds).attention.state == verdictUnknownAck.state, "export and Mission share one verdict")
 
-let verdictDisk = Check(id: "disk", label: "Rig storage", detail: "90% full", health: .bad, source: .rig, alert: true)
-let verdictOK = Check(id: "rig", label: "Rig", detail: "online", health: .ok, source: .rig)
-let verdictBadNeeds = Needs(items: [NeedItem(id: "check-disk", kind: .problem, tier: .now, title: "Rig storage", reason: "90% full", health: .bad)])
+let verdictDisk = Check(id: "disk", label: "CI host storage", detail: "90% full", health: .bad, source: .rig, alert: true)
+let verdictOK = Check(id: "rig", label: "CI host", detail: "online", health: .ok, source: .rig)
+let verdictBadNeeds = Needs(items: [NeedItem(id: "check-disk", kind: .problem, tier: .now, title: "CI host storage", reason: "90% full", health: .bad)])
 let verdictBad = Rules.verdict(checks: [verdictDisk, verdictOK], needs: verdictBadNeeds)
 let verdictBadAck = Rules.verdict(checks: [verdictDisk, verdictOK], needs: verdictBadNeeds, acknowledged: acknowledgeAll(verdictBad))
-expect(verdictBad.health == .bad && verdictBad.open.count == 1 && verdictBad.headline == "Rig storage: 90% full", "a failed check names itself once")
-expect(verdictBadAck.health == .bad && verdictBadAck.state == "bad" && verdictBadAck.headline == "Rig storage: 90% full · acknowledged", "dismissing a failure keeps it failed")
+expect(verdictBad.health == .bad && verdictBad.open.count == 1 && verdictBad.headline == "CI host storage: 90% full", "a failed check names itself once")
+expect(verdictBadAck.health == .bad && verdictBadAck.state == "bad" && verdictBadAck.headline == "CI host storage: 90% full · acknowledged", "dismissing a failure keeps it failed")
 expect(verdictBad.menuSymbol == "exclamationmark.circle.fill" && verdictBadAck.menuSymbol == verdictBad.menuSymbol, "the menu keeps factual health after acknowledgement")
 expect(verdictBad.menuNotice && !verdictBadAck.menuNotice, "acknowledging clears only the separate notice")
 expect(verdictUnknown.menuSymbol == "questionmark.circle" && verdictUnknownAck.menuSymbol == "questionmark.circle" && !verdictUnknownAck.menuNotice, "unknown shows in the menu, acknowledged or not")
@@ -2359,7 +2359,7 @@ expect(Rules.verdict(checks: [verdictOK], needs: verdictStaleOwner).health == .u
 let verdictClear = Rules.verdict(checks: [verdictOK], needs: Needs())
 expect(verdictClear.health == .ok && verdictClear.headline == "All systems go" && verdictClear.text == "All clear" && verdictClear.open.isEmpty, "only a fully known, untroubled world is all clear")
 let verdictPartialBad = Rules.verdict(checks: [verdictDisk], needs: Needs(items: [], gaps: ["Linear"]))
-expect(verdictPartialBad.text == "Rig storage · 90% full · partial data" && verdictPartialBad.open.count == 2, "a failure with gaps says both")
+expect(verdictPartialBad.text == "CI host storage · 90% full · partial data" && verdictPartialBad.open.count == 2, "a failure with gaps says both")
 
 let unrelated = LaneTiming.schedule(running: [], slots: 2, jobs: [(group: "A", length: 300), (group: "A", length: 720), (group: "B", length: 300)])
 expect(unrelated.map(\.start) == [0, 300, 0] && unrelated.map(\.end) == [300, 1020, 300], "a blocked leg leaves its slot for unrelated work: \(unrelated)")
@@ -2671,8 +2671,8 @@ var staleRig = World()
 staleRig.status[.rig] = SourceStatus(sampleAt: Date(timeIntervalSinceNow: -3600))
 let staleRigChecks = Rules.checks(staleRig)
 let staleRigVerdict = Rules.verdict(checks: staleRigChecks, needs: Rules.needs(staleRig, checks: staleRigChecks, threadURL: { _ in nil }))
-expect(!staleRig.rigUnreachable && staleRigVerdict.menuSymbol == "questionmark.circle", "a stale Rig reads unknown in the menu, not offline")
-expect(!World().rigUnreachable, "a Rig never read is not offline")
+expect(!staleRig.rigUnreachable && staleRigVerdict.menuSymbol == "questionmark.circle", "a stale CI host reads unknown in the menu, not offline")
+expect(!World().rigUnreachable, "a CI host never read is not offline")
 var failingRig = World()
 failingRig.status[.rig] = SourceStatus(failures: 2, error: "collector failed")
 expect(!failingRig.rigUnreachable, "a failing collector doesn't prove the host is offline")
@@ -2825,12 +2825,12 @@ expect(bestSeen.bestDecision(now: bestAt.addingTimeInterval(60))?.isCurrent(at: 
 expect(bestSeen.bestDecision(now: bestAt.addingTimeInterval(60))?.lastGood?.decisionHash == bestReal?.decision.decisionHash, "the bytes survive the snapshot and the pull")
 expect(bestSeen.bestDecision(now: bestAt.addingTimeInterval(700))?.isCurrent(at: bestAt.addingTimeInterval(700)) == false, "a stopped publisher makes the decision historical at read time")
 expect(bestSeen.bestDecision(now: bestAt.addingTimeInterval(700))?.label(bestReal!.decision.measures.values.first!.groups.values.first!, at: bestAt.addingTimeInterval(700)).hasPrefix("Historical computed") == true, "historical results say so")
-let bestFailed = bestDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(), best: bestData(bestFile), bestError: "Orch unreachable"), kept: bestGood.kept)
+let bestFailed = bestDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM(), best: bestData(bestFile), bestError: "Orchestrator unreachable"), kept: bestGood.kept)
 let bestFailedSeen = bestImport(bestFailed.data)
-expect(bestFailedSeen.bestProblem?.contains("Orch unreachable") == true && bestFailedSeen.liveBest != nil, "a failed refresh keeps the last good decision and says why")
+expect(bestFailedSeen.bestProblem?.contains("Orchestrator unreachable") == true && bestFailedSeen.liveBest != nil, "a failed refresh keeps the last good decision and says why")
 expect(bestImport(bestDocument(PublishedStatus.Input(repos: pubRepos(), vm: pubVM())).data).bestDecision(now: bestAt)?.lastGood == nil, "no publication shows no decision")
 expect(Collected().bestDecision(now: bestAt) == nil, "without a feed the Mac has nothing from the snapshot")
-expect(PublishedStatus.bestOutput(Data(#"{"schema":"flightops-best/1","error":"Orch unreachable"}"#.utf8), error: nil, now: bestAt).error == "Orch unreachable", "the collector's reason is kept")
+expect(PublishedStatus.bestOutput(Data(#"{"schema":"flightops-best/1","error":"Orchestrator unreachable"}"#.utf8), error: nil, now: bestAt).error == "Orchestrator unreachable", "the collector's reason is kept")
 expect(PublishedStatus.bestOutput(Data(#"{"schema":"flightops-models/1"}"#.utf8), error: nil, now: bestAt).data == nil, "another schema is refused")
 
 

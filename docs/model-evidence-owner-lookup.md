@@ -1,6 +1,6 @@
 # Exact returned-run owner lookup, source-only
 
-This seven-file component implements an explicit Rig read-only observer for one returned orchestration run and exact target thread. It contains the original six files plus one publication-repair test file. The pure relation derivation is separate from the source-owned transaction. Imports/constructors do not read files, SQLite, native logs, network, source paths or default feeds. No existing module/CLI registration, capture wire/ledger/projection/port, joins, agent, CI, kernel, Swift, installer or shared CHANGELOG changes.
+This seven-file component implements an explicit CI host read-only observer for one returned orchestration run and exact target thread. It contains the original six files plus one publication-repair test file. The pure relation derivation is separate from the source-owned transaction. Imports/constructors do not read files, SQLite, native logs, network, source paths or default feeds. No existing module/CLI registration, capture wire/ledger/projection/port, joins, agent, CI, kernel, Swift, installer or shared CHANGELOG changes.
 
 
 ## Contract and pure interface
@@ -39,8 +39,8 @@ Publication is an explicit independent /tmp sidecar, not a ledger append/feed. E
 
 ## Remaining acceptance and dependencies
 
-No live observer/CLI/guard/Orch/native/DB/API/cache/courier read, new send, old actual control replay, model/comparison task, service/hook/controller/feed/host/credential/settings/network/remote/PR/CI/Mac/native/install action or agent occurs in this packet. Source/test success does not establish current actual owner/model/actor/producer/PR/usage/cohort/Best facts. Source approval needs NEW FULL independent whole-component review.
+No live observer/CLI/guard/Orchestrator/native/DB/API/cache/courier read, new send, old actual control replay, model/comparison task, service/hook/controller/feed/host/credential/settings/network/remote/PR/CI/Mac/native/install action or agent occurs in this packet. Source/test success does not establish current actual owner/model/actor/producer/PR/usage/cohort/Best facts. Source approval needs NEW FULL independent whole-component review.
 
-Only after that review may a separately predeclared already-needed task's exact returned run/target and original dispatch custody support ONE Rig lookup within5s/100rows/1MiB, with no native read/new send/retry/widening. Independent field review must establish actual caller/source/transaction custody; ambiguity is an acceptable bounded observation. No artificial task is created to fill a model cell.
+Only after that review may a separately predeclared already-needed task's exact returned run/target and original dispatch custody support ONE CI host lookup within5s/100rows/1MiB, with no native read/new send/retry/widening. Independent field review must establish actual caller/source/transaction custody; ambiguity is an acceptable bounded observation. No artificial task is created to fill a model cell.
 
 A later code-owned primary-dispatch/lookup composer must preserve epochs and exact custody, with a versioned one-to-many relation for genuine multi-attempt/turn work. Actual call-side terminal and normal-Git witnesses, authoritative decisions/independent actors, exact PR membership and usage/children/shared allocation/retention, source qualification, prospective cohort/decision consumer and final UI/native installation remain separate dependencies. No frozen1969/e520 window/support/coverage/precision/calibration/multiplicity rule changes, fake PID, startup terminal, default model/billing, forced winner, denominator drop or90-calendar wait is introduced. Freeze and park after this source packet; no automatic adoption or actual action.

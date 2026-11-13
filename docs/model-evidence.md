@@ -1,7 +1,7 @@
 # Offline model evidence — Packet A
 
 FlightOps owns the `collectors/model_evidence` package and `collectors/runs.py`.
-These modules are not connected to the app, a scheduled collector, SSH, Orch,
+These modules are not connected to the app, a scheduled collector, SSH, Orchestrator,
 a database, logs, a hook, a controller, an observer key, or a user cache. Packet A
 supplies a reproducible offline evidence core and ingestion contract. It does not
 supply PR joins, CI/assignment/anchor derivation, cohorts, statistics, Best/Needs
@@ -9,7 +9,7 @@ attention calls, installation, or live-source qualification.
 
 ## Run and inspect
 
-From the repository root with the existing Rig Python (stdlib only):
+From the repository root with the existing CI host Python (stdlib only):
 
 ```sh
 python3 -m collectors.model_evidence \
@@ -76,7 +76,7 @@ no filesystem or remote-name resolution of a repository.
 ## Fixture input, settings and canonical usage
 
 `model-evidence-fixture/1` is a technical fixture format, **not** an assertion that
-Orch or a native provider emits these field names. The committed bundles are the
+Orchestrator or a native provider emits these field names. The committed bundles are the
 input examples; the paired goldens are immutable expected publications. The separate
 `current-interface-shape.json` is a sanitized shape regression derived from a
 Root-supplied guarded metadata observation, not a current native-log sample.
@@ -120,7 +120,7 @@ rejected rather than clamped. All five buckets must be known for this contract's
 conservative usage completeness. There is no pricing or USD estimate.
 
 `usage.codex_turn_updates` is a pure **fixture** cumulative-baseline control, not a
-native Orch log decoder. It keys updates by their actual turn; a late finished turn
+native Orchestrator log decoder. It keys updates by their actual turn; a late finished turn
 cannot be charged to a newer one. Missing/reset baselines use latest-response scope.
 When a late old update makes the newer baseline uncertain, it is invalidated and
 subsequent output remains explicitly latest-response scoped, never a made-up whole
@@ -265,6 +265,6 @@ or runtime acceptance. Packet B/C/D and Swift integration remain separate work.
 
 ## Current-source adapter
 
-The offline v1 contract remains intact. A current Orch/Codex read-only acquisition
+The offline v1 contract remains intact. A current Orchestrator/Codex read-only acquisition
 implementation and `agent-evidence/2` are documented in
 [model-evidence-native.md](model-evidence-native.md).

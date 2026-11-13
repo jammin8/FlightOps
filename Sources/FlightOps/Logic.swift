@@ -155,23 +155,23 @@ enum Rules {
         let s = w.status[.rig] ?? SourceStatus()
         if w.fresh(.rig), let h = w.host {
             if let n = h.net_fail_min, n > 0 {
-                return Check(id: "rig", label: "Rig", detail: "network down \(n)m", health: .bad, source: .rig, alert: true)
+                return Check(id: "rig", label: "CI host", detail: "network down \(n)m", health: .bad, source: .rig, alert: true)
             }
-            return Check(id: "rig", label: "Rig", detail: "online", health: .ok, source: .rig)
+            return Check(id: "rig", label: "CI host", detail: "online", health: .ok, source: .rig)
         }
         if w.rigUnreachable {
-            return Check(id: "rig", label: "Rig", detail: "unreachable", health: .bad, source: .rig, alert: true,
+            return Check(id: "rig", label: "CI host", detail: "unreachable", health: .bad, source: .rig, alert: true,
                          observedAt: s.observedAt)
         }
         if let at = s.sampleAt {
-            return Check(id: "rig", label: "Rig", detail: "last seen \(ago(at, now: w.now)) ago", health: .unknown, source: .rig)
+            return Check(id: "rig", label: "CI host", detail: "last seen \(ago(at, now: w.now)) ago", health: .unknown, source: .rig)
         }
         let detail = s.failures > 0 ? (s.unreachable ? "not answering" : "no data (\(s.error ?? "collector failed"))") : "checking"
-        return Check(id: "rig", label: "Rig", detail: detail, health: .unknown, source: .rig)
+        return Check(id: "rig", label: "CI host", detail: detail, health: .unknown, source: .rig)
     }
 
     static func rigState(_ w: World) -> Check {
-        let id = "rig-state", label = "Rig storage state", fact = w.storageFact
+        let id = "rig-state", label = "CI host storage state", fact = w.storageFact
         guard fact.known, let state = fact.state else { return Check(id: id, label: label, detail: fact.why ?? "unknown", health: .unknown, source: .agents) }
         let bad = state.lowercased().contains("critical")
         let healthy = state.uppercased() == "OK"
@@ -188,7 +188,7 @@ enum Rules {
     }
 
     static func storage(_ w: World) -> Check {
-        percentUsed(w.host?.disk_pct, id: "disk", label: "Rig storage", source: .rig, fresh: w.fresh(.rig))
+        percentUsed(w.host?.disk_pct, id: "disk", label: "CI host storage", source: .rig, fresh: w.fresh(.rig))
     }
 
     static func vmDisk(_ w: World) -> Check {
@@ -274,7 +274,7 @@ enum Rules {
     }
 
     static func orch(_ w: World) -> Check {
-        let id = "orch", label = "Orch"
+        let id = "orch", label = "Orchestrator"
         guard w.fresh(.agents), let state = w.vm?.orch else {
             return Check(id: id, label: label, detail: "no data", health: .unknown, source: .agents)
         }
@@ -283,7 +283,7 @@ enum Rules {
     }
 
     static func orchToken(_ w: World) -> Check {
-        let id = "orch-token", label = "Orch collector token"
+        let id = "orch-token", label = "Orchestrator collector token"
         guard w.fresh(.agents), let v = w.vm else { return Check(id: id, label: label, detail: "no data", health: .unknown, source: .agents) }
         guard let exp = v.orch_token_expires else { return Check(id: id, label: label, detail: "expiry unknown", health: .unknown, source: .agents) }
         let left = exp - Int(w.now.timeIntervalSince1970)
@@ -434,7 +434,7 @@ struct SystemVerdict: Equatable {
     var menuNotice: Bool { !open.isEmpty }
 }
 
-let agentScope = "Orch backend, web and iOS projects"
+let agentScope = "Orchestrator backend, web and iOS projects"
 
 extension Rules {
 
@@ -442,7 +442,7 @@ extension Rules {
         var gaps: [String] = []
         for s in SourceID.allCases where !w.fresh(s) { gaps.append(s.label) }
         for c in checks where c.health == .unknown && w.fresh(c.source) { gaps.append(c.label) }
-        if w.fresh(.agents) && !w.agentsKnown { gaps.append("Orch agent list") }
+        if w.fresh(.agents) && !w.agentsKnown { gaps.append("Orchestrator agent list") }
         for s in SourceID.allCases where w.fresh(s) && w.status[s]?.note != nil { gaps.append("\(s.label) (partly unreadable)") }
         if w.fresh(.mac), let m = w.mac {
             if m.iosCI == nil { gaps.append("Mac CI jobs") }
@@ -1789,7 +1789,7 @@ struct PRModels: Decodable {
     }
 
     func tokenLine(opened: Double?) -> String {
-        if let n = linkedEstimate(opened: opened)?.fresh { return "~" + compactCount(n) + " · no cache reads · estimate from Orch links, exclusive use unproven" }
+        if let n = linkedEstimate(opened: opened)?.fresh { return "~" + compactCount(n) + " · no cache reads · estimate from Orchestrator links, exclusive use unproven" }
         if let n = allTokens(opened: opened)?.fresh { return compactCount(n) + " · no cache reads · historical, freshness unknown" }
         if !usageEvidenceValid { return "– · model evidence unreadable or conflicting" }
         if historyCut(opened: opened) { return "– · history not fully covered" }

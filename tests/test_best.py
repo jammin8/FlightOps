@@ -466,7 +466,7 @@ class Redirects(unittest.TestCase):
         local = self.origin((302, {"Location": other.base + "/stolen"}, b""))
         _, token = support.data_dir(support.capture())
         orch = best.LiveOrch(local.base, token)
-        with self.assertRaisesRegex(models.Failure, "Orch answered 302"):
+        with self.assertRaisesRegex(models.Failure, "Orchestrator answered 302"):
             best.shell_rows(orch)
         with self.assertRaises(best.orch_api.Refused):
             orch.thread("mcp:one")
@@ -614,8 +614,8 @@ class ModelsSource(unittest.TestCase):
         return directory
 
     def test_a_failed_refresh_stops_the_pass_even_with_recent_bytes(self):
-        with self.assertRaisesRegex(models.Failure, "Models collection failed: Orch unreachable"):
-            best.usage(self.raw({"schema": models.SCHEMA, "generated": 1000, "runs": {}}, "Orch unreachable"), 1010)
+        with self.assertRaisesRegex(models.Failure, "Models collection failed: Orchestrator unreachable"):
+            best.usage(self.raw({"schema": models.SCHEMA, "generated": 1000, "runs": {}}, "Orchestrator unreachable"), 1010)
 
     def test_a_report_of_another_schema_is_unreadable(self):
         with self.assertRaisesRegex(models.Failure, "Models report unreadable"):
@@ -684,7 +684,7 @@ class Budget(unittest.TestCase):
     def test_an_oversized_shell_is_refused(self):
         orch = best.LiveOrch("http://127.0.0.1:3773", self.token)
         with unittest.mock.patch.object(best, "SOURCE_BYTES", 10), unittest.mock.patch.object(best.orch_api, "open_local", support.Transport(self.data)):
-            with self.assertRaisesRegex(models.Failure, "Orch shell exceeds"):
+            with self.assertRaisesRegex(models.Failure, "Orchestrator shell exceeds"):
                 best.shell_rows(orch)
 
     def test_an_oversized_review_thread_is_refused_by_reason_and_not_read_again(self):

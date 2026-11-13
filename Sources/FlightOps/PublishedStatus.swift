@@ -58,7 +58,7 @@ struct LiveModels {
     }
 
     func statusLine(now: Double) -> String {
-        var parts = ["Models: live from VM", "\(attributed) PRs on Orch records"]
+        var parts = ["Models: live from VM", "\(attributed) PRs on Orchestrator records"]
         parts.append(github?.line(now: now) ?? "GitHub coverage unknown")
         parts += ["builders unknown", "settings as requested", "report age " + duration(Int(max(0, now - at.timeIntervalSince1970)))]
         return parts.joined(separator: " · ")
@@ -102,10 +102,10 @@ enum PublishedStatus {
     static let failures = "failures"
     static let delivery = "delivery"
     static let notFromVM: [[String: String]] = [
-        ["field": "rig.cpu", "why": "needs Rig host access"],
-        ["field": "rig.guests", "why": "needs Rig host access"],
-        ["field": "ci.minute_health", "why": "needs Rig host access"],
-        ["field": "merge_publisher", "why": "needs Rig host access"],
+        ["field": "rig.cpu", "why": "needs CI host access"],
+        ["field": "rig.guests", "why": "needs CI host access"],
+        ["field": "ci.minute_health", "why": "needs CI host access"],
+        ["field": "merge_publisher", "why": "needs CI host access"],
         ["field": "mac", "why": "Mac-only"],
         ["field": "linear", "why": "not collected on the VM"],
     ]
@@ -188,7 +188,7 @@ enum PublishedStatus {
         let localWhy = input.vmError ?? present(vm["vm_error"]) as? String ?? (local == nil ? "no VM data" : nil)
         out["vm"] = Candidate(at: at, exact: exact, value: counters, error: localWhy)
         let state = present(local?["orch"]) as? String
-        out["orch"] = Candidate(at: at, exact: exact, value: state.map { ["state": $0] }, error: state == nil ? localWhy ?? "Orch state unknown" : input.vmError)
+        out["orch"] = Candidate(at: at, exact: exact, value: state.map { ["state": $0] }, error: state == nil ? localWhy ?? "Orchestrator state unknown" : input.vmError)
         let expires = present(local?["orch_token_expires"])
         out["orch_token"] = Candidate(at: at, exact: exact, value: expires.map { ["expires": $0] }, error: expires == nil ? "expiry unknown" : input.vmError)
         let listed = present(vm["agents"]) as? [Any]
