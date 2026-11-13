@@ -729,6 +729,21 @@ expect(json.load(open(ledger_status))["schema"] == "flightops-snapshot/1", "a hu
 github_due()
 fake_ledger(ledger_stub)
 expect(ledger_collect() == 0 and not os.path.exists(os.path.join(ledger_store, "raw", "ledger.error")), "a ledger that recovers clears its error")
+import shutil
+standins = os.path.join(os.path.dirname(data), "standins")
+os.makedirs(standins)
+for name in os.listdir("collectors"):
+    if name.endswith(".py"):
+        os.symlink(os.path.abspath(os.path.join("collectors", name)), os.path.join(standins, name))
+for name in ("machine", "rig", "vm"):
+    shutil.copy(os.path.join("collectors", "examples", name + ".py"), standins)
+standin_store = os.path.join(os.path.dirname(data), "standin-data")
+standin_env = dict(env, FLIGHTOPS_DATA_DIR=standin_store, FLIGHTOPS_COLLECTORS=standins, FLIGHTOPS_COLLECTORS_ENABLED="rig,vm")
+subprocess.run([binary, "collect"], env=standin_env, capture_output=True, text=True)
+standin_status = json.loads(subprocess.run([binary, "status", "--json"], env=standin_env, capture_output=True, text=True, check=True).stdout)
+expect(source(standin_status, "rig")["state"] == "fresh", "the stand-in CI host collector is read as a fresh host: %s" % source(standin_status, "rig"))
+expect(all(os.path.exists(os.path.join(standin_store, "raw", n + ".json")) and not os.path.exists(os.path.join(standin_store, "raw", n + ".error")) for n in ("rig", "vm")),
+       "the stand-in collectors run without errors")
 print(f"CLI OK ({checks[0]} assertions)" if not failures else "\n".join("FAIL: " + f for f in failures) + f"\n{len(failures)} FAILED ({checks[0]} assertions)")
 sys.exit(1 if failures else 0)
 PY

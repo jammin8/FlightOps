@@ -179,7 +179,7 @@ GitHub's own records (Models design, Phase 1; `pr-facts.json`, written by `colle
 
 | Collector | Source | Every |
 |---|---|---|
-| host collectors | site-specific and not part of this repository: the app runs `collectors/rig.py` (CI host and agents VM over SSH), `collectors/vm.py` (VM-side snapshot) and `collectors/mac.py` (local CI lanes, GitHub and Codex budgets) when they exist, and shows their sources as never seen otherwise. Their JSON shapes are the ones `Ingest.swift` decodes. | 20–30 s |
+| host collectors | site-specific: the app runs `collectors/rig.py` (CI host and agents VM), `collectors/vm.py` (VM-side snapshot) and `collectors/mac.py` (local CI lanes, GitHub and Codex budgets) when they exist, and shows their sources as never seen otherwise. Stand-ins live in `collectors/examples` (see *Host collectors*). Their JSON shapes are the ones `Ingest.swift` decodes. | 20–30 s |
 | `collectors/linear.py` | Linear GraphQL API: every issue's state and project, initiatives, the launch (cached 30 min) | 15 min |
 | `collectors/repos.py` | one GitHub GraphQL query for all three repos: PR checks (latest attempt per check), review gate, merge state, queued CI jobs (cached 15 min; not the REST budget the CI hosts use), plus GitHub `rate_limit` on every run, so the budget needs no Mac | 15 min |
 | `collectors/prfacts.py` | GitHub receipts for the Models tab and PR cards: the repository events feed (`ghevents.py`: `If-None-Match`, so a quiet poll is a free 304; at most 36 requests an hour, each counted before it's sent and refunded only for a confirmed 304; receipts on disk before the state that acknowledges them; a gap is recorded when more events arrive between polls than the pages read), main's required checks (daily), PR facts and full check history (`ghfacts.py`: discovery every 15 min; an open PR again when it changed, with every head's history; running, empty or incomplete histories every 15 min, the current head hourly; a merged PR once, sealed only when everything came back whole; at most 100 GraphQL points an hour, each query reserving its documented cost before it's sent, under a lock shared with `verify.py --refresh`, with older ledger lines and a line cut short still charged; a run held by the budget doesn't count as a GitHub read, and the head histories it held are reported), then `receipts.py` writes `pr-facts.json`. Stored in `~/Library/Application Support/FlightOps/github-events` and `github-facts`; commit messages keep only their headline and trailers | 5 min |
@@ -206,6 +206,29 @@ nothing in this repository assumes a particular host.
 Optional: `defaults write io.github.jammin8.flightops orchThreadURL 'https://<orch host>/thread/{id}'` makes agent rows and
 notifications open the thread; without it they copy the thread id.
 
+## Host collectors
+
+The real host collectors depend on your own machines, so they are not in this repository. `collectors/examples`
+has stand-ins with the same JSON shapes that report only what they can measure on the machine they run on and
+leave everything else unknown:
+
+| Stand-in | Reports | Leaves unknown |
+|---|---|---|
+| `rig.py` | this machine as the CI host: CPU, memory, load, uptime, disk | temperature, fan, swap, network, CI guests and lanes, the agents VM |
+| `vm.py` | this machine as the agents VM: memory, load, CPUs, disk | the orchestrator, its token, agent sessions and the agent list |
+| `mac.py` | the GitHub API budget through `gh api rate_limit` | local CI jobs, Codex usage, agent counts |
+
+To use them, copy them next to the other collectors (the copies are gitignored, so a site-specific version never
+gets committed by accident) and enable the ones you want:
+
+```
+cp collectors/examples/{machine,rig,vm,mac}.py collectors/
+FLIGHTOPS_COLLECTORS_ENABLED=repos,rig,vm,mac flightops collect
+```
+
+Replace a stand-in with your own script when you have a real source; keep the same output shape and leave
+anything you can't read out (or `null`) rather than reporting zero.
+
 ## Configuration
 
 Site-specific names live in a local JSON file that is never committed. The collectors read, in order,
@@ -230,8 +253,8 @@ replaces the default. For example, `FLIGHTOPS_COLLECTORS_ENABLED=repos,linear fl
 `FLIGHTOPS_COLLECTORS_ENABLED=repos,ledger flightops collect --publish` also records GitHub evidence and
 publishes a local snapshot. Configure each selected source before enabling it. `pull`, `models` and `best`
 require their own supported integration and retained inputs. The `rig`, `vm` and `mac` host adapters are
-site-specific scripts absent from this public source tree; selecting one without supplying it reports
-`collector missing`.
+site-specific scripts absent from `collectors/` (stand-ins are in `collectors/examples`); selecting one without
+supplying it reports `collector missing`.
 
 `flightops status --json` labels an omitted source with no retained input as
 `collector disabled (not configured)`. Its readings remain unknown. Retained inputs keep their original
