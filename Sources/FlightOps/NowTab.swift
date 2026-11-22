@@ -162,6 +162,12 @@ struct VerdictCard: View {
     var stage: Stage
     var status: StatusFile
 
+    private func headline(_ verdict: Verdict) -> String {
+        let age = Clock.age(verdict.since)
+        let lasting = verdict.since == nil || age == "now" || age == "–" ? "" : " for \(age)"
+        return "\(stage.label): \(verdict.word)\(lasting)"
+    }
+
     var body: some View {
         let verdict = stage.verdict!
         let tint = verdictTint(verdict.state) ?? .secondary
@@ -170,7 +176,7 @@ struct VerdictCard: View {
             Image(systemName: verdict.state == "busy" ? "water.waves" : verdict.state == "stuck" ? "exclamationmark.octagon.fill" : "tortoise.fill")
                 .foregroundStyle(tint).font(.title3)
             VStack(alignment: .leading, spacing: 3) {
-                Text("\(stage.label): \(verdict.word)" + (verdict.since.map { Clock.age($0) }.flatMap { $0 == "now" || $0 == "–" ? nil : " for \($0)" } ?? ""))
+                Text(headline(verdict))
                     .font(.subheadline.weight(.semibold))
                 Text(verdict.reason).font(.callout).foregroundStyle(.secondary)
                 if let pr, verdict.state != "busy" {
