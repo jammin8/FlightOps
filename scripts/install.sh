@@ -5,14 +5,14 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 VERSION=$(git describe --tags --always 2>/dev/null || echo dev)
 
-FLIGHTOPS_CONFIG="$PWD/tests/fixtures/site-config.json" python3 -m unittest discover -s tests -q
+python3 -m unittest discover -s tests -q
 swift build -c release
 
 APP=build/"FlightOps.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/collectors"
 cp .build/release/FlightOps "$APP/Contents/MacOS/FlightOps"
-cp collectors/*.py "$APP/Contents/Resources/collectors/"
+cp collectors/*.py collectors/sample-status.json "$APP/Contents/Resources/collectors/"
 cp assets/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 cat > "$APP/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -24,7 +24,7 @@ cat > "$APP/Contents/Info.plist" <<EOF
 <key>CFBundleExecutable</key><string>FlightOps</string>
 <key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>1.2</string>
+<key>CFBundleShortVersionString</key><string>2.0</string>
 <key>CFBundleVersion</key><string>$VERSION</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>LSUIElement</key><true/>

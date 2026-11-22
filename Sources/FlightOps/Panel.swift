@@ -1,155 +1,144 @@
 import AppKit
-import ServiceManagement
 import SwiftUI
 
+enum Tab: Int, CaseIterable {
+    case now, trends, models
 
-
+    var title: String {
+        switch self {
+        case .now: return "Now"
+        case .trends: return "Trends"
+        case .models: return "Models"
+        }
+    }
+}
 
 struct Panel: View {
-    @Environment(\.openSettings) private var openSettings
     @ObservedObject var m: Monitor
-    @AppStorage("tab") private var tab = Tab.mission.rawValue
+    @AppStorage("tab") private var tab = Tab.now.rawValue
+    @AppStorage("repo") private var repo = "all"
+    @State private var choosing = false
+
+    private var selectedRepo: String { m.status?.views[repo] != nil ? repo : "all" }
 
     var body: some View {
         VStack(spacing: 0) {
             header.padding(.horizontal, Theme.margin).padding(.top, 14).padding(.bottom, 10)
+            if choosing {
+                RepoChooser(m: m, done: { choosing = false })
+                    .frame(maxHeight: .infinity, alignment: .top)
+            } else {
+                controls.padding(.horizontal, Theme.margin).padding(.bottom, 10)
+                if m.demo { demoBanner.padding(.horizontal, Theme.margin).padding(.bottom, 10) }
+                ScrollView(.vertical) {
+                    page
+                        .frame(width: Theme.width - 2 * Theme.margin, alignment: .topLeading)
+                        .padding(.horizontal, Theme.margin).padding(.bottom, 12)
+                }
+                .frame(maxHeight: .infinity, alignment: .top)
+            }
+            Divider()
+            footer.padding(.horizontal, Theme.margin).padding(.vertical, 8)
+        }
+        .frame(width: Theme.width, height: min(760, (NSScreen.main?.visibleFrame.height ?? 900) - 40), alignment: .top)
+        .background { shortcuts.opacity(0).allowsHitTesting(false) }
+    }
+
+    @ViewBuilder private var page: some View {
+        if let status = m.status, let view = status.view(selectedRepo) {
+            switch Tab(rawValue: tab) ?? .now {
+            case .now: NowTab(status: status, view: view)
+            case .trends: TrendsTab(status: status, view: view, repo: selectedRepo)
+            case .models: ModelsTab(status: status)
+            }
+        } else {
+            Text(m.problem ?? "No status yet.").foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 200)
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: 8) {
+            Image(nsImage: JetIcon.image).resizable().frame(width: 16, height: 16).foregroundStyle(.secondary)
+            Text("FlightOps").font(.headline)
+            Spacer(minLength: 12)
+            if let line = m.status?.view(selectedRepo)?.statusLine {
+                Text(line).font(.callout).foregroundStyle(.secondary).lineLimit(1).truncationMode(.tail).help(line)
+            }
+        }
+    }
+
+    private var controls: some View {
+        HStack(spacing: 10) {
+            Picker("", selection: $repo) {
+                Text("All repos").tag("all")
+                if let repos = m.status?.repos, !repos.isEmpty {
+                    Divider()
+                    ForEach(repos) { r in
+                        Label { Text(r.name) } icon: { Image(systemName: "circle.fill").foregroundStyle(r.tint) }.tag(r.id)
+                    }
+                }
+            }
+            .labelsHidden().fixedSize().help("Filter every tab by repo")
             Picker("", selection: $tab) {
                 ForEach(Tab.allCases, id: \.rawValue) { Text($0.title).tag($0.rawValue) }
             }
             .pickerStyle(.segmented).labelsHidden()
-            .padding(.horizontal, Theme.margin).padding(.bottom, 12)
-            ScrollView(.vertical) {
-
-
-                page
-                    .frame(width: 520 - 2 * Theme.margin, alignment: .topLeading)
-                    .padding(.horizontal, Theme.margin).padding(.bottom, 12)
-                    .frame(maxWidth: .infinity, alignment: .top)
-            }
-            .scrollIndicators(.automatic)
-            .frame(maxHeight: .infinity, alignment: .top)
-            Divider()
-            footer.padding(.horizontal, Theme.margin).padding(.vertical, 8)
-        }
-        .frame(width: 520, height: min(780, (NSScreen.main?.visibleFrame.height ?? 900) - 40), alignment: .top)
-        .background {
-
-            shortcuts.opacity(0).allowsHitTesting(false)
-        }
-        .onAppear {
-            if Tab(rawValue: tab) == nil { tab = Tab.mission.rawValue }
-            m.recompute()
         }
     }
 
-    @ViewBuilder private var page: some View {
-        switch Tab(rawValue: tab) ?? .mission {
-        case .mission: MissionTab(m: m, tab: $tab)
-        case .charts: ChartsTab(m: m)
-        case .models: ModelsTab(m: m)
+    private var demoBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "sparkles").foregroundStyle(.secondary)
+            Text("Sample data. Connect your repos to see your own work.").font(.callout)
+            Spacer()
+            Button("Connect your repos") { choosing = true }.buttonStyle(.borderedProminent).controlSize(.small)
         }
+        .card()
     }
 
     private var shortcuts: some View {
         HStack {
-
             ForEach(Array(Tab.allCases.enumerated()), id: \.offset) { i, t in
                 Button("") { tab = t.rawValue }.keyboardShortcut(KeyEquivalent(Character(String(i + 1))))
             }
         }
     }
 
-    private var header: some View {
-        let v = m.verdict
-        return HStack(spacing: 8) {
-            HStack(spacing: 5) {
-                Image(nsImage: JetIcon.image).resizable().frame(width: 16, height: 16).foregroundStyle(.secondary)
-                Text("FlightOps").font(.headline)
-            }
-            Spacer()
-            Button { tab = Tab.mission.rawValue } label: {
-                HStack(spacing: 6) {
-                    verdictMark(v)
-                    Text(v.text).font(.callout).foregroundStyle(.secondary).lineLimit(1).truncationMode(.tail)
-                }
-            }
-            .buttonStyle(.plain)
-            .help("What needs attention right now; click for Mission. Partial data: a source is out of date, so this may be missing something.")
-            if !v.open.isEmpty {
-                Button { m.dismissShown() } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary).frame(minWidth: 20, minHeight: 20).contentShape(Rectangle()) }
-                    .buttonStyle(.plain).help("Dismiss until it changes")
-            }
-        }
-        .accessibilityElement(children: .contain)
-    }
-
-    @ViewBuilder private func verdictMark(_ v: SystemVerdict) -> some View {
-        switch v.health {
-        case .bad, .warn:
-            Circle().fill(v.health == .bad ? Theme.warning : Theme.caution).frame(width: 8, height: 8)
-        case .unknown:
-            Image(systemName: "questionmark.circle").font(.caption).foregroundStyle(.secondary)
-        case .ok:
-            Image(systemName: "checkmark.circle").font(.caption).foregroundStyle(.secondary)
-        }
-    }
-
     private var footer: some View {
         HStack(spacing: 10) {
-            SourceDots(m: m)
+            if m.collecting {
+                ProgressView().controlSize(.small)
+                Text("Reading GitHub…").font(.caption).foregroundStyle(.secondary)
+            } else if let problem = m.problem {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Theme.caution).font(.caption)
+                Text(problem).font(.caption).foregroundStyle(.secondary).lineLimit(1).help(problem)
+            } else {
+                Text(updatedText).font(.caption).foregroundStyle(.secondary).help(sourceHelp)
+            }
             Spacer()
-            Button { m.refreshAll() } label: { Image(systemName: "arrow.clockwise") }
-                .buttonStyle(.borderless).help("Refresh (⌘R)").keyboardShortcut("r")
+            Button { Task { await m.collect() } } label: { Image(systemName: "arrow.clockwise") }
+                .buttonStyle(.borderless).help("Refresh now (⌘R)").keyboardShortcut("r").disabled(m.demo || m.collecting)
             Menu {
-                Button("Open Linear") { open(SiteConfig.shared.linearURL) }
-                Button("Open GitHub") { open(SiteConfig.shared.githubURL) }
-                Button("Copy Status") { copy(m.statusText) }
-                Button("Preview Board Animations") { NotificationCenter.default.post(name: .previewBoardMotion, object: nil) }
-                Button("Show Dismissed (\(m.dismissed.count))") { m.restoreDismissed() }.disabled(m.dismissed.isEmpty)
+                Button("Choose Repos…") { choosing = true }
+                Button("Open GitHub") { openLink("https://github.com/pulls") }
                 Divider()
-
-                Button("Settings…") { NSApp.activate(ignoringOtherApps: true); openSettings() }.keyboardShortcut(",")
                 Button("Quit FlightOps") { NSApplication.shared.terminate(nil) }.keyboardShortcut("q")
             } label: { Image(systemName: "ellipsis.circle") }
                 .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize().help("More")
         }
     }
-}
 
-
-struct SourceDots: View {
-    @ObservedObject var m: Monitor
-
-    var body: some View {
-        HStack(spacing: 8) {
-            ForEach(SourceID.allCases, id: \.self) { s in
-                HStack(spacing: 3) {
-                    dot(m.freshness(s), failed: (m.status[s]?.failures ?? 0) > 0)
-                    Text(shortName(s)).font(.caption2).foregroundStyle(.secondary)
-                }
-                .help(helpText(s))
-                .accessibilityElement(children: .combine)
-            }
-        }
+    private var updatedText: String {
+        guard let status = m.status else { return "" }
+        if m.demo { return "Sample data" }
+        let github = status.sources?["github"]
+        guard let read = github?.readAt else { return github?.error ?? "Not read yet" }
+        return "GitHub read \(Clock.age(read)) ago" + (github?.state == "partial" ? " · some repos failed" : "")
     }
 
-    private func shortName(_ s: SourceID) -> String { s == .agents ? "VM" : s.label }
-
-    @ViewBuilder private func dot(_ f: Freshness, failed: Bool) -> some View {
-        switch f {
-        case .fresh:
-            Circle().fill(Color.secondary.opacity(0.5)).frame(width: 6, height: 6)
-        case .stale:
-            Circle().fill(Theme.caution).frame(width: 6, height: 6)
-        case .missing:
-            Circle().strokeBorder(failed ? Theme.caution : Color.secondary, lineWidth: 1).frame(width: 6, height: 6)
-        }
-    }
-
-    private func helpText(_ s: SourceID) -> String {
-        let st = m.status[s] ?? SourceStatus()
-        let seen = st.sampleAt.map { "updated \(ago($0)) ago" } ?? "no data yet"
-        let why = st.error.map { " · \($0)" } ?? ""
-        return "\(s.label): \(seen)\(why)"
+    private var sourceHelp: String {
+        guard let status = m.status else { return "" }
+        let failed = status.repos.filter { $0.error != nil }.map { "\($0.id): \($0.error ?? "")" }
+        return failed.isEmpty ? "Every repo read" : failed.joined(separator: "\n")
     }
 }

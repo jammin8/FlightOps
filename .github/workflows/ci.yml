@@ -15,9 +15,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  FLIGHTOPS_CONFIG: ${{ github.workspace }}/tests/fixtures/site-config.json
-
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -63,3 +60,18 @@ jobs:
       - run: swift --version
       - name: swift build
         run: swift build
+      - name: render every tab from the sample status file
+        run: |
+          .build/debug/FlightOps --snapshot "$RUNNER_TEMP/snapshots" --status collectors/sample-status.json &
+          pid=$!
+          for _ in $(seq 1 60); do kill -0 $pid 2>/dev/null || break; sleep 1; done
+          kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
+          wait $pid
+          ls "$RUNNER_TEMP/snapshots"
+          test "$(ls "$RUNNER_TEMP/snapshots" | wc -l)" -eq 6
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: snapshots
+          path: ${{ runner.temp }}/snapshots
+          if-no-files-found: ignore
