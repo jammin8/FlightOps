@@ -191,9 +191,9 @@ def episodes(stage, points, live_until=None):
         lost = 0.0
         for enter, leave, _, _ in stage.items:
             stop = leave if leave is not None else end
-            if stop is None or stop < e["start"] or enter > end:
+            if stop is None or stop - enter > PARKED[stage.stage]:
                 continue
-            lost += max(0, min(stop, end) - enter - bar)
+            lost += max(0, min(stop, end + STEP) - max(enter + bar, e["start"]))
         e["hours_lost"] = round(lost / 3600, 1)
         e.pop("last_bad")
     return found
