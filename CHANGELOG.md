@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### The new app
+
+- The app is rebuilt to draw only the status file: Now, Trends and Models tabs, one repo filter, and a first-run repo picker that starts on sample data.
+- One collector (`collectors/flightops.py`) replaces the repos, ledger and pull collectors and the host collector stand-ins. Repos come from an `owner/name` list, each repo's default branch is read from GitHub, and approval is GitHub's review decision unless a check is named.
+- The old app, its alerts, launch forecast, lane timers, budgets and the Best view are gone.
+
 ### Removed
 
 - The model comparison: `best.py`, `model_evidence`, `model_analysis` and the GitHub receipts collectors (`receipts.py`, `prfacts.py`, `ghfacts.py`, `ghevents.py`, `verify.py`). It never produced an answer.

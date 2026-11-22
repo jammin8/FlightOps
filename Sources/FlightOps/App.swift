@@ -1,105 +1,95 @@
 import AppKit
-import ServiceManagement
 import SwiftUI
 
-
 enum LaunchOptions {
-
-    static var snapshotDir: String? {
+    static func value(_ flag: String) -> String? {
         let args = CommandLine.arguments
-        guard let i = args.firstIndex(of: "--snapshot"), i + 1 < args.count else { return nil }
+        guard let i = args.firstIndex(of: flag), i + 1 < args.count else { return nil }
         return args[i + 1]
     }
+
+    static var snapshotDir: String? { value("--snapshot") }
+    static var statusFile: String? { value("--status") }
 }
 
 @main
 struct FlightOpsApp: App {
-
-    @StateObject private var m = Monitor(mode: LaunchOptions.snapshotDir == nil ? .live : .inert)
+    @StateObject private var m = Monitor(mode: LaunchOptions.snapshotDir == nil ? .live : .fixed(URL(fileURLWithPath: LaunchOptions.statusFile ?? Paths.sample.path)))
 
     init() {
         if let dir = LaunchOptions.snapshotDir {
-            Snapshot.run(into: dir)
-            return
+            Snapshot.run(into: dir, status: URL(fileURLWithPath: LaunchOptions.statusFile ?? Paths.sample.path))
         }
-
-        PanelCapture.install()
     }
 
     var body: some Scene {
         MenuBarExtra {
             Panel(m: m)
         } label: {
-
-
-            Image(nsImage: MenuBarIcon.image(agents: m.agentsWorking, ci: m.ciRunning, offline: m.rigOffline,
-                                             symbol: m.verdict.menuSymbol, notice: m.verdict.menuNotice))
+            Image(nsImage: MenuBarIcon.image(open: m.status?.views["all"]?.counts.open, needsYou: (m.status?.views["all"]?.counts.needsYou ?? 0) > 0 && !m.demo,
+                                             stuck: m.status?.views["all"]?.stages.contains { $0.verdict == "stuck" } ?? false))
         }
         .menuBarExtraStyle(.window)
-
-        Settings { SettingsView(m: m) }
     }
 }
 
-
-
-
-
-
-
 @MainActor enum MenuBarIcon {
-    static func image(agents: Int?, ci: Int?, offline: Bool, symbol: String?, notice: Bool) -> NSImage {
-        let agentsText: String = agents.map { String($0) } ?? "–"
-        let ciText: String = ci.map { String($0) } ?? "–"
+    static func image(open: Int?, needsYou: Bool, stuck: Bool) -> NSImage {
         let content = HStack(spacing: 3) {
-            if !offline {
-                Image(nsImage: JetIcon.image).resizable().frame(width: 16, height: 16)
-                Text(agentsText)
-                Color.clear.frame(width: 5, height: 1)
-                Image(systemName: "testtube.2").font(.system(size: 13, weight: .medium))
-                Text(ciText)
-                if let symbol {
-                    Color.clear.frame(width: 3, height: 1)
-                    Image(systemName: symbol).font(.system(size: 12, weight: .medium))
-                }
-                if notice { Circle().frame(width: 4, height: 4) }
-            } else {
-                Image(systemName: "exclamationmark.triangle.fill")
-                Text("CI host offline")
-            }
+            Image(nsImage: JetIcon.image).resizable().frame(width: 16, height: 16)
+            Text(open.map(String.init) ?? "–")
+            if stuck { Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 11)) }
+            if needsYou { Circle().frame(width: 5, height: 5) }
         }
         .font(.system(size: 13, weight: .medium))
         .monospacedDigit()
         .foregroundStyle(.black)
         .padding(.vertical, 1)
-        let r = ImageRenderer(content: content)
-        r.scale = NSScreen.main?.backingScaleFactor ?? 2
-        let img = r.nsImage ?? NSImage(size: NSSize(width: 18, height: 18))
-        img.isTemplate = true
-        return img
+        let renderer = ImageRenderer(content: content)
+        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
+        let image = renderer.nsImage ?? NSImage(size: NSSize(width: 18, height: 18))
+        image.isTemplate = true
+        return image
     }
 }
 
-
-
-
-@MainActor enum PanelCapture {
-    static func install() {
-        NotificationCenter.default.addObserver(forName: NSWindow.didBecomeKeyNotification, object: nil, queue: .main) { note in
-            guard UserDefaults.standard.bool(forKey: "captureNextOpen"), let win = note.object as? NSWindow else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                guard let frameView = win.contentView?.superview ?? win.contentView,
-                      let rep = frameView.bitmapImageRepForCachingDisplay(in: frameView.bounds) else { return }
-                frameView.cacheDisplay(in: frameView.bounds, to: rep)
-                let tab = UserDefaults.standard.integer(forKey: "tab")
-                try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: "/tmp/flightops-panel-\(tab).png"))
-                try? "\(win.className) frame \(win.frame) content \(frameView.bounds)".write(toFile: "/tmp/flightops-panel-\(tab).txt", atomically: true, encoding: .utf8)
+@MainActor enum Snapshot {
+    static func run(into dir: String, status: URL) {
+        Task { @MainActor in
+            let suite = "io.github.jammin8.flightops.snapshot"
+            let store = UserDefaults(suiteName: suite) ?? UserDefaults()
+            let m = Monitor(mode: .fixed(status))
+            guard m.status != nil else {
+                FileHandle.standardError.write(Data("flightops: unreadable status file \(status.path)\n".utf8))
+                exit(2)
             }
+            try? FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
+            for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
+                for tab in Tab.allCases {
+                    store.set(tab.rawValue, forKey: "tab")
+                    store.set("all", forKey: "repo")
+                    let host = NSHostingView(rootView: Panel(m: m).defaultAppStorage(store).background(Color(nsColor: .windowBackgroundColor)))
+                    let window = NSWindow(contentRect: NSRect(origin: .zero, size: host.fittingSize), styleMask: [.borderless], backing: .buffered, defer: false)
+                    window.appearance = NSAppearance(named: appearance)
+                    window.contentView = host
+                    window.orderBack(nil)
+                    window.setFrameOrigin(NSPoint(x: -10_000, y: -10_000))
+                    try? await Task.sleep(for: .milliseconds(700))
+                    window.setContentSize(host.fittingSize)
+                    host.layoutSubtreeIfNeeded()
+                    try? await Task.sleep(for: .milliseconds(300))
+                    if let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) {
+                        host.cacheDisplay(in: host.bounds, to: rep)
+                        try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: "\(dir)/\(name)-\(tab.title.lowercased()).png"))
+                    }
+                    window.orderOut(nil)
+                }
+            }
+            store.removePersistentDomain(forName: suite)
+            exit(0)
         }
     }
 }
-
-
 
 enum JetIcon {
     private static let half: [(CGFloat, CGFloat)] = [
