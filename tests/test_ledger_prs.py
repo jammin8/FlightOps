@@ -89,6 +89,12 @@ class Inventory(Base):
         self.assertEqual(ledger_prs.state_of(self.store, "web")["walk"]["after"], f"c{ledger_prs.PAGES_PER_PASS}")
         self.assertIn(f'after: "c{ledger_prs.PAGES_PER_PASS - 1}"', fake.queries[-1])
 
+    def test_a_missing_cursor_stays_a_gap(self):
+        self.inventory(node(), more=True, cursor=None)
+        kinds = {tuple(r) for r in self.store.db.execute("SELECT repo, kind FROM gaps WHERE closed_pass IS NULL")}
+        self.assertIn(("web", "read-failed"), kinds)
+        self.assertIsNone(ledger_prs.state_of(self.store, "web")["covered_to"])
+
     def test_a_truncated_timeline_is_explicit(self):
         self.inventory(node(timelineItems={"pageInfo": {"hasNextPage": True}, "nodes": []}))
         self.assertEqual(self.store.db.execute("SELECT kind FROM gaps WHERE source = 'prs'").fetchone()[0], "timeline-truncated")
@@ -238,56 +244,6 @@ class Witness(Base):
         self.inventory(node(state="MERGED", mergedAt="2026-10-01T12:00:00Z", closedAt="2026-10-01T12:00:00Z"))
         heads = {r[0] for r in self.store.db.execute("SELECT sha FROM ci_heads")}
         self.assertEqual(heads, {sha(1), sha(2)})
-
-
-RULES = {"branchProtectionRules": {"pageInfo": {"hasNextPage": False}, "nodes": []},
-         "rulesets": {"pageInfo": {"hasNextPage": False}, "nodes": [
-             {"name": "main", "enforcement": "ACTIVE", "target": "BRANCH", "conditions": {"refName": {"include": ["~DEFAULT_BRANCH"], "exclude": []}},
-              "rules": {"pageInfo": {"hasNextPage": False}, "nodes": [{"type": "REQUIRED_STATUS_CHECKS", "parameters": {"requiredStatusChecks": [{"context": "quality", "integrationId": 15368}]}}]}}]}}
-
-
-class Policy(Base):
-    def read(self, now=NOW, rules=RULES):
-        fake = FakeGitHub(graphql=lambda q: {"data": {"web": rules, "backend": rules, "ios": rules}})
-        client = ledger_github.Client(runner=fake)
-        client.start()
-        ledger_prs.read_policy(self.store, client, now)
-        return fake
-
-    def test_required_checks_stay_with_the_head(self):
-        self.branch()
-        self.inventory(node())
-        self.read()
-        ledger_prs.attach_policy(self.store)
-        row = self.store.db.execute("SELECT required, base_ref, basis FROM head_policy WHERE sha = ?", (sha(2),)).fetchone()
-        self.assertEqual((json.loads(row[0]), row[1], row[2]), ([[None, "quality", 15368]], "main", "read-after-head"))
-
-    def test_policy_waits_until_the_head_time_can_be_known(self):
-        self.branch()
-        with self.store.tx():
-            self.store.set_cursor("activity:web", ledger_activity.blank())
-        self.inventory(node())
-        self.read()
-        self.assertEqual(ledger_prs.attach_policy(self.store), 0)
-
-    def test_a_later_policy_never_rewrites_a_heads_policy(self):
-        self.branch()
-        self.inventory(node())
-        self.read()
-        ledger_prs.attach_policy(self.store)
-        changed = json.loads(json.dumps(RULES).replace("quality", "other"))
-        self.read(NOW + 90000, changed)
-        ledger_prs.attach_policy(self.store)
-        self.assertIn("quality", self.store.db.execute("SELECT required FROM head_policy WHERE sha = ?", (sha(2),)).fetchone()[0])
-
-    def test_policy_is_read_at_most_daily(self):
-        self.assertEqual(len(self.read().queries), 1)
-        self.assertEqual(len(self.read(NOW + 3600).queries), 0)
-
-    def test_no_policy_read_leaves_no_invented_policy(self):
-        self.branch()
-        self.inventory(node())
-        self.assertEqual(ledger_prs.attach_policy(self.store), 0)
 
 
 if __name__ == "__main__":

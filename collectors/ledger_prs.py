@@ -3,9 +3,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ghfacts
 import ledger_activity
-import receipts
 from ledger_github import OWNER, REPOS, Unreadable
 from ledger_store import ZERO, digest, epoch, iso
 
@@ -13,7 +11,6 @@ PAGE_SIZE = 100
 PAGES_PER_PASS = 4
 TIMELINE_LIMIT = 30
 OVERLAP = 1800
-POLICY_EVERY = 86400
 SOURCE = "prs"
 INCOMPLETE = "timeline-incomplete"
 TIMELINE_TYPES = ("READY_FOR_REVIEW_EVENT", "CONVERT_TO_DRAFT_EVENT", "CLOSED_EVENT", "REOPENED_EVENT", "MERGED_EVENT",
@@ -121,6 +118,8 @@ def read_inventory(store, client, now):
                 elif not cursor or cursor == walk["after"]:
                     state["walk"] = None
                     store.open_gap(SOURCE, repo, "inventory", "read-failed", "missing or repeated cursor", now)
+                    store.set_cursor(f"prs:{repo}", state)
+                    continue
                 else:
                     walk["after"] = cursor
                     store.open_gap(SOURCE, repo, "inventory", "walk-open", f"unread older than {iso(oldest) if oldest else 'unknown'}", now)
@@ -252,53 +251,3 @@ def resolve(store, changed, touched, now):
             resolve_pr(store, pr, states[repo], now)
     return len(wanted)
 
-
-def read_policy(store, client, now):
-    due = [repo for repo in REPOS if now - (store.cursor(f"policy:{repo}", {}).get("confirmed") or 0) >= POLICY_EVERY]
-    if not due:
-        return
-    try:
-        data, errors = client.graphql_query(ghfacts.rules_query())
-    except Unreadable as problem:
-        with store.tx():
-            store.open_gap("policy", "all", "rules", "read-failed", str(problem), now)
-        return
-    with store.tx():
-        for repo in due:
-            rules = data.get(repo)
-            if not isinstance(rules, dict) or receipts.required_checks(rules) is None or any((e.get("path") or [None])[0] == repo for e in errors if isinstance(e, dict)):
-                store.open_gap("policy", repo, "rules", "read-failed", "rules missing or incomplete", now)
-                continue
-            mark = digest(rules)
-            last = store.db.execute("SELECT digest FROM policy_reads WHERE repo = ? ORDER BY id DESC LIMIT 1", (repo,)).fetchone()
-            if last is None or last[0] != mark:
-                store.db.execute("INSERT INTO policy_reads(repo, rules, digest, read_at, pass) VALUES (?, ?, ?, ?, ?)", (repo, json.dumps(rules, sort_keys=True), mark, iso(now), store.pass_id))
-            store.set_cursor(f"policy:{repo}", {"confirmed": now})
-            store.close_gap("policy", repo, "rules", "read-failed", now)
-        if all(data.get(repo) for repo in due):
-            store.close_gap("policy", "all", "rules", "read-failed", now)
-
-
-def attach_policy(store):
-    latest = {}
-    for repo in REPOS:
-        row = store.db.execute("SELECT id, rules, read_at FROM policy_reads WHERE repo = ? ORDER BY id DESC LIMIT 1", (repo,)).fetchone()
-        if row:
-            latest[repo] = (row["id"], json.loads(row["rules"]), row["read_at"])
-    attached = 0
-    with store.tx():
-        rows = store.db.execute(
-            """SELECT DISTINCT h.repo, h.sha, h.number, h.pushed_at, p.base_ref FROM pr_heads h JOIN prs p ON p.repo = h.repo AND p.number = h.number
-               LEFT JOIN head_policy q ON q.repo = h.repo AND q.sha = h.sha AND q.number = h.number
-               LEFT JOIN pr_witness w ON w.repo = h.repo AND w.number = h.number
-               WHERE q.sha IS NULL AND p.base_ref IS NOT NULL AND (h.pushed_at IS NOT NULL OR w.binding <> 'pending')""").fetchall()
-        for row in rows:
-            held = latest.get(row["repo"])
-            if not held:
-                continue
-            required = receipts.required_checks(held[1], row["base_ref"])
-            basis = "head-time-unknown" if not row["pushed_at"] else "read-before-head" if epoch(held[2]) <= epoch(row["pushed_at"]) else "read-after-head"
-            attached += store.db.execute(
-                "INSERT OR IGNORE INTO head_policy(repo, sha, number, base_ref, status, required, policy_read, policy_read_at, basis, pass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (row["repo"], row["sha"], row["number"], row["base_ref"], "known" if required is not None else "unknown", json.dumps(required), held[0], held[2], basis, store.pass_id)).rowcount
-    return attached

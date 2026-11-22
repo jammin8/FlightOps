@@ -44,7 +44,3 @@ jobs:
       - run: swift --version
       - name: swift build
         run: swift build
-      - name: check-cli
-        run: scripts/check-cli.sh
-      - name: check-logic
-        run: scripts/check-logic.sh

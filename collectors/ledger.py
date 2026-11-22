@@ -17,7 +17,7 @@ from ledger_github import REPOS, Stop, Unreadable
 SCHEMA = "flightops-ledger-pass/1"
 DEFAULT_SECONDS = 60
 LOCKED = 5
-TABLES = ("activity_events", "branch_incarnations", "prs", "pr_witness", "pr_heads", "head_policy", "ci_heads", "ci_run_attempts", "ci_jobs", "ci_check_runs", "ci_statuses")
+TABLES = ("activity_events", "branch_incarnations", "prs", "pr_witness", "pr_heads", "ci_heads", "ci_run_attempts", "ci_jobs", "ci_check_runs", "ci_statuses")
 
 
 def tally(store, sql):
@@ -114,14 +114,12 @@ def run_pass(directory, seconds=DEFAULT_SECONDS, runner=ledger_github.run_comman
         outcome = "interrupted"
         try:
             started = current.guarded("budget", client.start)
-            reads = [("rules", lambda: ledger_prs.read_policy(store, client, now))]
-            reads += [(f"activity {repo}", lambda repo=repo: ledger_activity.read_repo(store, client, repo, now)) for repo in REPOS]
+            reads = [(f"activity {repo}", lambda repo=repo: ledger_activity.read_repo(store, client, repo, now)) for repo in REPOS]
             reads += [("inventory", lambda: ledger_prs.read_inventory(store, client, now))]
             for name, read in reads:
                 if started and not current.stopped:
                     current.guarded(name, read)
             current.guarded("history", lambda: settle_history(store, now))
-            current.guarded("policy", lambda: ledger_prs.attach_policy(store))
             if started and not current.stopped:
                 current.guarded("ci", lambda: ledger_ci.run(store, client, now))
             current.guarded("feed", lambda: ledger_ci.check_feed(store, now))

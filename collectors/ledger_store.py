@@ -251,6 +251,8 @@ class Store:
             self.db.execute("INSERT INTO etags(path, etag, updated_pass) VALUES (?, ?, ?) "
                             "ON CONFLICT(path) DO UPDATE SET etag = excluded.etag, updated_pass = excluded.updated_pass",
                             (path, etag, self.pass_id))
+        else:
+            self.db.execute("DELETE FROM etags WHERE path = ?", (path,))
 
     def gap_state(self, source, repo, subject, kind):
         return self.db.execute("SELECT event, detail FROM gap_events WHERE source = ? AND repo = ? AND subject = ? AND kind = ? ORDER BY id DESC LIMIT 1",

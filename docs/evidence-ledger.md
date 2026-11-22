@@ -1,6 +1,6 @@
 # Evidence ledger
 
-`evidence.sqlite` in the VM data directory keeps CI evidence and branch history that GitHub would otherwise lose, or that no one was reading. GitHub deletes checks, runs and statuses after 14 days on all three repositories. The ledger is written only by the collect pass. The snapshot carries only its progress and errors. The Best pass reads `pr_witness`, `gaps` and `passes` read-only as descriptive evidence, and the ledger ranks no model.
+`evidence.sqlite` in the VM data directory keeps CI evidence and branch history that GitHub would otherwise lose, or that no one was reading. GitHub deletes checks, runs and statuses after 14 days on all three repositories. The ledger is written only by the collect pass. The snapshot carries only its progress and errors.
 
 ## What it holds
 
@@ -56,7 +56,7 @@ A push after the moment never counts, even by one second. `first_ready_at_basis`
 
 ## How a pass spends
 
-Order: budget, policy (daily), Activity, PR inventory, then local reconciling, then CI, then the import. Each stage fails on its own. Every response commits with its cursor in one transaction, so a killed pass resumes where it stopped.
+Order: budget, Activity, PR inventory, then local reconciling, then CI, then the import. Each stage fails on its own. Every response commits with its cursor in one transaction, so a killed pass resumes where it stopped.
 
 | Limit | Value |
 |---|---|
