@@ -1,3 +1,4 @@
+import Charts
 import SwiftUI
 
 struct NowTab: View {
@@ -11,6 +12,7 @@ struct NowTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.gap) {
             if view.state == "unknown" { unknownCard }
+            KPIRow(view: view)
             StageStrip(stages: view.stages, focus: $focus)
             ForEach(view.stages.filter { $0.alarming || $0.verdict?.state == "busy" }) { stage in VerdictCard(stage: stage, status: status) }
             if !view.needsYou.isEmpty { needsYou }
@@ -27,7 +29,6 @@ struct NowTab: View {
             if view.state != "unknown" && prs.isEmpty {
                 Text("No open pull requests.").foregroundStyle(.secondary).frame(maxWidth: .infinity).card()
             }
-            machines
         }
     }
 
@@ -70,15 +71,6 @@ struct NowTab: View {
                 Button(showAllNeeds ? "Show fewer" : "Show all \(view.needsYou.count)") { showAllNeeds.toggle() }
                     .buttonStyle(.link).font(.caption)
             }
-        }
-        .card()
-    }
-
-    private var machines: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            CardTitle(text: "Machines")
-            Text("Not connected yet. Machine health and agents working arrive in a later update.")
-                .font(.caption).foregroundStyle(.secondary)
         }
         .card()
     }
@@ -193,5 +185,46 @@ struct VerdictCard: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: Theme.corner, style: .continuous))
+    }
+}
+
+struct KPIRow: View {
+    var view: StatusView
+
+    var body: some View {
+        let t = view.trends
+        let last = max(0, t.days.count - 14)..<t.days.count
+        HStack(spacing: 8) {
+            tile("Open", view.counts.open, t.open[last].map(Double.init), .accentColor, "Open pull requests, last 14 days")
+            tile("Merged today", view.counts.mergedToday, t.merged[last].map(Double.init), .green, "Merged per day, last 14 days")
+            tile("Needs you", view.counts.needsYou, nil, (view.counts.needsYou ?? 0) > 0 ? Theme.caution : .secondary, "Pull requests waiting on you")
+        }
+    }
+
+    private func tile(_ label: String, _ value: Int?, _ points: [Double]?, _ tint: Color, _ help: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label).font(.caption).foregroundStyle(.secondary)
+            HStack(alignment: .bottom, spacing: 8) {
+                Text(value.map(String.init) ?? "–").font(.title.weight(.semibold).monospacedDigit())
+                Spacer(minLength: 0)
+                if let points, points.count > 1 { Sparkline(values: points, tint: tint).frame(width: 64, height: 24) }
+            }
+        }
+        .card()
+        .help(help)
+    }
+}
+
+struct Sparkline: View {
+    var values: [Double]
+    var tint: Color
+
+    var body: some View {
+        Chart(Array(values.enumerated()), id: \.offset) { i, v in
+            AreaMark(x: .value("Day", i), y: .value("Value", v)).foregroundStyle(tint.opacity(0.18)).interpolationMethod(.monotone)
+            LineMark(x: .value("Day", i), y: .value("Value", v)).foregroundStyle(tint).interpolationMethod(.monotone)
+        }
+        .chartXAxis(.hidden).chartYAxis(.hidden).chartLegend(.hidden)
+        .chartYScale(domain: 0...max(1, values.max() ?? 1))
     }
 }

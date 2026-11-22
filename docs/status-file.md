@@ -84,7 +84,7 @@ A view:
 | `stages` | Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today: `count`, `oldest_since`, `oldest_pr`, `verdict` for Waiting for CI, In CI and In review (see Bottlenecks), `null` for the rest |
 | `bottlenecks` | Up to 20 past and ongoing Slowing or Stuck episodes in 90 days: `stage`, `state` (the worst reached), `start`, `end` (`null` while ongoing), `hours_lost` (waiting beyond normal, summed over the items caught in it), largest first |
 | `prs`, `needs_you` | PR ids in this view, in stage order, oldest first |
-| `trends` | 90 days: `days`, `opened`, `merged`, `open` at the end of each day, `ci_jobs`, `ci_wait_p90_min` (the slowest tenth of queue waits; `null` under 5 jobs) |
+| `trends` | 90 days: `days`, `opened`, `merged`, `open` at the end of each day, `ci_jobs`, `ci_wait_p90_min` (the slowest tenth of queue waits; `null` under 5 jobs), `merge_hours_p50` and `merge_hours_p90` (open to merge for PRs merged that day; `null` under 3 and 5 merges), `verdicts` (each judged stage's worst verdict per day) |
 | `history` | `complete` once 90 days of PRs, runs and jobs are read; `oldest` day held |
 
 Rules:
@@ -102,17 +102,18 @@ Each verdict compares the stage now with its own normal:
 - **Normal** is the median, over the last 28 days, of each day's slowest tenth of waits (days with at least 5 items). With fewer than 20 items in 28 days the verdict is `learning`.
 - **Load** is items that entered in the last 24 hours against the 28-day daily average.
 - **Wait** is the oldest item waiting now and the slowest tenth of items that left in the last 6 hours. Items waiting over 7 days count as parked and are left out.
-- **Time to clear** is items waiting divided by how fast items left in the last 6 hours.
 
 The bar is normal or a floor, whichever is larger (15 minutes for both CI stages, 4 hours for review), so a small wait is never an alarm.
 
 | Verdict | Rule |
 | --- | --- |
 | `stuck` | The oldest wait or the slowest tenth is over 3 times the bar |
-| `slowing` | Either is over 1.5 times the bar, or 3 or more items would take over twice the bar to clear |
+| `slowing` | Either is over 1.5 times the bar |
 | `busy` | Load is at least twice usual and at least 10, and waits are normal: a wave that is flowing |
 | `clear` | None of the above |
 
-A verdict holds for 30 minutes so a stage doesn't flicker. Each `verdict` holds `state`, `reason` (one sentence), `since` (when an ongoing Slowing or Stuck episode began), `oldest_pr`, `load_24h`, `usual_load`, `oldest_min`, `slow_end_min`, `normal_min` and `clear_hours`.
+A verdict holds for 30 minutes so a stage doesn't flicker. Each `verdict` holds `state`, `reason` (one sentence), `since` (when an ongoing Slowing or Stuck episode began), `oldest_pr`, `load_24h`, `usual_load`, `oldest_min`, `slow_end_min` and `normal_min`.
+
+Time to clear was tried and left out: CI jobs and reviews run side by side, so items waiting divided by the rate leaving misreads a normal burst as a slowdown.
 
 The app shows a card for any stage that is Busy, Slowing or Stuck, ranks `bottlenecks` on Trends, and sends one notification when a stage turns Stuck and one when it clears.

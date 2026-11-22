@@ -5,6 +5,7 @@
 ### Bottlenecks
 
 - Waiting for CI, In CI and In review each get a verdict against their own 28-day normal: Clear, Busy (a wave that is flowing), Slowing or Stuck. Now shows a card naming the stage and its oldest PR, Trends ranks past slowdowns by hours of extra waiting, and the app sends one notification when a stage turns Stuck and one when it clears.
+- A simpler, richer panel: Now opens with open, merged today and needs you, each with a sparkline. Trends adds a stage health map, time to merge and merged per repo. The Models tab and the Machines card are hidden until their data is connected.
 - `flightops.py replay FROM TO` prints the verdicts day by day from stored history.
 
 ### The new app

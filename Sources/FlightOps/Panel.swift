@@ -2,13 +2,12 @@ import AppKit
 import SwiftUI
 
 enum Tab: Int, CaseIterable {
-    case now, trends, models
+    case now, trends
 
     var title: String {
         switch self {
         case .now: return "Now"
         case .trends: return "Trends"
-        case .models: return "Models"
         }
     }
 }
@@ -49,7 +48,6 @@ struct Panel: View {
             switch Tab(rawValue: tab) ?? .now {
             case .now: NowTab(status: status, view: view)
             case .trends: TrendsTab(status: status, view: view, repo: selectedRepo)
-            case .models: ModelsTab(status: status)
             }
         } else {
             Text(m.problem ?? "No status yet.").foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 200)

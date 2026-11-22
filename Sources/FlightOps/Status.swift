@@ -112,14 +112,12 @@ struct Verdict: Decodable {
     var oldestPr: String?
     var load24h: Int?
     var usualLoad: Double?
-    var clearHours: Double?
 
     enum CodingKeys: String, CodingKey {
         case state, reason, since
         case oldestPr = "oldest_pr"
         case load24h = "load_24h"
         case usualLoad = "usual_load"
-        case clearHours = "clear_hours"
     }
 
     var word: String {
@@ -155,11 +153,16 @@ struct Trends: Decodable {
     var open: [Int]
     var ciWaitP90Min: [Double?]
     var ciJobs: [Int]
+    var mergeHoursP50: [Double?]?
+    var mergeHoursP90: [Double?]?
+    var verdicts: [String: [String?]]?
 
     enum CodingKeys: String, CodingKey {
-        case days, opened, merged, open
+        case days, opened, merged, open, verdicts
         case ciWaitP90Min = "ci_wait_p90_min"
         case ciJobs = "ci_jobs"
+        case mergeHoursP50 = "merge_hours_p50"
+        case mergeHoursP90 = "merge_hours_p90"
     }
 }
 

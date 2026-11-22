@@ -21,7 +21,6 @@ WAVE = 2.0
 WAVE_MIN = 10
 SLOWING = 1.5
 STUCK = 3.0
-CLEAR_TIME = 2.0
 FLOOR = {"waiting_ci": 15 * 60, "in_ci": 15 * 60, "in_review": 4 * 3600}
 JUDGED = tuple(FLOOR)
 RANK = {"learning": 0, "clear": 1, "busy": 2, "slowing": 3, "stuck": 4}
@@ -111,24 +110,19 @@ class Stage:
         lo, hi = bisect.bisect_right(self.leaves, t - RECENT), bisect.bisect_right(self.leaves, t)
         recent = self.waits[lo:hi]
         slow_end = p90(recent)
-        waiting = bisect.bisect_right(self.enters, t) - bisect.bisect_right(self.leaves, t)
         ages = [t - e for e in (oldest_enter,) if e is not None] + ([extra_oldest] if extra_oldest is not None else [])
         oldest = max(ages) if ages else None
-        rate = len(recent) / RECENT
-        clear = None if waiting <= 0 else (waiting / rate if rate else math.inf)
         facts = {"load_24h": load, "usual_load": round(usual, 1), "oldest_min": minutes(oldest), "slow_end_min": minutes(slow_end),
-                 "normal_min": minutes(normal), "clear_hours": None if clear is None or clear == math.inf else round(clear / 3600, 1)}
+                 "normal_min": minutes(normal)}
         if normal is None:
             return "learning", facts, f"Learning normal ({samples} of {LEARNING} samples)"
         bar = max(normal, FLOOR[self.stage])
         if (oldest or 0) > STUCK * bar or (slow_end or 0) > STUCK * bar:
             return "stuck", facts, f"Oldest waiting {span(oldest)}, normal is {span(normal)}" if (oldest or 0) > STUCK * bar else f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
-        if (oldest or 0) > SLOWING * bar or (slow_end or 0) > SLOWING * bar or (waiting >= 3 and clear is not None and clear > CLEAR_TIME * bar):
-            if (oldest or 0) > SLOWING * bar:
-                return "slowing", facts, f"Oldest waiting {span(oldest)}, normal is {span(normal)}"
-            if (slow_end or 0) > SLOWING * bar:
-                return "slowing", facts, f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
-            return "slowing", facts, f"{waiting} waiting and draining slowly"
+        if (oldest or 0) > SLOWING * bar:
+            return "slowing", facts, f"Oldest waiting {span(oldest)}, normal is {span(normal)}"
+        if (slow_end or 0) > SLOWING * bar:
+            return "slowing", facts, f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
         if load >= WAVE * usual and load >= WAVE_MIN:
             return "busy", facts, f"{load} came in over 24h, about {round(load / usual) if usual else load}× usual, still flowing"
         return "clear", facts, "Normal"
@@ -196,9 +190,19 @@ def episodes(stage, points, live_until=None):
     return found
 
 
-def assess(store, repos, now, live, history_days=90):
+def daily(points, days):
+    index = {d: i for i, d in enumerate(days)}
+    worst = [None] * len(days)
+    for t, state, _, _ in points:
+        i = index.get(iso(t)[:10])
+        if i is not None and (worst[i] is None or RANK[state] > RANK[worst[i]]):
+            worst[i] = state
+    return worst
+
+
+def assess(store, repos, now, live, history_days=90, days=()):
     gathered = gather(store, repos)
-    verdicts, log = {}, []
+    verdicts, log, by_day = {}, [], {}
     for name in JUDGED:
         stage = Stage(name, gathered[name])
         live_ages = [now - epoch(r["stage_since"]) for r in live if r["stage"] == name and epoch(r["stage_since"]) is not None
@@ -213,6 +217,7 @@ def assess(store, repos, now, live, history_days=90):
         if live_ages:
             oldest = min((r for r in live if r["stage"] == name and epoch(r["stage_since"]) is not None), key=lambda r: epoch(r["stage_since"]))
             oldest_pr = oldest["id"]
+        by_day[name] = daily(points + [(now, state, facts, reason)], days)
         found = episodes(stage, points + [(now, state, facts, reason)], live_until=now)
         ongoing = next((e for e in found if e["end"] is None), None)
         verdicts[name] = dict(facts, state=worst[0], reason=worst[1], since=iso(ongoing["start"]) if ongoing and worst[0] in ("slowing", "stuck") else None,
@@ -221,7 +226,7 @@ def assess(store, repos, now, live, history_days=90):
             log.append({"stage": name, "state": e["state"], "start": iso(e["start"]), "end": iso(e["end"]) if e["end"] is not None else None,
                         "hours_lost": e["hours_lost"]})
     log.sort(key=lambda e: (-e["hours_lost"], e["start"]))
-    return verdicts, log
+    return verdicts, log, by_day
 
 
 def replay(store, repos, start, end):
