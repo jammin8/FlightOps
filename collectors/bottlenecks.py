@@ -11,7 +11,8 @@ DAY = 86400
 WINDOW_DAYS = 28
 LEARNING = 20
 DAY_SAMPLES = 5
-RECENT_SAMPLES = 10
+RECENT_SAMPLES = 20
+LATE_SHARE = 0.1
 PARKED = {"waiting_ci": 2 * DAY, "in_ci": 2 * DAY, "in_review": 3 * DAY}
 RECENT = 6 * 3600
 HOLD = 1800
@@ -21,7 +22,7 @@ WAVE = 2.0
 WAVE_MIN = 10
 SLOWING = 1.5
 STUCK = 3.0
-FLOOR = {"waiting_ci": 15 * 60, "in_ci": 15 * 60, "in_review": 4 * 3600}
+FLOOR = {"waiting_ci": 15 * 60, "in_ci": 15 * 60, "in_review": 12 * 3600}
 JUDGED = tuple(FLOOR)
 RANK = {"learning": 0, "clear": 1, "busy": 2, "slowing": 3, "stuck": 4}
 NOT_WORK = ("skipped", "cancelled", "neutral", "stale")
@@ -104,21 +105,21 @@ class Stage:
         start = (day - WINDOW_DAYS) * DAY
         return (bisect.bisect_left(self.enters, day * DAY) - bisect.bisect_left(self.enters, start)) / WINDOW_DAYS
 
-    def judge(self, t, active, extra=()):
+    def judge(self, t, active, extra=None):
         normal, samples = self.normal(t // DAY)
         load = bisect.bisect_right(self.enters, t) - bisect.bisect_right(self.enters, t - LOAD_DAY)
         usual = self.usual_load(t // DAY)
         lo, hi = bisect.bisect_right(self.leaves, t - RECENT), bisect.bisect_right(self.leaves, t)
-        recent = self.waits[lo:hi]
+        recent = [w for w in self.waits[lo:hi] if w <= PARKED[self.stage]]
         slow_end = p90(recent) if len(recent) >= RECENT_SAMPLES else None
-        ages = sorted([t - e for e in active] + list(extra), reverse=True)
+        ages = sorted([t - e for e in active] + list(extra or ()), reverse=True)
         oldest = ages[0] if ages else None
         facts = {"load_24h": load, "usual_load": round(usual, 1), "oldest_min": minutes(oldest), "slow_end_min": minutes(slow_end),
                  "normal_min": minutes(normal)}
         if normal is None:
             return "learning", facts, f"Learning normal ({samples} of {LEARNING} samples)"
         bar = max(normal, FLOOR[self.stage])
-        need = LATE[self.stage]
+        need = LATE[self.stage] if extra is not None else max(LATE[self.stage], math.ceil(LATE_SHARE * load))
         late = ages[need - 1] if len(ages) >= need else 0
         many = f"{need} or more waiting over {span(late)}, normal is {span(normal)}"
         if late > STUCK * bar or (slow_end or 0) > STUCK * bar:

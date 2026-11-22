@@ -101,11 +101,11 @@ Each verdict compares the stage now with its own normal:
 
 - **Normal** is the lower third, over the last 28 days, of each day's slowest tenth of waits (days with at least 5 items), so a jam lasting most of a month still doesn't become normal. A re-run job's wait starts when the re-run does. With fewer than 20 items in 28 days the verdict is `learning`.
 - **Load** is items that entered in the last 24 hours against the 28-day daily average.
-- **Wait** is how long items have waited now, and the slowest tenth of items that left in the last 6 hours (once at least 10 have). Items waiting over 2 days (3 for review) count as parked and are left out: that is a forgotten item, not a queue.
+- **Wait** is how long items have waited now, and the slowest tenth of items that left in the last 6 hours (once at least 20 have). Items waiting over 2 days (3 for review) count as parked and are left out: that is a forgotten item, not a queue.
 
-One forgotten item is not a bottleneck, so a wait only counts when at least 2 CI jobs, or 3 PRs in review, share it.
+One forgotten item is not a bottleneck, so a wait only counts when at least 2 CI jobs, or 3 PRs in review, share it, and in replayed history at least a tenth of the day's load. A job whose runner never came up, while the rest flowed, stays Busy.
 
-The bar is normal or a floor, whichever is larger (15 minutes for both CI stages, 4 hours for review), so a small wait is never an alarm.
+The bar is normal or a floor, whichever is larger (15 minutes for both CI stages, 12 hours for review), so a small wait is never an alarm.
 
 | Verdict | Rule |
 | --- | --- |

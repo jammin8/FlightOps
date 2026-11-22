@@ -104,6 +104,12 @@ def do_replay(start, end, only):
     for (day, stage), row in sorted(days.items()):
         print(f"{storage.iso(day * bottlenecks.DAY)[:10]:<11}{stage:<12}{row['state']:<10}{row['slowing'] or '':<9}{row['stuck'] or '':<7}{row['load']:>6}"
               f"{row['oldest_min']:>9}{row['slow_end_min']:>10}{'' if row['normal_min'] is None else row['normal_min']:>9}")
+    tally = {}
+    for (_, stage), row in days.items():
+        tally.setdefault(stage, {}).setdefault(row["state"], 0)
+        tally[stage][row["state"]] += 1
+    for stage, counts in sorted(tally.items()):
+        print(f"{stage}: " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
     return 0
 
 
