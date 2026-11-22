@@ -82,7 +82,7 @@ A view:
 | `status_line` | One sentence for the top of the panel |
 | `counts` | `open`, `merged_today` (since local midnight), `needs_you` |
 | `stages` | Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today: `count`, `oldest_since`, `oldest_pr`, `verdict` for Waiting for CI, In CI and In review (see Bottlenecks), `null` for the rest |
-| `bottlenecks` | Up to 20 past and ongoing Slowing or Stuck episodes in 90 days: `stage`, `state` (the worst reached), `start`, `end` (`null` while ongoing), `hours_lost` (waiting beyond normal, summed over the items caught in it), largest first |
+| `bottlenecks` | Up to 20 past and ongoing Slowing or Stuck episodes in 90 days: `stage`, `state` (the worst reached), `start`, `end` (`null` while ongoing), `hours_lost` (waiting beyond normal during the episode, summed over the items caught in it, parked items left out), largest first |
 | `prs`, `needs_you` | PR ids in this view, in stage order, oldest first |
 | `trends` | 90 days: `days`, `opened`, `merged`, `open` at the end of each day, `ci_jobs`, `ci_wait_p90_min` (the slowest tenth of queue waits; `null` under 5 jobs), `merge_hours_p50` and `merge_hours_p90` (open to merge for PRs merged that day; `null` under 3 and 5 merges), `verdicts` (each judged stage's worst verdict per day) |
 | `history` | `complete` once 90 days of PRs, runs and jobs are read; `oldest` day held |

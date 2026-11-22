@@ -152,7 +152,7 @@
      "state": "slowing",
      "start": "2026-10-23T08:00:00Z",
      "end": "2026-10-23T08:00:00Z",
-     "hours_lost": 0.5
+     "hours_lost": 0.7
     },
     {
      "stage": "waiting_ci",
@@ -1308,14 +1308,14 @@
      "state": "slowing",
      "start": "2026-09-17T00:30:00Z",
      "end": "2026-09-17T23:30:00Z",
-     "hours_lost": 338.6
+     "hours_lost": 229.2
     },
     {
      "stage": "waiting_ci",
      "state": "slowing",
      "start": "2026-10-23T08:00:00Z",
      "end": "2026-10-23T08:00:00Z",
-     "hours_lost": 0.5
+     "hours_lost": 0.7
     },
     {
      "stage": "waiting_ci",
@@ -2463,56 +2463,56 @@
      "state": "slowing",
      "start": "2026-11-15T17:30:00Z",
      "end": "2026-11-16T19:00:00Z",
-     "hours_lost": 127.9
-    },
-    {
-     "stage": "in_review",
-     "state": "stuck",
-     "start": "2026-10-23T00:00:00Z",
-     "end": "2026-10-23T03:00:00Z",
-     "hours_lost": 123.3
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-11-11T16:30:00Z",
-     "end": "2026-11-12T08:30:00Z",
-     "hours_lost": 122.5
+     "hours_lost": 88.9
     },
     {
      "stage": "in_review",
      "state": "slowing",
      "start": "2026-10-29T18:30:00Z",
      "end": "2026-10-30T15:30:00Z",
-     "hours_lost": 100.3
+     "hours_lost": 64.3
     },
     {
      "stage": "in_review",
      "state": "slowing",
      "start": "2026-11-01T09:30:00Z",
      "end": "2026-11-01T22:30:00Z",
-     "hours_lost": 94.5
+     "hours_lost": 49.4
     },
     {
      "stage": "in_review",
      "state": "slowing",
-     "start": "2026-10-27T12:00:00Z",
-     "end": "2026-10-27T16:30:00Z",
-     "hours_lost": 59.9
+     "start": "2026-11-11T16:30:00Z",
+     "end": "2026-11-12T08:30:00Z",
+     "hours_lost": 49.3
     },
     {
      "stage": "in_review",
      "state": "slowing",
      "start": "2026-11-05T02:00:00Z",
      "end": "2026-11-05T09:00:00Z",
-     "hours_lost": 57.1
+     "hours_lost": 22.0
     },
     {
      "stage": "in_review",
      "state": "slowing",
      "start": "2026-11-13T23:30:00Z",
      "end": "2026-11-14T06:00:00Z",
-     "hours_lost": 55.7
+     "hours_lost": 20.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-27T12:00:00Z",
+     "end": "2026-10-27T16:30:00Z",
+     "hours_lost": 14.9
+    },
+    {
+     "stage": "in_review",
+     "state": "stuck",
+     "start": "2026-10-23T00:00:00Z",
+     "end": "2026-10-23T03:00:00Z",
+     "hours_lost": 10.3
     }
    ],
    "prs": [
@@ -3645,7 +3645,7 @@
      "state": "slowing",
      "start": "2026-10-21T15:30:00Z",
      "end": "2026-10-21T23:30:00Z",
-     "hours_lost": 176.3
+     "hours_lost": 92.9
     }
    ],
    "prs": [
