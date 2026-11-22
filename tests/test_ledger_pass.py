@@ -127,7 +127,7 @@ class WholePass(unittest.TestCase):
 
     def test_api_spend_is_recorded_with_the_pass(self):
         result = self.run_pass()
-        self.assertEqual((result["last_pass"]["rest_requests"], result["last_pass"]["graphql_requests"]), (13, 2))
+        self.assertEqual((result["last_pass"]["rest_requests"], result["last_pass"]["graphql_requests"]), (13, 1))
 
     def test_the_budget_floor_makes_no_github_read_and_still_imports(self):
         fake = world()
@@ -137,10 +137,10 @@ class WholePass(unittest.TestCase):
         self.assertEqual(result["import"]["files"], {"done": 1})
 
     def test_a_failed_step_does_not_stop_the_others(self):
-        with mock.patch.object(ledger_prs, "read_policy", side_effect=RuntimeError("boom")):
+        with mock.patch.object(ledger_import, "run", side_effect=RuntimeError("boom")):
             result = self.run_pass()
-        self.assertEqual(result["errors"], ["rules: RuntimeError"])
-        self.assertEqual((result["rows"]["activity_events"], result["ci"]["run_sources"]["github-rest"], result["import"]["files"]), (1, 1, {"done": 1}))
+        self.assertEqual(result["errors"], ["import: RuntimeError"])
+        self.assertEqual((result["rows"]["activity_events"], result["ci"]["run_sources"]["github-rest"]), (1, 1))
 
     def test_errors_carry_no_exception_text(self):
         with mock.patch.object(ledger_import, "run", side_effect=RuntimeError("token-like-text")):

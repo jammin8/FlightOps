@@ -118,7 +118,7 @@ def listing(store, client, path, key):
         rows += body
         if len(body) < PER_PAGE:
             return rows, (first, kept_etag), True
-    return rows, (first, kept_etag), False
+    return rows, (first, None), False
 
 
 def take_runs(store, client, repo, sha, now):

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Removed
+
+- The model comparison: `best.py`, `model_evidence`, `model_analysis` and the GitHub receipts collectors (`receipts.py`, `prfacts.py`, `ghfacts.py`, `ghevents.py`, `verify.py`). It never produced an answer.
+- The Linear collector, the orchestrator and model collectors (`linear.py`, `orch_api.py`, `models.py`, `runs.py`, `failures.py`).
+- The headless CLI and its MCP server (`cli/`, `build-cli.sh`, `check-cli.sh`). The new collector will print the status file itself.
+- The ledger's required-checks reads, which only the comparison used.
+- The Swift logic and decision checks, which test the app being replaced.
+
+### Fixed
+
+- A truncated CI listing no longer keeps its first page's ETag, so the next read can't close the truncation gap without reading the rest.
+- A PR inventory page with a missing or repeated cursor keeps its read-failed gap open.
+- `install.sh` creates `~/Applications` when it doesn't exist.
+
 ### Privacy checks
 
 - Check exact staged Git blobs and filenames, so changing or deleting the working copy cannot conceal private staged content. Preserve file paths for secret rules that depend on their location.

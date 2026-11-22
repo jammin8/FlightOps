@@ -6,7 +6,6 @@ cd "$(dirname "$0")/.."
 VERSION=$(git describe --tags --always 2>/dev/null || echo dev)
 
 FLIGHTOPS_CONFIG="$PWD/tests/fixtures/site-config.json" python3 -m unittest discover -s tests -q
-bash scripts/check-logic.sh
 swift build -c release
 
 APP=build/"FlightOps.app"
@@ -34,6 +33,7 @@ cat > "$APP/Contents/Info.plist" <<EOF
 EOF
 codesign --force --deep -s - "$APP"
 
+mkdir -p "$HOME/Applications"
 DEST="$HOME/Applications/FlightOps.app"
 
 rm -rf "$HOME/Applications/Cockpit.app" "$HOME/Applications/Flight Ops.app"
