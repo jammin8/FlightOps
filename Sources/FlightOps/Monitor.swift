@@ -106,6 +106,7 @@ enum Collector {
         switch mode {
         case .fixed(let url):
             status = Monitor.decode(url)
+            Clock.anchor = Clock.date(status?.generatedAt)
         case .live:
             reload()
             timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
@@ -138,6 +139,7 @@ enum Collector {
             demo = true
             problem = status == nil ? "The sample status file is missing from this build." : nil
         }
+        Clock.anchor = demo ? Clock.date(status?.generatedAt) : nil
         loadedAt = Date()
     }
 

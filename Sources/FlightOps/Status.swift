@@ -154,9 +154,11 @@ enum Clock {
 
     static func date(_ text: String?) -> Date? { text.flatMap { parser.date(from: $0) } }
 
-    static func age(_ text: String?, now: Date = Date()) -> String {
+    static var anchor: Date?
+
+    static func age(_ text: String?, now: Date? = nil) -> String {
         guard let d = date(text) else { return "–" }
-        return span(max(0, now.timeIntervalSince(d)))
+        return span(max(0, (now ?? anchor ?? Date()).timeIntervalSince(d)))
     }
 
     static func span(_ seconds: TimeInterval) -> String {

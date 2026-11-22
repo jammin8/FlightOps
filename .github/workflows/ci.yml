@@ -68,22 +68,24 @@ jobs:
           kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
           wait $pid
           ls "$RUNNER_TEMP/snapshots"
-          test "$(ls "$RUNNER_TEMP/snapshots" | wc -l)" -eq 6
-      - name: preview light-now
+          test "$(ls "$RUNNER_TEMP/snapshots"/*.png | wc -l)" -eq 6
+      - name: fresh Mac with only gh signed in
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FLIGHTOPS_CONFIG: ${{ runner.temp }}/fresh/config.json
+          FLIGHTOPS_DATA_DIR: ${{ runner.temp }}/fresh
+          FLIGHTOPS_STATUS_FILE: ${{ runner.temp }}/fresh/status.json
         run: |
-          for z in 640 560 480 420 360; do sips -s format jpeg -s formatOptions 35 -Z $z "$RUNNER_TEMP/snapshots/light-now.png" --out /tmp/light-now.jpg >/dev/null; [ $(stat -f%z /tmp/light-now.jpg) -lt 23000 ] && break; done
-          ls -l /tmp/light-now.jpg
-          base64 -i /tmp/light-now.jpg | tr -d '\n' | fold -w 4000 | head -8 | nl -ba | while read -r i chunk; do echo "::notice title=shot light-now $i::$chunk"; done
-      - name: preview dark-now
-        run: |
-          for z in 640 560 480 420 360; do sips -s format jpeg -s formatOptions 35 -Z $z "$RUNNER_TEMP/snapshots/dark-now.png" --out /tmp/dark-now.jpg >/dev/null; [ $(stat -f%z /tmp/dark-now.jpg) -lt 23000 ] && break; done
-          ls -l /tmp/dark-now.jpg
-          base64 -i /tmp/dark-now.jpg | tr -d '\n' | fold -w 4000 | head -8 | nl -ba | while read -r i chunk; do echo "::notice title=shot dark-now $i::$chunk"; done
-      - name: preview light-trends
-        run: |
-          for z in 640 560 480 420 360; do sips -s format jpeg -s formatOptions 35 -Z $z "$RUNNER_TEMP/snapshots/light-trends.png" --out /tmp/light-trends.jpg >/dev/null; [ $(stat -f%z /tmp/light-trends.jpg) -lt 23000 ] && break; done
-          ls -l /tmp/light-trends.jpg
-          base64 -i /tmp/light-trends.jpg | tr -d '\n' | fold -w 4000 | head -8 | nl -ba | while read -r i chunk; do echo "::notice title=shot light-trends $i::$chunk"; done
+          python3 collectors/flightops.py repos | python3 -c "import json,sys; r=json.load(sys.stdin); assert r.get('repos') or r.get('error'), r"
+          python3 collectors/flightops.py use "$GITHUB_REPOSITORY"
+          python3 collectors/flightops.py collect
+          python3 collectors/flightops.py status
+          .build/debug/FlightOps --snapshot "$RUNNER_TEMP/snapshots/live" --status "$FLIGHTOPS_STATUS_FILE" &
+          pid=$!
+          for _ in $(seq 1 60); do kill -0 $pid 2>/dev/null || break; sleep 1; done
+          kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
+          wait $pid
+          test "$(ls "$RUNNER_TEMP/snapshots/live" | wc -l)" -eq 6
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -55,7 +55,7 @@ struct NowTab: View {
                     Button { openLink(pr.url) } label: {
                         HStack(spacing: 8) {
                             RepoDot(color: status.repo(pr.repo)?.tint ?? .secondary)
-                            Text("#\(pr.number)").font(.callout.monospacedDigit()).foregroundStyle(.secondary)
+                            Text(verbatim: "#\(pr.number)").font(.callout.monospacedDigit()).foregroundStyle(.secondary)
                             Text(pr.title).font(.callout).lineLimit(1)
                             Spacer(minLength: 8)
                             Text(pr.needsYou ?? "").font(.caption).foregroundStyle(Theme.caution).lineLimit(1)
@@ -134,7 +134,7 @@ struct PRRow: View {
                 RoundedRectangle(cornerRadius: 1.5).fill(repo?.tint ?? .secondary).frame(width: 3, height: 32)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(pr.title).font(.callout).lineLimit(1)
-                    Text("\(repo?.name ?? pr.repo) #\(pr.number) · waiting on \(pr.waitingOn)")
+                    Text(verbatim: "\(repo?.name ?? pr.repo) #\(pr.number) · waiting on \(pr.waitingOn)")
                         .font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
                 Spacer(minLength: 8)
