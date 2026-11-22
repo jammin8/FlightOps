@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Bottlenecks
+
+- Waiting for CI, In CI and In review each get a verdict against their own 28-day normal: Clear, Busy (a wave that is flowing), Slowing or Stuck. Now shows a card naming the stage and its oldest PR, Trends ranks past slowdowns by hours of extra waiting, and the app sends one notification when a stage turns Stuck and one when it clears.
+- `flightops.py replay FROM TO` prints the verdicts day by day from stored history.
+
 ### The new app
 
 - The app is rebuilt to draw only the status file: Now, Trends and Models tabs, one repo filter, and a first-run repo picker that starts on sample data.

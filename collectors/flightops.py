@@ -7,12 +7,13 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import collect  # noqa: E402
+import bottlenecks  # noqa: E402
 import config  # noqa: E402
 import github  # noqa: E402
 import metrics  # noqa: E402
 import store as storage  # noqa: E402
 
-USAGE = "usage: flightops.py collect [--seconds N] | status [--json] | repos | use OWNER/NAME [OWNER/NAME ...]"
+USAGE = "usage: flightops.py collect [--seconds N] | status [--json] | repos | use OWNER/NAME [OWNER/NAME ...] | replay FROM TO [OWNER/NAME ...]"
 
 
 def status_path():
@@ -91,6 +92,21 @@ def do_repos(runner=github.run_command):
     return 0
 
 
+def do_replay(start, end, only):
+    settings, _ = config.load()
+    repos = only or [r["name"] for r in settings["repos"]]
+    db = storage.Store()
+    try:
+        days = bottlenecks.replay(db, repos, storage.epoch(start + "T00:00:00Z"), storage.epoch(end + "T23:59:59Z"))
+    finally:
+        db.close()
+    print(f"{'day':<11}{'stage':<12}{'verdict':<10}{'slowing':<9}{'stuck':<7}{'load':>6}{'oldest':>9}{'slow end':>10}{'normal':>9}")
+    for (day, stage), row in sorted(days.items()):
+        print(f"{storage.iso(day * bottlenecks.DAY)[:10]:<11}{stage:<12}{row['state']:<10}{row['slowing'] or '':<9}{row['stuck'] or '':<7}{row['load']:>6}"
+              f"{row['oldest_min']:>9}{row['slow_end_min']:>10}{'' if row['normal_min'] is None else row['normal_min']:>9}")
+    return 0
+
+
 def main(arguments):
     if not arguments:
         print(USAGE, file=sys.stderr)
@@ -107,6 +123,8 @@ def main(arguments):
         saved = config.save(rest)
         print(json.dumps(saved))
         return 0
+    if command == "replay" and len(rest) >= 2 and all(storage.epoch(d + "T00:00:00Z") for d in rest[:2]) and all(config.NAME.match(r) for r in rest[2:]):
+        return do_replay(rest[0], rest[1], rest[2:])
     print(USAGE, file=sys.stderr)
     return 2
 

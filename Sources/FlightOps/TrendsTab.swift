@@ -50,6 +50,7 @@ struct TrendsTab: View {
             flow
             wait
             openWork
+            log
         }
     }
 
@@ -99,6 +100,42 @@ struct TrendsTab: View {
             }
         }
         .card()
+    }
+
+    private var log: some View {
+        let from = window.isEmpty ? Date.distantPast : day(window.first!)
+        let inside = (view.bottlenecks ?? []).filter { (Clock.date($0.start) ?? .distantPast) >= from }.sorted { $0.hoursLost > $1.hoursLost }
+        let label = Dictionary(view.stages.map { ($0.id, $0.label) }, uniquingKeysWith: { a, _ in a })
+        let total = inside.reduce(0) { $0 + $1.hoursLost }
+        return VStack(alignment: .leading, spacing: 8) {
+            CardTitle(text: "Bottlenecks", detail: inside.isEmpty ? nil : "\(inside.count) · \(hours(total)) of extra waiting")
+                .help("Each time a stage was Slowing or Stuck, ranked by waiting beyond that stage's normal. Stages that keep coming back are worth fixing.")
+            if inside.isEmpty {
+                Text(view.history.complete ? "No slowdowns in this range." : "No slowdowns found yet. History is still filling in.")
+                    .font(.caption).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 40)
+            } else {
+                ForEach(inside.prefix(6)) { e in
+                    HStack(spacing: 8) {
+                        Circle().fill(verdictTint(e.state) ?? .secondary).frame(width: 7, height: 7)
+                        Text(label[e.stage] ?? e.stage).font(.callout)
+                        Text(when(e)).font(.caption).foregroundStyle(.secondary)
+                        Spacer(minLength: 8)
+                        Text(hours(e.hoursLost)).font(.callout.monospacedDigit())
+                    }
+                }
+            }
+        }
+        .card()
+    }
+
+    private func hours(_ h: Double) -> String { h >= 10 ? "\(Int(h.rounded())) h" : String(format: "%.1f h", h) }
+
+    private func when(_ e: Episode) -> String {
+        guard let start = Clock.date(e.start) else { return "" }
+        let f = DateFormatter()
+        f.setLocalizedDateFormatFromTemplate("MMM d")
+        let length = e.end.flatMap { Clock.date($0) }.map { Clock.span($0.timeIntervalSince(start)) } ?? "ongoing"
+        return "\(f.string(from: start)) · \(length == "now" ? "under 1m" : length)"
     }
 
     private var openWork: some View {

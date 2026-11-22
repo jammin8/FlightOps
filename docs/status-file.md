@@ -8,6 +8,7 @@ python3 collectors/flightops.py collect                  # one pass: read GitHub
 python3 collectors/flightops.py status                   # print the status line and stages
 python3 collectors/flightops.py status --json            # print the whole file
 python3 collectors/flightops.py repos                    # list repos your gh login can see (for the picker)
+python3 collectors/flightops.py replay 2026-09-20 2026-10-31   # replay bottleneck verdicts day by day from the store
 ```
 
 It needs Python 3 (standard library only) and `gh` signed in. It never writes to GitHub.
@@ -80,7 +81,8 @@ A view:
 | `partial` | Some repos in the view have never been read |
 | `status_line` | One sentence for the top of the panel |
 | `counts` | `open`, `merged_today` (since local midnight), `needs_you` |
-| `stages` | Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today: `count`, `oldest_since`, `oldest_pr`, `verdict` (`null` until bottleneck verdicts land) |
+| `stages` | Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today: `count`, `oldest_since`, `oldest_pr`, `verdict` for Waiting for CI, In CI and In review (see Bottlenecks), `null` for the rest |
+| `bottlenecks` | Up to 20 past and ongoing Slowing or Stuck episodes in 90 days: `stage`, `state` (the worst reached), `start`, `end` (`null` while ongoing), `hours_lost` (waiting beyond normal, summed over the items caught in it), largest first |
 | `prs`, `needs_you` | PR ids in this view, in stage order, oldest first |
 | `trends` | 90 days: `days`, `opened`, `merged`, `open` at the end of each day, `ci_jobs`, `ci_wait_p90_min` (the slowest tenth of queue waits; `null` under 5 jobs) |
 | `history` | `complete` once 90 days of PRs, runs and jobs are read; `oldest` day held |
@@ -90,3 +92,27 @@ Rules:
 - Unknown is never zero. A repo that was never read has `null` counts, and the total says it is partial.
 - A stage is decided from the PR as it is now: draft; failing checks or changes requested (Fixing); a check running (In CI); a check queued (Waiting for CI); approved; otherwise In review. A cancelled check isn't failing, and a repo with no CI goes straight to review.
 - Needs you: your review is requested, a PR is approved and not merged, or CI has failed for 6 hours with no new push.
+
+## Bottlenecks
+
+Three stages get a verdict: Waiting for CI and In CI (from CI job times), and In review (from a PR being ready to its first review by someone else, or its merge or close). Bot PRs are left out of review.
+
+Each verdict compares the stage now with its own normal:
+
+- **Normal** is the median, over the last 28 days, of each day's slowest tenth of waits (days with at least 5 items). With fewer than 20 items in 28 days the verdict is `learning`.
+- **Load** is items that entered in the last 24 hours against the 28-day daily average.
+- **Wait** is the oldest item waiting now and the slowest tenth of items that left in the last 6 hours. Items waiting over 7 days count as parked and are left out.
+- **Time to clear** is items waiting divided by how fast items left in the last 6 hours.
+
+The bar is normal or a floor, whichever is larger (15 minutes for both CI stages, 4 hours for review), so a small wait is never an alarm.
+
+| Verdict | Rule |
+| --- | --- |
+| `stuck` | The oldest wait or the slowest tenth is over 3 times the bar |
+| `slowing` | Either is over 1.5 times the bar, or 3 or more items would take over twice the bar to clear |
+| `busy` | Load is at least twice usual and at least 10, and waits are normal: a wave that is flowing |
+| `clear` | None of the above |
+
+A verdict holds for 30 minutes so a stage doesn't flicker. Each `verdict` holds `state`, `reason` (one sentence), `since` (when an ongoing Slowing or Stuck episode began), `oldest_pr`, `load_24h`, `usual_load`, `oldest_min`, `slow_end_min`, `normal_min` and `clear_hours`.
+
+The app shows a card for any stage that is Busy, Slowing or Stuck, ranks `bottlenecks` on Trends, and sends one notification when a stage turns Stuck and one when it clears.

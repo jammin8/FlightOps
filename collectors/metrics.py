@@ -5,6 +5,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bottlenecks  # noqa: E402
 from collect import FAILED, HISTORY_DAYS  # noqa: E402
 from store import epoch, iso  # noqa: E402
 
@@ -217,10 +218,15 @@ def view(store, repos, records, states, now, midnight):
     needs = [p["id"] for p in prs if p["needs_you"]]
     stages = stage_table(prs) if known else [{"id": k, "label": l, "count": None, "oldest_since": None, "oldest_pr": None, "verdict": None} for k, l in STAGES[:-1]]
     stages.append({"id": "merged", "label": "Merged today", "count": merged, "oldest_since": None, "oldest_pr": None, "verdict": None})
+    log = []
+    if known:
+        verdicts, log = bottlenecks.assess(store, known, now, prs)
+        for stage in stages:
+            stage["verdict"] = verdicts.get(stage["id"])
     open_count = len(prs) if known else None
     return {"state": state, "partial": partial, "status_line": status_line(open_count, merged, len(needs), partial, state),
             "counts": {"open": open_count, "merged_today": merged, "needs_you": len(needs) if known else None},
-            "stages": stages, "prs": [p["id"] for p in prs], "needs_you": needs,
+            "stages": stages, "bottlenecks": log[:20], "prs": [p["id"] for p in prs], "needs_you": needs,
             "trends": trends(store, repos, now), "history": history_state(store, repos, now)}
 
 

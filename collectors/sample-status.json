@@ -81,7 +81,18 @@
      "count": 2,
      "oldest_since": "2026-11-18T10:41:40Z",
      "oldest_pr": "acme/api#418",
-     "verdict": null
+     "verdict": {
+      "load_24h": 27,
+      "usual_load": 18.5,
+      "oldest_min": 25.0,
+      "slow_end_min": 1.5,
+      "normal_min": 1.4,
+      "clear_hours": null,
+      "state": "slowing",
+      "reason": "Oldest waiting 25m, normal is 1m",
+      "since": "2026-11-18T11:06:40Z",
+      "oldest_pr": "acme/api#418"
+     }
     },
     {
      "id": "in_ci",
@@ -89,7 +100,18 @@
      "count": 2,
      "oldest_since": "2026-11-18T10:46:40Z",
      "oldest_pr": "acme/ios#90",
-     "verdict": null
+     "verdict": {
+      "load_24h": 27,
+      "usual_load": 18.5,
+      "oldest_min": 20.0,
+      "slow_end_min": 5.0,
+      "normal_min": 5.0,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/ios#90"
+     }
     },
     {
      "id": "in_review",
@@ -97,7 +119,18 @@
      "count": 3,
      "oldest_since": "2026-11-17T17:06:40Z",
      "oldest_pr": "acme/ios#88",
-     "verdict": null
+     "verdict": {
+      "load_24h": 2,
+      "usual_load": 6.0,
+      "oldest_min": 1080.0,
+      "slow_end_min": null,
+      "normal_min": 3603.1,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/ios#88"
+     }
     },
     {
      "id": "approved",
@@ -114,6 +147,148 @@
      "oldest_since": null,
      "oldest_pr": null,
      "verdict": null
+    }
+   ],
+   "bottlenecks": [
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-08-27T21:00:00Z",
+     "end": "2026-08-28T00:00:00Z",
+     "hours_lost": 12.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-21T21:00:00Z",
+     "end": "2026-09-21T23:00:00Z",
+     "hours_lost": 9.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-06T17:00:00Z",
+     "end": "2026-10-06T17:30:00Z",
+     "hours_lost": 7.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-07T23:30:00Z",
+     "end": "2026-11-08T02:30:00Z",
+     "hours_lost": 7.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-07T03:00:00Z",
+     "end": "2026-10-07T09:30:00Z",
+     "hours_lost": 6.5
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-20T15:30:00Z",
+     "end": "2026-10-20T18:30:00Z",
+     "hours_lost": 6.4
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-27T23:00:00Z",
+     "end": "2026-09-28T08:30:00Z",
+     "hours_lost": 6.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-01T11:30:00Z",
+     "end": "2026-09-01T14:00:00Z",
+     "hours_lost": 5.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-02T14:00:00Z",
+     "end": "2026-10-02T22:00:00Z",
+     "hours_lost": 4.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-06T03:00:00Z",
+     "end": "2026-10-06T04:00:00Z",
+     "hours_lost": 3.3
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-03T07:00:00Z",
+     "end": "2026-10-03T09:30:00Z",
+     "hours_lost": 2.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-17T05:30:00Z",
+     "end": "2026-11-17T17:00:00Z",
+     "hours_lost": 2.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-23T03:30:00Z",
+     "end": "2026-09-23T04:00:00Z",
+     "hours_lost": 2.8
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-29T22:30:00Z",
+     "end": "2026-10-29T22:30:00Z",
+     "hours_lost": 2.5
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-24T07:00:00Z",
+     "end": "2026-09-24T09:00:00Z",
+     "hours_lost": 2.3
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-10T16:30:00Z",
+     "end": "2026-09-10T16:30:00Z",
+     "hours_lost": 1.1
+    },
+    {
+     "stage": "waiting_ci",
+     "state": "stuck",
+     "start": "2026-10-23T08:00:00Z",
+     "end": "2026-10-23T08:30:00Z",
+     "hours_lost": 1.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-02T10:00:00Z",
+     "end": "2026-09-02T13:30:00Z",
+     "hours_lost": 1.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-08-27T03:30:00Z",
+     "end": "2026-08-27T06:30:00Z",
+     "hours_lost": 0.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-02T20:00:00Z",
+     "end": "2026-09-02T21:30:00Z",
+     "hours_lost": 0.7
     }
    ],
    "prs": [
@@ -728,7 +903,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T10:41:40Z",
      "oldest_pr": "acme/api#418",
-     "verdict": null
+     "verdict": {
+      "load_24h": 12,
+      "usual_load": 6.6,
+      "oldest_min": 25.0,
+      "slow_end_min": 1.5,
+      "normal_min": 1.4,
+      "clear_hours": null,
+      "state": "slowing",
+      "reason": "Oldest waiting 25m, normal is 1m",
+      "since": "2026-11-18T11:06:40Z",
+      "oldest_pr": "acme/api#418"
+     }
     },
     {
      "id": "in_ci",
@@ -736,7 +922,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T10:56:40Z",
      "oldest_pr": "acme/api#417",
-     "verdict": null
+     "verdict": {
+      "load_24h": 12,
+      "usual_load": 6.6,
+      "oldest_min": 10.0,
+      "slow_end_min": 5.0,
+      "normal_min": 5.0,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/api#417"
+     }
     },
     {
      "id": "in_review",
@@ -744,7 +941,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T08:06:40Z",
      "oldest_pr": "acme/api#412",
-     "verdict": null
+     "verdict": {
+      "load_24h": 0,
+      "usual_load": 2.2,
+      "oldest_min": 180.0,
+      "slow_end_min": null,
+      "normal_min": 3811.4,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/api#412"
+     }
     },
     {
      "id": "approved",
@@ -761,6 +969,148 @@
      "oldest_since": null,
      "oldest_pr": null,
      "verdict": null
+    }
+   ],
+   "bottlenecks": [
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-17T07:00:00Z",
+     "end": "2026-09-17T09:00:00Z",
+     "hours_lost": 14.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-10T01:00:00Z",
+     "end": "2026-09-10T01:00:00Z",
+     "hours_lost": 9.4
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-20T16:30:00Z",
+     "end": "2026-10-20T21:00:00Z",
+     "hours_lost": 8.2
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-21T21:00:00Z",
+     "end": "2026-09-21T23:00:00Z",
+     "hours_lost": 8.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-10T07:30:00Z",
+     "end": "2026-09-10T16:30:00Z",
+     "hours_lost": 7.8
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-18T03:00:00Z",
+     "end": "2026-11-18T03:00:00Z",
+     "hours_lost": 7.8
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-07T07:30:00Z",
+     "end": "2026-09-07T16:30:00Z",
+     "hours_lost": 6.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-06T14:30:00Z",
+     "end": "2026-10-06T17:30:00Z",
+     "hours_lost": 6.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-02T14:00:00Z",
+     "end": "2026-10-03T16:00:00Z",
+     "hours_lost": 3.3
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-19T10:00:00Z",
+     "end": "2026-10-19T13:00:00Z",
+     "hours_lost": 2.8
+    },
+    {
+     "stage": "waiting_ci",
+     "state": "stuck",
+     "start": "2026-10-23T08:00:00Z",
+     "end": "2026-10-23T08:30:00Z",
+     "hours_lost": 1.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-17T02:30:00Z",
+     "end": "2026-11-17T20:30:00Z",
+     "hours_lost": 0.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-26T16:00:00Z",
+     "end": "2026-10-27T03:30:00Z",
+     "hours_lost": 0.5
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-08-25T21:30:00Z",
+     "end": "2026-08-25T21:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-08-27T00:30:00Z",
+     "end": "2026-08-27T00:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-08-30T13:00:00Z",
+     "end": "2026-08-30T15:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-03T17:00:00Z",
+     "end": "2026-09-03T20:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-04T08:30:00Z",
+     "end": "2026-09-04T18:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-05T02:00:00Z",
+     "end": "2026-09-05T05:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-05T17:00:00Z",
+     "end": "2026-09-05T18:30:00Z",
+     "hours_lost": 0.0
     }
    ],
    "prs": [
@@ -1367,7 +1717,18 @@
      "count": 0,
      "oldest_since": null,
      "oldest_pr": null,
-     "verdict": null
+     "verdict": {
+      "load_24h": 12,
+      "usual_load": 6.1,
+      "oldest_min": null,
+      "slow_end_min": null,
+      "normal_min": 1.4,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": null
+     }
     },
     {
      "id": "in_ci",
@@ -1375,7 +1736,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T10:46:40Z",
      "oldest_pr": "acme/ios#90",
-     "verdict": null
+     "verdict": {
+      "load_24h": 12,
+      "usual_load": 6.1,
+      "oldest_min": 20.0,
+      "slow_end_min": null,
+      "normal_min": 5.0,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/ios#90"
+     }
     },
     {
      "id": "in_review",
@@ -1383,7 +1755,18 @@
      "count": 1,
      "oldest_since": "2026-11-17T17:06:40Z",
      "oldest_pr": "acme/ios#88",
-     "verdict": null
+     "verdict": {
+      "load_24h": 1,
+      "usual_load": 1.9,
+      "oldest_min": 1080.0,
+      "slow_end_min": null,
+      "normal_min": 3207.3,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/ios#88"
+     }
     },
     {
      "id": "approved",
@@ -1400,6 +1783,148 @@
      "oldest_since": null,
      "oldest_pr": null,
      "verdict": null
+    }
+   ],
+   "bottlenecks": [
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-23T01:00:00Z",
+     "end": "2026-10-23T03:00:00Z",
+     "hours_lost": 52.2
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-11T04:00:00Z",
+     "end": "2026-11-12T08:30:00Z",
+     "hours_lost": 46.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-12T13:00:00Z",
+     "end": "2026-11-12T20:30:00Z",
+     "hours_lost": 39.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-23T05:00:00Z",
+     "end": "2026-10-23T07:30:00Z",
+     "hours_lost": 38.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-30T23:00:00Z",
+     "end": "2026-10-31T01:30:00Z",
+     "hours_lost": 38.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-16T16:30:00Z",
+     "end": "2026-11-16T21:30:00Z",
+     "hours_lost": 33.3
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-28T11:00:00Z",
+     "end": "2026-10-28T15:30:00Z",
+     "hours_lost": 32.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-30T10:30:00Z",
+     "end": "2026-10-30T15:30:00Z",
+     "hours_lost": 29.2
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-31T06:00:00Z",
+     "end": "2026-10-31T12:30:00Z",
+     "hours_lost": 26.8
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-23T12:00:00Z",
+     "end": "2026-10-23T18:00:00Z",
+     "hours_lost": 26.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-02T10:30:00Z",
+     "end": "2026-11-02T11:00:00Z",
+     "hours_lost": 20.1
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-15T02:00:00Z",
+     "end": "2026-11-15T06:30:00Z",
+     "hours_lost": 19.3
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-14T14:30:00Z",
+     "end": "2026-11-14T19:30:00Z",
+     "hours_lost": 15.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-26T01:00:00Z",
+     "end": "2026-10-26T21:00:00Z",
+     "hours_lost": 13.5
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-10T01:30:00Z",
+     "end": "2026-11-10T21:30:00Z",
+     "hours_lost": 11.4
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-07T12:00:00Z",
+     "end": "2026-11-07T16:00:00Z",
+     "hours_lost": 10.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-25T15:00:00Z",
+     "end": "2026-10-25T18:30:00Z",
+     "hours_lost": 10.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-15T13:00:00Z",
+     "end": "2026-11-16T07:00:00Z",
+     "hours_lost": 8.4
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-02T14:00:00Z",
+     "end": "2026-10-02T22:00:00Z",
+     "hours_lost": 6.8
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-03T07:00:00Z",
+     "end": "2026-10-03T11:00:00Z",
+     "hours_lost": 6.4
     }
    ],
    "prs": [
@@ -1999,7 +2524,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T10:51:40Z",
      "oldest_pr": "acme/web#1204",
-     "verdict": null
+     "verdict": {
+      "load_24h": 3,
+      "usual_load": 5.8,
+      "oldest_min": 15.0,
+      "slow_end_min": null,
+      "normal_min": 1.3,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/web#1204"
+     }
     },
     {
      "id": "in_ci",
@@ -2007,7 +2543,18 @@
      "count": 0,
      "oldest_since": null,
      "oldest_pr": null,
-     "verdict": null
+     "verdict": {
+      "load_24h": 3,
+      "usual_load": 5.8,
+      "oldest_min": null,
+      "slow_end_min": null,
+      "normal_min": 5.0,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": null
+     }
     },
     {
      "id": "in_review",
@@ -2015,7 +2562,18 @@
      "count": 1,
      "oldest_since": "2026-11-18T06:16:40Z",
      "oldest_pr": "acme/web#1201",
-     "verdict": null
+     "verdict": {
+      "load_24h": 1,
+      "usual_load": 1.9,
+      "oldest_min": 290.0,
+      "slow_end_min": null,
+      "normal_min": 4078.9,
+      "clear_hours": null,
+      "state": "clear",
+      "reason": "Normal",
+      "since": null,
+      "oldest_pr": "acme/web#1201"
+     }
     },
     {
      "id": "approved",
@@ -2032,6 +2590,148 @@
      "oldest_since": null,
      "oldest_pr": null,
      "verdict": null
+    }
+   ],
+   "bottlenecks": [
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-11-05T01:30:00Z",
+     "end": "2026-11-05T07:30:00Z",
+     "hours_lost": 7.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-27T21:00:00Z",
+     "end": "2026-09-28T10:00:00Z",
+     "hours_lost": 7.2
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-23T21:00:00Z",
+     "end": "2026-09-24T10:00:00Z",
+     "hours_lost": 3.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-28T22:00:00Z",
+     "end": "2026-10-28T22:00:00Z",
+     "hours_lost": 3.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-03T00:00:00Z",
+     "end": "2026-09-03T01:00:00Z",
+     "hours_lost": 2.7
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-29T20:00:00Z",
+     "end": "2026-10-29T22:30:00Z",
+     "hours_lost": 2.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-23T13:00:00Z",
+     "end": "2026-10-23T17:30:00Z",
+     "hours_lost": 1.9
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-30T09:00:00Z",
+     "end": "2026-10-30T12:00:00Z",
+     "hours_lost": 1.6
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-10-07T03:00:00Z",
+     "end": "2026-10-07T12:30:00Z",
+     "hours_lost": 0.7
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-08-28T02:30:00Z",
+     "end": "2026-08-28T02:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-09-01T09:30:00Z",
+     "end": "2026-09-01T09:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-09-01T18:30:00Z",
+     "end": "2026-09-01T18:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-09-03T13:30:00Z",
+     "end": "2026-09-03T13:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-03T23:30:00Z",
+     "end": "2026-09-04T01:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-04T11:30:00Z",
+     "end": "2026-09-04T13:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-09-09T07:00:00Z",
+     "end": "2026-09-09T07:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-09T13:00:00Z",
+     "end": "2026-09-10T10:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_ci",
+     "state": "slowing",
+     "start": "2026-09-09T21:30:00Z",
+     "end": "2026-09-09T21:30:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-10T16:30:00Z",
+     "end": "2026-09-10T19:00:00Z",
+     "hours_lost": 0.0
+    },
+    {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-11T06:00:00Z",
+     "end": "2026-09-11T11:30:00Z",
+     "hours_lost": 0.0
     }
    ],
    "prs": [
