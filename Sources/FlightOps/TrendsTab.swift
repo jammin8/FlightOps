@@ -1,22 +1,6 @@
 import Charts
 import SwiftUI
 
-private struct HealthCell: Identifiable {
-    var id: String { "\(stage)-\(day)" }
-    var day: Date
-    var stage: String
-    var state: String
-
-    var word: String {
-        switch state {
-        case "busy": return "Busy, flowing"
-        case "slowing": return "Slowing"
-        case "stuck": return "Stuck"
-        default: return "Clear"
-        }
-    }
-}
-
 private struct RepoTotal: Identifiable {
     var id: String { name }
     var name: String
@@ -133,32 +117,51 @@ struct TrendsTab: View {
     private var health: some View {
         let labels = Dictionary(view.stages.map { ($0.id, $0.label) }, uniquingKeysWith: { a, _ in a })
         let order = ["waiting_ci", "in_ci", "in_review"]
-        let cells: [HealthCell] = order.flatMap { stage in
-            window.compactMap { i -> HealthCell? in
-                guard let state = view.trends.verdicts?[stage]?[i] ?? nil, state != "learning" else { return nil }
-                return HealthCell(day: day(i), stage: labels[stage] ?? stage, state: state)
-            }
-        }
+        let known = order.contains { stage in window.contains { i in
+            let state = view.trends.verdicts?[stage].flatMap { i < $0.count ? $0[i] : nil }
+            return state != nil && state != "learning"
+        } }
         return VStack(alignment: .leading, spacing: 8) {
             CardTitle(text: "Stage health", detail: "worst each day")
                 .help("Each stage against its own last 28 days. Blue is a wave that kept flowing, amber is slowing, red is stuck.")
-            if cells.isEmpty {
+            if !known {
                 Text("Learning what normal looks like.").font(.caption).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 50)
             } else {
-                Chart(cells) { c in
-                    RectangleMark(x: .value("Day", c.day, unit: .day), y: .value("Stage", c.stage), width: .ratio(0.85), height: .ratio(0.7))
-                        .foregroundStyle(by: .value("Verdict", c.word))
-                        .cornerRadius(2)
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(order, id: \.self) { stage in
+                        HStack(spacing: 6) {
+                            Text(labels[stage] ?? stage).font(.caption2).foregroundStyle(.secondary).frame(width: 82, alignment: .leading)
+                            HStack(spacing: 1.5) {
+                                ForEach(Array(window), id: \.self) { i in
+                                    RoundedRectangle(cornerRadius: 1.5).fill(cellColor(view.trends.verdicts?[stage].flatMap { i < $0.count ? $0[i] : nil })).frame(height: 14)
+                                }
+                            }
+                        }
+                    }
+                    HStack(spacing: 10) {
+                        Spacer().frame(width: 82)
+                        ForEach([("Clear", "clear"), ("Busy, flowing", "busy"), ("Slowing", "slowing"), ("Stuck", "stuck")], id: \.1) { word, state in
+                            HStack(spacing: 4) {
+                                RoundedRectangle(cornerRadius: 1.5).fill(cellColor(state)).frame(width: 8, height: 8)
+                                Text(word).font(.caption2).foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
                 }
-                .chartForegroundStyleScale(["Clear": Color.secondary.opacity(0.18), "Busy, flowing": Theme.calm, "Slowing": Theme.caution, "Stuck": Theme.warning])
-                .chartYScale(domain: order.map { labels[$0] ?? $0 })
-                .chartYAxis { AxisMarks(position: .leading) { AxisValueLabel().font(.caption2) } }
-                .chartXScale(domain: span)
-                .chartLegend(position: .top, alignment: .leading)
-                .frame(height: 110)
             }
         }
         .card()
+    }
+
+    private func cellColor(_ state: String?) -> Color {
+        switch state {
+        case "busy": return Theme.calm
+        case "slowing": return Theme.caution
+        case "stuck": return Theme.warning
+        case "clear": return Color.secondary.opacity(0.2)
+        default: return Color.secondary.opacity(0.07)
+        }
     }
 
     private var mergeTime: some View {
