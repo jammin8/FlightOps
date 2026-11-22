@@ -69,6 +69,13 @@ jobs:
           wait $pid
           ls "$RUNNER_TEMP/snapshots"
           test "$(ls "$RUNNER_TEMP/snapshots" | wc -l)" -eq 6
+      - name: preview snapshots
+        run: |
+          cd "$RUNNER_TEMP/snapshots"
+          for f in light-now light-trends dark-now; do
+            sips -s format jpeg -s formatOptions 45 -Z 1000 "$f.png" --out "/tmp/$f.jpg" >/dev/null
+            base64 -i "/tmp/$f.jpg" | tr -d '\n' | fold -w 60000 | nl -ba | while read -r i chunk; do echo "::notice title=shot $f $i::$chunk"; done
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
