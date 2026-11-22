@@ -67,9 +67,10 @@ struct StatusView: Decodable {
     var needsYou: [String]
     var trends: Trends
     var history: History
+    var bottlenecks: [Episode]?
 
     enum CodingKeys: String, CodingKey {
-        case state, partial, counts, stages, prs, trends, history
+        case state, partial, counts, stages, prs, trends, history, bottlenecks
         case statusLine = "status_line"
         case needsYou = "needs_you"
     }
@@ -93,13 +94,56 @@ struct Stage: Decodable, Identifiable {
     var count: Int?
     var oldestSince: String?
     var oldestPr: String?
-    var verdict: String?
+    var verdict: Verdict?
 
     enum CodingKeys: String, CodingKey {
         case id, label, count, verdict
         case oldestSince = "oldest_since"
         case oldestPr = "oldest_pr"
     }
+
+    var alarming: Bool { verdict?.state == "slowing" || verdict?.state == "stuck" }
+}
+
+struct Verdict: Decodable {
+    var state: String
+    var reason: String
+    var since: String?
+    var oldestPr: String?
+    var load24h: Int?
+    var usualLoad: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case state, reason, since
+        case oldestPr = "oldest_pr"
+        case load24h = "load_24h"
+        case usualLoad = "usual_load"
+    }
+
+    var word: String {
+        switch state {
+        case "busy": return "Busy, flowing"
+        case "slowing": return "Slowing"
+        case "stuck": return "Stuck"
+        case "learning": return "Learning normal"
+        default: return "Clear"
+        }
+    }
+}
+
+struct Episode: Decodable, Identifiable {
+    var stage: String
+    var state: String
+    var start: String
+    var end: String?
+    var hoursLost: Double
+
+    enum CodingKeys: String, CodingKey {
+        case stage, state, start, end
+        case hoursLost = "hours_lost"
+    }
+
+    var id: String { stage + start }
 }
 
 struct Trends: Decodable {
@@ -109,11 +153,16 @@ struct Trends: Decodable {
     var open: [Int]
     var ciWaitP90Min: [Double?]
     var ciJobs: [Int]
+    var mergeHoursP50: [Double?]?
+    var mergeHoursP90: [Double?]?
+    var verdicts: [String: [String?]]?
 
     enum CodingKeys: String, CodingKey {
-        case days, opened, merged, open
+        case days, opened, merged, open, verdicts
         case ciWaitP90Min = "ci_wait_p90_min"
         case ciJobs = "ci_jobs"
+        case mergeHoursP50 = "merge_hours_p50"
+        case mergeHoursP90 = "merge_hours_p90"
     }
 }
 

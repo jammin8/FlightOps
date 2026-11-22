@@ -1,10 +1,12 @@
 import datetime
 import json
 import math
+import statistics
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bottlenecks  # noqa: E402
 from collect import FAILED, HISTORY_DAYS  # noqa: E402
 from store import epoch, iso  # noqa: E402
 
@@ -12,6 +14,7 @@ SCHEMA = "flightops-status/2"
 STALE_AFTER = 600
 IDLE_FAILING = 6 * 3600
 WAIT_SAMPLES = 5
+MERGE_SAMPLES = 3
 STAGES = (("draft", "Draft"), ("fixing", "Fixing"), ("waiting_ci", "Waiting for CI"), ("in_ci", "In CI"),
           ("in_review", "In review"), ("approved", "Approved"), ("merged", "Merged today"))
 ORDER = {key: index for index, (key, _) in enumerate(STAGES)}
@@ -148,7 +151,15 @@ def trends(store, repos, now):
     spans = [(epoch(r["created_at"]), epoch(r["merged_at"] or r["closed_at"])) for r in prs]
     still_open = [sum(1 for made, ended in spans if made is not None and made < end and (ended is None or ended >= end)) for end in ends]
     p90 = [None if w is None else round(w, 1) for w in (percentile(x, 0.9) for x in waits)]
-    return {"days": list(index), "opened": opened, "merged": merged, "open": still_open, "ci_wait_p90_min": p90, "ci_jobs": [len(x) for x in waits]}
+    lead = [[] for _ in days]
+    for (made, _), row in zip(spans, prs):
+        at = row["merged_at"]
+        if at and at[:10] in index and made is not None:
+            lead[index[at[:10]]].append((epoch(at) - made) / 3600)
+    typical = [round(statistics.median(x), 1) if len(x) >= MERGE_SAMPLES else None for x in lead]
+    slow = [round(percentile(x, 0.9), 1) if len(x) >= WAIT_SAMPLES else None for x in lead]
+    return {"days": list(index), "opened": opened, "merged": merged, "open": still_open, "ci_wait_p90_min": p90, "ci_jobs": [len(x) for x in waits],
+            "merge_hours_p50": typical, "merge_hours_p90": slow}
 
 
 def history_state(store, repos, now):
@@ -217,11 +228,17 @@ def view(store, repos, records, states, now, midnight):
     needs = [p["id"] for p in prs if p["needs_you"]]
     stages = stage_table(prs) if known else [{"id": k, "label": l, "count": None, "oldest_since": None, "oldest_pr": None, "verdict": None} for k, l in STAGES[:-1]]
     stages.append({"id": "merged", "label": "Merged today", "count": merged, "oldest_since": None, "oldest_pr": None, "verdict": None})
+    log, series = [], trends(store, repos, now)
+    series["verdicts"] = {k: [None] * len(series["days"]) for k in bottlenecks.JUDGED}
+    if known:
+        verdicts, log, series["verdicts"] = bottlenecks.assess(store, known, now, prs, days=series["days"])
+        for stage in stages:
+            stage["verdict"] = verdicts.get(stage["id"])
     open_count = len(prs) if known else None
     return {"state": state, "partial": partial, "status_line": status_line(open_count, merged, len(needs), partial, state),
             "counts": {"open": open_count, "merged_today": merged, "needs_you": len(needs) if known else None},
-            "stages": stages, "prs": [p["id"] for p in prs], "needs_you": needs,
-            "trends": trends(store, repos, now), "history": history_state(store, repos, now)}
+            "stages": stages, "bottlenecks": log[:20], "prs": [p["id"] for p in prs], "needs_you": needs,
+            "trends": series, "history": history_state(store, repos, now)}
 
 
 def build(store, config, now, config_state="ok"):

@@ -1,6 +1,14 @@
 import Charts
 import SwiftUI
 
+private struct RepoTotal: Identifiable {
+    var id: String { name }
+    var name: String
+    var tint: Color
+    var merged: Int
+    var opened: Int
+}
+
 private struct DayPoint: Identifiable {
     var id: String { "\(series)-\(day)" }
     var day: Date
@@ -47,9 +55,13 @@ struct TrendsTab: View {
                         .help("FlightOps reads 90 days of history from GitHub a little at a time.")
                 }
             }
+            health
             flow
+            mergeTime
             wait
             openWork
+            if repo == "all" && status.repos.count > 1 { byRepo }
+            log
         }
     }
 
@@ -69,6 +81,7 @@ struct TrendsTab: View {
             }
             .chartForegroundStyleScale(["Opened": tint.opacity(0.45), "Merged": tint])
             .chartLegend(position: .top, alignment: .leading)
+            .chartXScale(domain: span)
             .frame(height: 140)
         }
         .card()
@@ -101,6 +114,148 @@ struct TrendsTab: View {
         .card()
     }
 
+    private var health: some View {
+        let labels = Dictionary(view.stages.map { ($0.id, $0.label) }, uniquingKeysWith: { a, _ in a })
+        let order = ["waiting_ci", "in_ci", "in_review"]
+        let known = order.contains { stage in window.contains { i in
+            let state = view.trends.verdicts?[stage].flatMap { i < $0.count ? $0[i] : nil }
+            return state != nil && state != "learning"
+        } }
+        return VStack(alignment: .leading, spacing: 8) {
+            CardTitle(text: "Stage health", detail: "worst each day")
+                .help("Each stage against its own last 28 days. Blue is a wave that kept flowing, amber is slowing, red is stuck.")
+            if !known {
+                Text("Learning what normal looks like.").font(.caption).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 50)
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(order, id: \.self) { stage in
+                        HStack(spacing: 6) {
+                            Text(labels[stage] ?? stage).font(.caption2).foregroundStyle(.secondary).frame(width: 82, alignment: .leading)
+                            HStack(spacing: 1.5) {
+                                ForEach(Array(window), id: \.self) { i in
+                                    RoundedRectangle(cornerRadius: 1.5).fill(cellColor(view.trends.verdicts?[stage].flatMap { i < $0.count ? $0[i] : nil })).frame(height: 14)
+                                }
+                            }
+                        }
+                    }
+                    HStack(spacing: 10) {
+                        Spacer().frame(width: 82)
+                        ForEach([("Clear", "clear"), ("Busy, flowing", "busy"), ("Slowing", "slowing"), ("Stuck", "stuck")], id: \.1) { word, state in
+                            HStack(spacing: 4) {
+                                RoundedRectangle(cornerRadius: 1.5).fill(cellColor(state)).frame(width: 8, height: 8)
+                                Text(word).font(.caption2).foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
+                }
+            }
+        }
+        .card()
+    }
+
+    private func cellColor(_ state: String?) -> Color {
+        switch state {
+        case "busy": return Theme.calm
+        case "slowing": return Theme.caution
+        case "stuck": return Theme.warning
+        case "clear": return Color.secondary.opacity(0.2)
+        default: return Color.secondary.opacity(0.07)
+        }
+    }
+
+    private var mergeTime: some View {
+        let p50 = view.trends.mergeHoursP50 ?? []
+        let p90 = view.trends.mergeHoursP90 ?? []
+        let points = window.flatMap { i -> [DayPoint] in
+            var found: [DayPoint] = []
+            if i < p50.count, let v = p50[i] { found.append(DayPoint(day: day(i), series: "Typical", value: v)) }
+            if i < p90.count, let v = p90[i] { found.append(DayPoint(day: day(i), series: "Slowest tenth", value: v)) }
+            return found
+        }
+        return VStack(alignment: .leading, spacing: 8) {
+            CardTitle(text: "Time to merge", detail: points.isEmpty ? nil : "hours, open to merged")
+                .help("For pull requests merged each day: the typical time from opening to merge, and the slowest tenth. Days with few merges are left out.")
+            if points.isEmpty {
+                Text("Not enough merges read yet.").font(.caption).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 60)
+            } else {
+                Chart(points) { p in
+                    LineMark(x: .value("Day", p.day, unit: .day), y: .value("Hours", p.value))
+                        .foregroundStyle(by: .value("Series", p.series))
+                        .interpolationMethod(.monotone)
+                    PointMark(x: .value("Day", p.day, unit: .day), y: .value("Hours", p.value))
+                        .foregroundStyle(by: .value("Series", p.series)).symbolSize(12)
+                }
+                .chartForegroundStyleScale(["Typical": tint, "Slowest tenth": tint.opacity(0.4)])
+                .chartLegend(position: .top, alignment: .leading)
+                .chartXScale(domain: span)
+                .frame(height: 120)
+            }
+        }
+        .card()
+    }
+
+    private var byRepo: some View {
+        let rows = status.repos.map { r -> RepoTotal in
+            let t = status.views[r.id]?.trends
+            let lo = max(0, (t?.days.count ?? 0) - range)
+            let merged = t.map { Array($0.merged[lo...]).reduce(0, +) } ?? 0
+            let opened = t.map { Array($0.opened[lo...]).reduce(0, +) } ?? 0
+            return RepoTotal(name: r.name, tint: r.tint, merged: merged, opened: opened)
+        }
+        return VStack(alignment: .leading, spacing: 8) {
+            CardTitle(text: "By repo", detail: "merged in \(range) days")
+            Chart(rows) { r in
+                BarMark(x: .value("Merged", r.merged), y: .value("Repo", r.name))
+                    .foregroundStyle(r.tint)
+                    .cornerRadius(3)
+                    .annotation(position: .trailing) {
+                        Text("\(r.merged) merged · \(r.opened) opened").font(.caption2).foregroundStyle(.secondary)
+                    }
+            }
+            .chartXAxis(.hidden)
+            .chartXScale(domain: 0...max(1, Double(rows.map(\.merged).max() ?? 1) * 1.6))
+            .frame(height: CGFloat(rows.count) * 26 + 4)
+        }
+        .card()
+    }
+
+    private var log: some View {
+        let from = window.isEmpty ? Date.distantPast : day(window.first!)
+        let inside = (view.bottlenecks ?? []).filter { (Clock.date($0.start) ?? .distantPast) >= from }.sorted { $0.hoursLost > $1.hoursLost }
+        let label = Dictionary(view.stages.map { ($0.id, $0.label) }, uniquingKeysWith: { a, _ in a })
+        let total = inside.reduce(0) { $0 + $1.hoursLost }
+        return VStack(alignment: .leading, spacing: 8) {
+            CardTitle(text: "Bottlenecks", detail: inside.isEmpty ? nil : "\(inside.count) · \(hours(total)) of extra waiting")
+                .help("Each time a stage was Slowing or Stuck, ranked by waiting beyond that stage's normal. Stages that keep coming back are worth fixing.")
+            if inside.isEmpty {
+                Text(view.history.complete ? "No slowdowns in this range." : "No slowdowns found yet. History is still filling in.")
+                    .font(.caption).foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 40)
+            } else {
+                ForEach(inside.prefix(6)) { e in
+                    HStack(spacing: 8) {
+                        Circle().fill(verdictTint(e.state) ?? .secondary).frame(width: 7, height: 7)
+                        Text(label[e.stage] ?? e.stage).font(.callout)
+                        Text(when(e)).font(.caption).foregroundStyle(.secondary)
+                        Spacer(minLength: 8)
+                        Text(hours(e.hoursLost)).font(.callout.monospacedDigit())
+                    }
+                }
+            }
+        }
+        .card()
+    }
+
+    private func hours(_ h: Double) -> String { h >= 10 ? "\(Int(h.rounded())) h" : String(format: "%.1f h", h) }
+
+    private func when(_ e: Episode) -> String {
+        guard let start = Clock.date(e.start) else { return "" }
+        let f = DateFormatter()
+        f.setLocalizedDateFormatFromTemplate("MMM d")
+        let length = e.end.flatMap { Clock.date($0) }.map { Clock.span($0.timeIntervalSince(start)) } ?? "ongoing"
+        return "\(f.string(from: start)) · \(length == "now" ? "under 1m" : length)"
+    }
+
     private var openWork: some View {
         let points = window.map { DayPoint(day: day($0), series: "Open", value: Double(view.trends.open[$0])) }
         return VStack(alignment: .leading, spacing: 8) {
@@ -111,20 +266,8 @@ struct TrendsTab: View {
                 LineMark(x: .value("Day", p.day, unit: .day), y: .value("Open", p.value))
                     .interpolationMethod(.monotone).foregroundStyle(tint)
             }
+            .chartXScale(domain: span)
             .frame(height: 110)
-        }
-        .card()
-    }
-}
-
-struct ModelsTab: View {
-    var status: StatusFile
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            CardTitle(text: "Agent usage")
-            Text("Not connected yet. A later update reads the usage logs Claude Code and Codex already write on your machines, and shows tokens, cost at list price and sessions by model, repo and day.")
-                .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }
         .card()
     }

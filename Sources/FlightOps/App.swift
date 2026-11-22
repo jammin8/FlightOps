@@ -27,7 +27,7 @@ struct FlightOpsApp: App {
             Panel(m: m)
         } label: {
             Image(nsImage: MenuBarIcon.image(open: m.status?.views["all"]?.counts.open, needsYou: (m.status?.views["all"]?.counts.needsYou ?? 0) > 0 && !m.demo,
-                                             stuck: m.status?.views["all"]?.stages.contains { $0.verdict == "stuck" } ?? false))
+                                             stuck: m.status?.views["all"]?.stages.contains { $0.verdict?.state == "stuck" } ?? false))
         }
         .menuBarExtraStyle(.window)
     }

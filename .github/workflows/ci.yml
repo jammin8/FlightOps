@@ -68,7 +68,7 @@ jobs:
           kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
           wait $pid
           ls "$RUNNER_TEMP/snapshots"
-          test "$(ls "$RUNNER_TEMP/snapshots"/*.png | wc -l)" -eq 6
+          test "$(ls "$RUNNER_TEMP/snapshots"/*.png | wc -l)" -eq 4
       - name: fresh Mac with only gh signed in
         env:
           GH_TOKEN: ${{ github.token }}
@@ -85,7 +85,7 @@ jobs:
           for _ in $(seq 1 60); do kill -0 $pid 2>/dev/null || break; sleep 1; done
           kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
           wait $pid
-          test "$(ls "$RUNNER_TEMP/snapshots/live" | wc -l)" -eq 6
+          test "$(ls "$RUNNER_TEMP/snapshots/live" | wc -l)" -eq 4
       - uses: actions/upload-artifact@v4
         if: always()
         with:

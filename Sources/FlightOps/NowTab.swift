@@ -1,3 +1,4 @@
+import Charts
 import SwiftUI
 
 struct NowTab: View {
@@ -11,7 +12,9 @@ struct NowTab: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.gap) {
             if view.state == "unknown" { unknownCard }
+            KPIRow(view: view)
             StageStrip(stages: view.stages, focus: $focus)
+            ForEach(view.stages.filter { $0.alarming || $0.verdict?.state == "busy" }) { stage in VerdictCard(stage: stage, status: status) }
             if !view.needsYou.isEmpty { needsYou }
             ForEach(view.stages.filter { $0.id != "merged" && (focus == nil || focus == $0.id) }) { stage in
                 let inside = prs.filter { $0.stage == stage.id }
@@ -26,7 +29,6 @@ struct NowTab: View {
             if view.state != "unknown" && prs.isEmpty {
                 Text("No open pull requests.").foregroundStyle(.secondary).frame(maxWidth: .infinity).card()
             }
-            machines
         }
     }
 
@@ -72,15 +74,6 @@ struct NowTab: View {
         }
         .card()
     }
-
-    private var machines: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            CardTitle(text: "Machines")
-            Text("Not connected yet. Machine health and agents working arrive in a later update.")
-                .font(.caption).foregroundStyle(.secondary)
-        }
-        .card()
-    }
 }
 
 struct StageStrip: View {
@@ -102,12 +95,16 @@ struct StageStrip: View {
 
     private func tile(_ stage: Stage) -> some View {
         let selected = focus == stage.id
-        let tint = verdictTint(stage.verdict)
+        let tint = verdictTint(stage.verdict?.state)
         return VStack(spacing: 2) {
             Text(stage.count.map(String.init) ?? "–").font(.title2.weight(.semibold).monospacedDigit())
             Text(stage.label).font(.caption2).foregroundStyle(.secondary).lineLimit(2).multilineTextAlignment(.center)
                 .frame(height: 26, alignment: .top)
-            Text(stage.oldestSince.map { Clock.age($0) } ?? " ").font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+            if stage.alarming || stage.verdict?.state == "busy", let verdict = stage.verdict {
+                Text(verdict.state == "busy" ? "Busy" : verdict.word).font(.caption2.weight(.semibold)).foregroundStyle(tint ?? .secondary)
+            } else {
+                Text(stage.oldestSince.map { Clock.age($0) } ?? " ").font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+            }
         }
         .frame(maxWidth: .infinity).padding(.vertical, 8)
         .background((tint ?? Color.secondary).opacity(selected ? 0.22 : tint == nil ? 0.07 : 0.15),
@@ -120,7 +117,8 @@ struct StageStrip: View {
         guard let count = stage.count else { return "\(stage.label): unknown" }
         if stage.id == "merged" { return "\(count) merged since midnight" }
         let oldest = stage.oldestSince.map { ", oldest waiting \(Clock.age($0))" } ?? ""
-        return "\(stage.label): \(count)\(oldest). Click to show only these."
+        let verdict = stage.verdict.map { "\n\($0.word): \($0.reason)." } ?? ""
+        return "\(stage.label): \(count)\(oldest).\(verdict)\nClick to show only these."
     }
 }
 
@@ -157,5 +155,82 @@ struct PRRow: View {
         case "passed": Image(systemName: "checkmark.circle").foregroundStyle(.secondary).font(.caption)
         default: EmptyView()
         }
+    }
+}
+
+struct VerdictCard: View {
+    var stage: Stage
+    var status: StatusFile
+
+    private func headline(_ verdict: Verdict) -> String {
+        let age = Clock.age(verdict.since)
+        let lasting = verdict.since == nil || age == "now" || age == "–" ? "" : " for \(age)"
+        return "\(stage.label): \(verdict.word)\(lasting)"
+    }
+
+    var body: some View {
+        let verdict = stage.verdict!
+        let tint = verdictTint(verdict.state) ?? .secondary
+        let pr = verdict.oldestPr.flatMap { status.pr($0) }
+        return HStack(alignment: .top, spacing: 10) {
+            Image(systemName: verdict.state == "busy" ? "water.waves" : verdict.state == "stuck" ? "exclamationmark.octagon.fill" : "tortoise.fill")
+                .foregroundStyle(tint).font(.title3)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(headline(verdict))
+                    .font(.subheadline.weight(.semibold))
+                Text(verdict.reason).font(.callout).foregroundStyle(.secondary)
+                if let pr, verdict.state != "busy" {
+                    Button { openLink(pr.url) } label: {
+                        Text(verbatim: "Oldest: \(status.repo(pr.repo)?.name ?? pr.repo) #\(pr.number) \(pr.title)").font(.caption).lineLimit(1)
+                    }
+                    .buttonStyle(.link)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: Theme.corner, style: .continuous))
+    }
+}
+
+struct KPIRow: View {
+    var view: StatusView
+
+    var body: some View {
+        let t = view.trends
+        let last = max(0, t.days.count - 14)..<t.days.count
+        HStack(spacing: 8) {
+            tile("Open", view.counts.open, t.open[last].map(Double.init), .accentColor, "Open pull requests, last 14 days")
+            tile("Merged today", view.counts.mergedToday, t.merged[last].map(Double.init), .green, "Merged per day, last 14 days")
+            tile("Needs you", view.counts.needsYou, nil, (view.counts.needsYou ?? 0) > 0 ? Theme.caution : .secondary, "Pull requests waiting on you")
+        }
+    }
+
+    private func tile(_ label: String, _ value: Int?, _ points: [Double]?, _ tint: Color, _ help: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label).font(.caption).foregroundStyle(.secondary)
+            HStack(alignment: .bottom, spacing: 8) {
+                Text(value.map(String.init) ?? "–").font(.title.weight(.semibold).monospacedDigit())
+                Spacer(minLength: 0)
+                if let points, points.count > 1 { Sparkline(values: points, tint: tint).frame(width: 64, height: 24) }
+            }
+        }
+        .card()
+        .help(help)
+    }
+}
+
+struct Sparkline: View {
+    var values: [Double]
+    var tint: Color
+
+    var body: some View {
+        Chart(Array(values.enumerated()), id: \.offset) { i, v in
+            AreaMark(x: .value("Day", i), y: .value("Value", v)).foregroundStyle(tint.opacity(0.18)).interpolationMethod(.monotone)
+            LineMark(x: .value("Day", i), y: .value("Value", v)).foregroundStyle(tint).interpolationMethod(.monotone)
+        }
+        .chartXAxis(.hidden).chartYAxis(.hidden).chartLegend(.hidden)
+        .chartYScale(domain: 0...max(1, values.max() ?? 1))
     }
 }

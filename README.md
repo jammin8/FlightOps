@@ -10,9 +10,8 @@ One picker at the top filters every tab: **All repos**, or one repo.
 
 | Tab | Shows |
 | --- | --- |
-| **Now** | One status line. A stage strip: Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today, each with its count and how long the oldest has waited. The PRs that need you. Every open PR, grouped by stage, with what it is waiting on. |
-| **Trends** | 7, 30 or 90 days: PRs opened and merged per day, how long the slowest tenth of CI jobs waited for a runner, and open PRs at the end of each day. |
-| **Models** | Agent usage. Not connected yet. |
+| **Now** | One status line. Open, merged today and needs you, with 14-day sparklines. A stage strip: Draft, Fixing, Waiting for CI, In CI, In review, Approved, Merged today, each with its count and how long the oldest has waited. A bottleneck card when CI or review is Slowing or Stuck, or a wave is flowing through. The PRs that need you. Every open PR, grouped by stage, with what it is waiting on. |
+| **Trends** | 7, 30 or 90 days: a stage health map (each stage's worst verdict per day), PRs opened and merged per day, time to merge, how long the slowest tenth of CI jobs waited for a runner, open PRs at the end of each day, merged per repo, and past bottlenecks ranked by hours of extra waiting. |
 
 The menu bar shows the number of open PRs and a dot when something needs you.
 
@@ -21,6 +20,7 @@ Rules it keeps:
 - Unknown is never zero. A repo that couldn't be read shows "–" and the total says it is partial.
 - Every tab reads the same file, so they always agree.
 - Charts come from stored history, so they have no holes for days the app was closed.
+- A bottleneck is judged against the stage's own last 28 days, on the slow end of waits, so a big wave that keeps flowing reads as Busy, not Stuck. See [docs/status-file.md](docs/status-file.md#bottlenecks).
 
 ## Get started
 

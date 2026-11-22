@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 import SwiftUI
 
 struct AvailableRepo: Decodable, Identifiable, Hashable {
@@ -141,6 +142,7 @@ enum Collector {
         }
         Clock.anchor = demo ? Clock.date(status?.generatedAt) : nil
         loadedAt = Date()
+        if !demo, let stages = status?.views["all"]?.stages { Alerts.check(stages) }
     }
 
     private func tick() {
@@ -183,4 +185,36 @@ enum Collector {
     }
 
     var currentRepos: [String] { demo ? [] : (status?.repos.map(\.id) ?? []) }
+}
+
+enum Alerts {
+    private static let key = "stuckStages"
+
+    static func check(_ stages: [Stage]) {
+        let before = Set(UserDefaults.standard.stringArray(forKey: key) ?? [])
+        var now = before
+        for stage in stages {
+            guard let state = stage.verdict?.state else { continue }
+            if state == "stuck" && !before.contains(stage.id) {
+                now.insert(stage.id)
+                post("\(stage.label) is stuck", stage.verdict?.reason ?? "")
+            } else if (state == "clear" || state == "busy") && before.contains(stage.id) {
+                now.remove(stage.id)
+                post("\(stage.label) has cleared", "Back to normal.")
+            }
+        }
+        if now != before { UserDefaults.standard.set(Array(now), forKey: key) }
+    }
+
+    private static func post(_ title: String, _ body: String) {
+        guard Bundle.main.bundleIdentifier != nil else { return }
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { granted, _ in
+            guard granted else { return }
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            center.add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil))
+        }
+    }
 }
