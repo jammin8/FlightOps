@@ -170,7 +170,7 @@ struct VerdictCard: View {
             Image(systemName: verdict.state == "busy" ? "water.waves" : verdict.state == "stuck" ? "exclamationmark.octagon.fill" : "tortoise.fill")
                 .foregroundStyle(tint).font(.title3)
             VStack(alignment: .leading, spacing: 3) {
-                Text("\(stage.label): \(verdict.word)" + (verdict.since.map { " for \(Clock.age($0))" } ?? ""))
+                Text("\(stage.label): \(verdict.word)" + (verdict.since.map { Clock.age($0) }.flatMap { $0 == "now" || $0 == "–" ? nil : " for \($0)" } ?? ""))
                     .font(.subheadline.weight(.semibold))
                 Text(verdict.reason).font(.callout).foregroundStyle(.secondary)
                 if let pr, verdict.state != "busy" {

@@ -152,6 +152,7 @@ struct TrendsTab: View {
                 }
                 .chartForegroundStyleScale(["Clear": Color.secondary.opacity(0.18), "Busy, flowing": Theme.calm, "Slowing": Theme.caution, "Stuck": Theme.warning])
                 .chartYScale(domain: order.map { labels[$0] ?? $0 })
+                .chartYAxis { AxisMarks(position: .leading) { AxisValueLabel().font(.caption2) } }
                 .chartXScale(domain: span)
                 .chartLegend(position: .top, alignment: .leading)
                 .frame(height: 110)
