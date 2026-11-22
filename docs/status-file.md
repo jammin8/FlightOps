@@ -95,20 +95,22 @@ Rules:
 
 ## Bottlenecks
 
-Three stages get a verdict: Waiting for CI and In CI (from CI job times), and In review (from a PR being ready to its first review by someone else, or its merge or close). Bot PRs are left out of review.
+Three stages get a verdict: Waiting for CI and In CI (from CI job times), and In review (from a PR being ready to its first review by someone else, or its merge). Cancelled and skipped jobs, PRs closed without a review, and bot PRs are left out: none of them was waiting on anyone.
 
 Each verdict compares the stage now with its own normal:
 
 - **Normal** is the median, over the last 28 days, of each day's slowest tenth of waits (days with at least 5 items). With fewer than 20 items in 28 days the verdict is `learning`.
 - **Load** is items that entered in the last 24 hours against the 28-day daily average.
-- **Wait** is the oldest item waiting now and the slowest tenth of items that left in the last 6 hours. Items waiting over 7 days count as parked and are left out.
+- **Wait** is how long items have waited now, and the slowest tenth of items that left in the last 6 hours (once at least 10 have). Items waiting over 7 days count as parked and are left out.
+
+One forgotten item is not a bottleneck, so a wait only counts when at least 2 CI jobs, or 3 PRs in review, share it.
 
 The bar is normal or a floor, whichever is larger (15 minutes for both CI stages, 4 hours for review), so a small wait is never an alarm.
 
 | Verdict | Rule |
 | --- | --- |
-| `stuck` | The oldest wait or the slowest tenth is over 3 times the bar |
-| `slowing` | Either is over 1.5 times the bar |
+| `stuck` | At least 2 items (3 for review) have waited over 3 times the bar, or the slowest tenth has |
+| `slowing` | The same, over 1.5 times the bar |
 | `busy` | Load is at least twice usual and at least 10, and waits are normal: a wave that is flowing |
 | `clear` | None of the above |
 

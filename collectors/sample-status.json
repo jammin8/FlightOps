@@ -52,9 +52,9 @@
   "all": {
    "state": "ok",
    "partial": false,
-   "status_line": "13 open, 5 merged today. 4 need you.",
+   "status_line": "14 open, 5 merged today. 4 need you.",
    "counts": {
-    "open": 13,
+    "open": 14,
     "merged_today": 5,
     "needs_you": 4
    },
@@ -78,19 +78,19 @@
     {
      "id": "waiting_ci",
      "label": "Waiting for CI",
-     "count": 2,
-     "oldest_since": "2026-11-18T10:41:40Z",
-     "oldest_pr": "acme/api#418",
+     "count": 3,
+     "oldest_since": "2026-11-18T10:16:40Z",
+     "oldest_pr": "acme/api#421",
      "verdict": {
       "load_24h": 27,
       "usual_load": 18.5,
-      "oldest_min": 25.0,
-      "slow_end_min": 1.5,
+      "oldest_min": 50.0,
+      "slow_end_min": null,
       "normal_min": 1.4,
       "state": "slowing",
-      "reason": "Oldest waiting 25m, normal is 1m",
+      "reason": "2 or more waiting over 25m, normal is 1m",
       "since": "2026-11-18T11:06:40Z",
-      "oldest_pr": "acme/api#418"
+      "oldest_pr": "acme/api#421"
      }
     },
     {
@@ -103,7 +103,7 @@
       "load_24h": 27,
       "usual_load": 18.5,
       "oldest_min": 20.0,
-      "slow_end_min": 5.0,
+      "slow_end_min": null,
       "normal_min": 5.0,
       "state": "clear",
       "reason": "Normal",
@@ -119,10 +119,10 @@
      "oldest_pr": "acme/ios#88",
      "verdict": {
       "load_24h": 2,
-      "usual_load": 6.0,
+      "usual_load": 5.3,
       "oldest_min": 1080.0,
       "slow_end_min": null,
-      "normal_min": 3603.1,
+      "normal_min": 3692.1,
       "state": "clear",
       "reason": "Normal",
       "since": null,
@@ -149,17 +149,10 @@
    "bottlenecks": [
     {
      "stage": "waiting_ci",
-     "state": "stuck",
+     "state": "slowing",
      "start": "2026-10-23T08:00:00Z",
-     "end": "2026-10-23T08:30:00Z",
-     "hours_lost": 1.1
-    },
-    {
-     "stage": "waiting_ci",
-     "state": "stuck",
-     "start": "2026-10-23T13:00:00Z",
-     "end": "2026-10-23T14:00:00Z",
-     "hours_lost": 0.0
+     "end": "2026-10-23T08:00:00Z",
+     "hours_lost": 0.5
     },
     {
      "stage": "waiting_ci",
@@ -174,6 +167,7 @@
     "acme/web#1205",
     "acme/api#415",
     "acme/ios#91",
+    "acme/api#421",
     "acme/api#418",
     "acme/web#1204",
     "acme/ios#90",
@@ -992,7 +986,7 @@
       "busy",
       "busy",
       "clear",
-      "stuck",
+      "slowing",
       "clear",
       "clear",
       "clear",
@@ -1119,7 +1113,7 @@
       "learning",
       "learning",
       "learning",
-      "busy",
+      "learning",
       "clear",
       "clear",
       "clear",
@@ -1134,9 +1128,9 @@
       "clear",
       "clear",
       "clear",
-      "busy",
-      "busy",
-      "busy",
+      "clear",
+      "clear",
+      "clear",
       "clear",
       "busy",
       "busy",
@@ -1214,9 +1208,9 @@
   "acme/api": {
    "state": "ok",
    "partial": false,
-   "status_line": "6 open, 3 merged today. 3 need you.",
+   "status_line": "7 open, 3 merged today. 3 need you.",
    "counts": {
-    "open": 6,
+    "open": 7,
     "merged_today": 3,
     "needs_you": 3
    },
@@ -1240,19 +1234,19 @@
     {
      "id": "waiting_ci",
      "label": "Waiting for CI",
-     "count": 1,
-     "oldest_since": "2026-11-18T10:41:40Z",
-     "oldest_pr": "acme/api#418",
+     "count": 2,
+     "oldest_since": "2026-11-18T10:16:40Z",
+     "oldest_pr": "acme/api#421",
      "verdict": {
       "load_24h": 12,
       "usual_load": 6.6,
-      "oldest_min": 25.0,
-      "slow_end_min": 1.5,
+      "oldest_min": 50.0,
+      "slow_end_min": null,
       "normal_min": 1.4,
       "state": "slowing",
-      "reason": "Oldest waiting 25m, normal is 1m",
+      "reason": "2 or more waiting over 25m, normal is 1m",
       "since": "2026-11-18T11:06:40Z",
-      "oldest_pr": "acme/api#418"
+      "oldest_pr": "acme/api#421"
      }
     },
     {
@@ -1265,7 +1259,7 @@
       "load_24h": 12,
       "usual_load": 6.6,
       "oldest_min": 10.0,
-      "slow_end_min": 5.0,
+      "slow_end_min": null,
       "normal_min": 5.0,
       "state": "clear",
       "reason": "Normal",
@@ -1281,10 +1275,10 @@
      "oldest_pr": "acme/api#412",
      "verdict": {
       "load_24h": 0,
-      "usual_load": 2.2,
+      "usual_load": 1.9,
       "oldest_min": 180.0,
       "slow_end_min": null,
-      "normal_min": 3811.4,
+      "normal_min": 3841.2,
       "state": "clear",
       "reason": "Normal",
       "since": null,
@@ -1310,11 +1304,18 @@
    ],
    "bottlenecks": [
     {
+     "stage": "in_review",
+     "state": "slowing",
+     "start": "2026-09-17T13:30:00Z",
+     "end": "2026-09-17T22:30:00Z",
+     "hours_lost": 193.8
+    },
+    {
      "stage": "waiting_ci",
-     "state": "stuck",
+     "state": "slowing",
      "start": "2026-10-23T08:00:00Z",
-     "end": "2026-10-23T08:30:00Z",
-     "hours_lost": 1.1
+     "end": "2026-10-23T08:00:00Z",
+     "hours_lost": 0.5
     },
     {
      "stage": "waiting_ci",
@@ -1327,6 +1328,7 @@
    "prs": [
     "acme/api#420",
     "acme/api#415",
+    "acme/api#421",
     "acme/api#418",
     "acme/api#417",
     "acme/api#412",
@@ -2139,7 +2141,7 @@
       "busy",
       "busy",
       "clear",
-      "stuck",
+      "slowing",
       "clear",
       "clear",
       "clear",
@@ -2269,10 +2271,10 @@
       "learning",
       "learning",
       "learning",
-      "clear",
-      "clear",
-      "clear",
-      "clear",
+      "learning",
+      "learning",
+      "learning",
+      "learning",
       "clear",
       "clear",
       "clear",
@@ -2287,7 +2289,7 @@
       "clear",
       "busy",
       "busy",
-      "clear",
+      "slowing",
       "clear",
       "clear",
       "clear",
@@ -2428,10 +2430,10 @@
      "oldest_pr": "acme/ios#88",
      "verdict": {
       "load_24h": 1,
-      "usual_load": 1.9,
+      "usual_load": 1.8,
       "oldest_min": 1080.0,
       "slow_end_min": null,
-      "normal_min": 3207.3,
+      "normal_min": 3723.5,
       "state": "clear",
       "reason": "Normal",
       "since": null,
@@ -2455,71 +2457,7 @@
      "verdict": null
     }
    ],
-   "bottlenecks": [
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-23T01:00:00Z",
-     "end": "2026-10-23T03:00:00Z",
-     "hours_lost": 52.2
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-11-12T01:00:00Z",
-     "end": "2026-11-12T08:30:00Z",
-     "hours_lost": 46.0
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-11-12T13:00:00Z",
-     "end": "2026-11-12T20:30:00Z",
-     "hours_lost": 39.7
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-23T05:00:00Z",
-     "end": "2026-10-23T07:30:00Z",
-     "hours_lost": 38.7
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-30T23:30:00Z",
-     "end": "2026-10-31T01:30:00Z",
-     "hours_lost": 38.1
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-11-16T20:00:00Z",
-     "end": "2026-11-16T21:30:00Z",
-     "hours_lost": 33.3
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-28T15:30:00Z",
-     "end": "2026-10-28T15:30:00Z",
-     "hours_lost": 32.9
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-31T06:00:00Z",
-     "end": "2026-10-31T12:30:00Z",
-     "hours_lost": 26.8
-    },
-    {
-     "stage": "in_review",
-     "state": "slowing",
-     "start": "2026-10-23T12:00:00Z",
-     "end": "2026-10-23T18:00:00Z",
-     "hours_lost": 26.6
-    }
-   ],
+   "bottlenecks": [],
    "prs": [
     "acme/ios#91",
     "acme/ios#90",
@@ -3464,8 +3402,8 @@
       "learning",
       "learning",
       "learning",
-      "clear",
-      "clear",
+      "learning",
+      "learning",
       "clear",
       "clear",
       "clear",
@@ -3512,15 +3450,6 @@
       "busy",
       "busy",
       "clear",
-      "slowing",
-      "clear",
-      "clear",
-      "clear",
-      "clear",
-      "slowing",
-      "clear",
-      "slowing",
-      "slowing",
       "clear",
       "clear",
       "clear",
@@ -3532,11 +3461,20 @@
       "clear",
       "clear",
       "clear",
-      "slowing",
       "clear",
       "clear",
       "clear",
-      "slowing",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
+      "clear",
       "clear",
       "clear"
      ]
@@ -3617,7 +3555,7 @@
      "oldest_pr": "acme/web#1201",
      "verdict": {
       "load_24h": 1,
-      "usual_load": 1.9,
+      "usual_load": 1.6,
       "oldest_min": 290.0,
       "slow_end_min": null,
       "normal_min": 4078.9,
@@ -4590,7 +4528,7 @@
       "learning",
       "learning",
       "learning",
-      "clear",
+      "learning",
       "clear",
       "clear",
       "clear",
@@ -4776,6 +4714,23 @@
    "stage_since": "2026-11-17T05:06:40Z",
    "waiting_on": "the author",
    "ci": "none",
+   "review": "none",
+   "needs_you": null
+  },
+  {
+   "id": "acme/api#421",
+   "repo": "acme/api",
+   "number": 421,
+   "title": "Pin the build image",
+   "url": "https://github.com/example/pull/421",
+   "author": "dev",
+   "draft": false,
+   "created_at": "2026-11-18T08:06:40Z",
+   "updated_at": "2026-11-18T08:06:40Z",
+   "stage": "waiting_ci",
+   "stage_since": "2026-11-18T10:16:40Z",
+   "waiting_on": "a CI runner",
+   "ci": "queued",
    "review": "none",
    "needs_you": null
   },

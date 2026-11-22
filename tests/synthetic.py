@@ -85,6 +85,7 @@ def sample_live():
             live_pr(419, "Drop the legacy auth path", ago(26 * 3600), checks=[check("test", "COMPLETED", "SUCCESS", ago(25 * 3600), ago(24 * 3600))],
                     reviews=[("APPROVED", ago(5400), "alice")], decision="APPROVED"),
             live_pr(420, "Sketch the export endpoint", ago(30 * 3600), draft=True),
+            live_pr(421, "Pin the build image", ago(3 * 3600), checks=[check("build", "QUEUED", None, None, None, ago(3000))]),
         ],
         "acme/ios": [
             live_pr(88, "Offline mode for the inbox", ago(20 * 3600), checks=[check("build", "COMPLETED", "SUCCESS", ago(19 * 3600), ago(18 * 3600))], requested=["alice"]),

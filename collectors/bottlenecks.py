@@ -12,6 +12,7 @@ DAY = 86400
 WINDOW_DAYS = 28
 LEARNING = 20
 DAY_SAMPLES = 5
+RECENT_SAMPLES = 10
 PARKED = 7 * DAY
 RECENT = 6 * 3600
 HOLD = 1800
@@ -24,6 +25,8 @@ STUCK = 3.0
 FLOOR = {"waiting_ci": 15 * 60, "in_ci": 15 * 60, "in_review": 4 * 3600}
 JUDGED = tuple(FLOOR)
 RANK = {"learning": 0, "clear": 1, "busy": 2, "slowing": 3, "stuck": 4}
+NOT_WORK = ("skipped", "cancelled", "neutral", "stale")
+LATE = {"waiting_ci": 2, "in_ci": 2, "in_review": 3}
 BOTS = ("dependabot[bot]", "renovate[bot]", "github-actions[bot]", "dependabot", "renovate")
 
 
@@ -35,11 +38,7 @@ def gather(store, repos):
     for row in store.db.execute(f"""SELECT repo, queued_at, started_at, completed_at, status, conclusion FROM ci_jobs
                                     WHERE repo IN ({marks}) AND queued_at IS NOT NULL""", repos):
         queued, started, done = epoch(row["queued_at"]), epoch(row["started_at"]), epoch(row["completed_at"])
-        if row["conclusion"] == "skipped" or queued is None:
-            continue
-        if started is None:
-            if row["status"] != "completed":
-                found["waiting_ci"].append((queued, None, row["repo"], None))
+        if row["conclusion"] in NOT_WORK or queued is None or started is None:
             continue
         found["waiting_ci"].append((queued, max(queued, started), row["repo"], None))
         if done is not None:
@@ -57,7 +56,7 @@ def gather(store, repos):
         if enter is None:
             continue
         seen = [at for kind, at, who in marks_of if kind == "Review" and at is not None and at >= enter and who != row["author"]]
-        ended = [t for t in (epoch(row["merged_at"]), epoch(row["closed_at"])) if t is not None and t >= enter]
+        ended = [t for t in (epoch(row["merged_at"]),) if t is not None and t >= enter]
         leave = min(seen + ended) if seen or ended else None
         if leave is not None:
             found["in_review"].append((enter, leave, row["repo"], f"{row['repo']}#{row['number']}"))
@@ -103,24 +102,27 @@ class Stage:
         start = (day - WINDOW_DAYS) * DAY
         return (bisect.bisect_left(self.enters, day * DAY) - bisect.bisect_left(self.enters, start)) / WINDOW_DAYS
 
-    def judge(self, t, oldest_enter, extra_oldest=None):
+    def judge(self, t, active, extra=()):
         normal, samples = self.normal(t // DAY)
         load = bisect.bisect_right(self.enters, t) - bisect.bisect_right(self.enters, t - LOAD_DAY)
         usual = self.usual_load(t // DAY)
         lo, hi = bisect.bisect_right(self.leaves, t - RECENT), bisect.bisect_right(self.leaves, t)
         recent = self.waits[lo:hi]
-        slow_end = p90(recent)
-        ages = [t - e for e in (oldest_enter,) if e is not None] + ([extra_oldest] if extra_oldest is not None else [])
-        oldest = max(ages) if ages else None
+        slow_end = p90(recent) if len(recent) >= RECENT_SAMPLES else None
+        ages = sorted([t - e for e in active] + list(extra), reverse=True)
+        oldest = ages[0] if ages else None
         facts = {"load_24h": load, "usual_load": round(usual, 1), "oldest_min": minutes(oldest), "slow_end_min": minutes(slow_end),
                  "normal_min": minutes(normal)}
         if normal is None:
             return "learning", facts, f"Learning normal ({samples} of {LEARNING} samples)"
         bar = max(normal, FLOOR[self.stage])
-        if (oldest or 0) > STUCK * bar or (slow_end or 0) > STUCK * bar:
-            return "stuck", facts, f"Oldest waiting {span(oldest)}, normal is {span(normal)}" if (oldest or 0) > STUCK * bar else f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
-        if (oldest or 0) > SLOWING * bar:
-            return "slowing", facts, f"Oldest waiting {span(oldest)}, normal is {span(normal)}"
+        need = LATE[self.stage]
+        late = ages[need - 1] if len(ages) >= need else 0
+        many = f"{need} or more waiting over {span(late)}, normal is {span(normal)}"
+        if late > STUCK * bar or (slow_end or 0) > STUCK * bar:
+            return "stuck", facts, many if late > STUCK * bar else f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
+        if late > SLOWING * bar:
+            return "slowing", facts, many
         if (slow_end or 0) > SLOWING * bar:
             return "slowing", facts, f"Slowest tenth waited {span(slow_end)}, normal is {span(normal)}"
         if load >= WAVE * usual and load >= WAVE_MIN:
@@ -142,19 +144,23 @@ def span(seconds):
 
 
 def sweep(stage, times):
-    heap, index, items = [], 0, stage.items
+    leaving, active, index, items = [], [], 0, stage.items
     for t in times:
         while index < len(items) and items[index][0] <= t:
-            heapq.heappush(heap, (items[index][0], items[index][1] if items[index][1] is not None else math.inf))
+            enter, leave = items[index][0], items[index][1] if items[index][1] is not None else math.inf
+            if leave > t:
+                heapq.heappush(leaving, (leave, enter))
+                bisect.insort(active, enter)
             index += 1
-        while heap and (heap[0][1] <= t or heap[0][0] < t - PARKED):
-            heapq.heappop(heap)
-        yield t, heap[0][0] if heap else None
+        while leaving and leaving[0][0] <= t:
+            _, enter = heapq.heappop(leaving)
+            del active[bisect.bisect_left(active, enter)]
+        yield t, active[bisect.bisect_left(active, t - PARKED):]
 
 
 def series(stage, start, end, step=STEP):
     times = list(range(start - start % step, end + 1, step))
-    return [(t,) + stage.judge(t, oldest) for t, oldest in sweep(stage, times)]
+    return [(t,) + stage.judge(t, active) for t, active in sweep(stage, times)]
 
 
 def episodes(stage, points, live_until=None):
@@ -209,7 +215,7 @@ def assess(store, repos, now, live, history_days=90, days=()):
                      and now - epoch(r["stage_since"]) <= PARKED]
         points = series(stage, now - history_days * DAY, now)
         held = [p for p in points if p[0] > now - HOLD]
-        state, facts, reason = stage.judge(now, next((o for _, o in sweep(stage, [now])), None), max(live_ages) if live_ages else None)
+        state, facts, reason = stage.judge(now, next(a for _, a in sweep(stage, [now])), live_ages)
         worst = max([(state, reason)] + [(s, r) for _, s, _, r in held if s not in ("learning",)], key=lambda x: RANK[x[0]])
         if state == "learning":
             worst = (state, reason)

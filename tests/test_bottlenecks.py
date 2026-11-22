@@ -59,6 +59,12 @@ class Replay(unittest.TestCase):
         self.assertEqual(read[50], "slowing")
         self.assertEqual([read[d] for d in (51, 52, 53)], ["stuck"] * 3)
 
+    def test_one_forgotten_job_is_not_a_bottleneck(self):
+        rows = history()
+        rows.append((START + 45 * 86400, 5 * 3600, 60))
+        jobs(self.db, rows)
+        self.assertEqual(self.read(45, 45)[45], "clear")
+
     def test_too_little_history_is_learning(self):
         jobs(self.db, [(START + i * 3600, 30, 60) for i in range(10)])
         self.assertEqual(self.read(0, 0)[0], "learning")
@@ -77,7 +83,7 @@ class Status(unittest.TestCase):
         verdicts = {s["id"]: s["verdict"] for s in view["stages"]}
         self.assertEqual({k for k, v in verdicts.items() if v}, set(bottlenecks.JUDGED))
         self.assertEqual(verdicts["waiting_ci"]["state"], "slowing")
-        self.assertEqual(verdicts["waiting_ci"]["oldest_pr"], "acme/api#418")
+        self.assertEqual(verdicts["waiting_ci"]["oldest_pr"], "acme/api#421")
         self.assertTrue(all(e["hours_lost"] >= 0 for e in view["bottlenecks"]))
         self.assertEqual(view["bottlenecks"], sorted(view["bottlenecks"], key=lambda e: -e["hours_lost"]))
 
