@@ -133,7 +133,8 @@ struct Panel: View {
         if m.demo { return "Sample data" }
         let github = status.sources?["github"]
         guard let read = github?.readAt else { return github?.error ?? "Not read yet" }
-        return "GitHub read \(Clock.age(read)) ago" + (github?.state == "partial" ? " · some repos failed" : "")
+        let age = Clock.age(read)
+        return (age == "now" ? "GitHub read just now" : "GitHub read \(age) ago") + (github?.state == "partial" ? " · some repos failed" : "")
     }
 
     private var sourceHelp: String {

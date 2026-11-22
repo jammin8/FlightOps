@@ -74,6 +74,12 @@ struct TrendsTab: View {
         .card()
     }
 
+    private var span: ClosedRange<Date> {
+        let first = day(window.first ?? 0)
+        let last = Calendar.current.date(byAdding: .day, value: 1, to: day(window.last ?? 0)) ?? first
+        return first...last
+    }
+
     private var wait: some View {
         let points = window.compactMap { i in view.trends.ciWaitP90Min[i].map { DayPoint(day: day(i), series: "Wait", value: $0) } }
         return VStack(alignment: .leading, spacing: 8) {
@@ -88,6 +94,7 @@ struct TrendsTab: View {
                     PointMark(x: .value("Day", p.day, unit: .day), y: .value("Minutes", p.value))
                         .symbolSize(14).foregroundStyle(tint)
                 }
+                .chartXScale(domain: span)
                 .frame(height: 120)
             }
         }
