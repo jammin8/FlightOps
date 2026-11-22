@@ -86,18 +86,6 @@ jobs:
           kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
           wait $pid
           test "$(ls "$RUNNER_TEMP/snapshots/live" | wc -l)" -eq 4
-      - name: preview light-now
-        if: always()
-        run: |
-          f="$RUNNER_TEMP/snapshots/light-now.png"; w=420; q=50
-          while :; do sips -s format jpeg -s formatOptions $q --resampleWidth $w "$f" --out /tmp/p.jpg >/dev/null; n=$(base64 -i /tmp/p.jpg | tr -d '\n' | wc -c); [ "$n" -le 36000 ] && break; w=$((w-30)); q=$((q-5)); [ $q -lt 15 ] && q=15; done
-          base64 -i /tmp/p.jpg | tr -d '\n' | fold -w 3900 | head -9 | while read -r c; do echo "::notice title=light-now::$c"; done
-      - name: preview light-trends
-        if: always()
-        run: |
-          f="$RUNNER_TEMP/snapshots/light-trends.png"; w=420; q=50
-          while :; do sips -s format jpeg -s formatOptions $q --resampleWidth $w "$f" --out /tmp/p.jpg >/dev/null; n=$(base64 -i /tmp/p.jpg | tr -d '\n' | wc -c); [ "$n" -le 36000 ] && break; w=$((w-30)); q=$((q-5)); [ $q -lt 15 ] && q=15; done
-          base64 -i /tmp/p.jpg | tr -d '\n' | fold -w 3900 | head -9 | while read -r c; do echo "::notice title=light-trends::$c"; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
