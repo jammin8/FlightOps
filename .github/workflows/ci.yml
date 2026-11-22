@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
+  actions: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -28,6 +30,23 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m unittest discover -s tests
+      - name: collector against this repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FLIGHTOPS_CONFIG: ${{ runner.temp }}/flightops/config.json
+          FLIGHTOPS_DATA_DIR: ${{ runner.temp }}/flightops
+          FLIGHTOPS_STATUS_FILE: ${{ runner.temp }}/flightops/status.json
+        run: |
+          python collectors/flightops.py use "$GITHUB_REPOSITORY"
+          python collectors/flightops.py collect
+          python collectors/flightops.py status
+          python - <<'PY'
+          import json, os
+          s = json.load(open(os.environ["FLIGHTOPS_STATUS_FILE"]))
+          assert s["repos"][0]["state"] == "ok", s["repos"]
+          assert s["views"]["all"]["counts"]["open"] is not None
+          assert s["views"]["all"]["counts"]["merged_today"] is not None
+          PY
 
   macos:
     runs-on: macos-15
