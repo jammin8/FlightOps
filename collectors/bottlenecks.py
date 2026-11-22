@@ -2,7 +2,6 @@ import bisect
 import heapq
 import math
 import os
-import statistics
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -13,7 +12,7 @@ WINDOW_DAYS = 28
 LEARNING = 20
 DAY_SAMPLES = 5
 RECENT_SAMPLES = 10
-PARKED = 7 * DAY
+PARKED = {"waiting_ci": 2 * DAY, "in_ci": 2 * DAY, "in_review": 3 * DAY}
 RECENT = 6 * 3600
 HOLD = 1800
 STEP = 1800
@@ -35,9 +34,12 @@ def gather(store, repos):
     if not repos:
         return found
     marks = ",".join("?" * len(repos))
-    for row in store.db.execute(f"""SELECT repo, queued_at, started_at, completed_at, status, conclusion FROM ci_jobs
-                                    WHERE repo IN ({marks}) AND queued_at IS NOT NULL""", repos):
+    for row in store.db.execute(f"""SELECT j.repo, j.queued_at, j.started_at, j.completed_at, j.status, j.conclusion, a.started_at AS attempt_at
+                                    FROM ci_jobs j LEFT JOIN ci_run_attempts a USING (repo, run_id, run_attempt)
+                                    WHERE j.repo IN ({marks}) AND j.queued_at IS NOT NULL""", repos):
         queued, started, done = epoch(row["queued_at"]), epoch(row["started_at"]), epoch(row["completed_at"])
+        if queued is not None and epoch(row["attempt_at"]) is not None:
+            queued = max(queued, epoch(row["attempt_at"]))
         if row["conclusion"] in NOT_WORK or queued is None or started is None:
             continue
         found["waiting_ci"].append((queued, max(queued, started), row["repo"], None))
@@ -92,7 +94,7 @@ class Stage:
         if samples < LEARNING:
             value = (None, samples)
         elif len(daily) >= 3:
-            value = (statistics.median(daily), samples)
+            value = (sorted(daily)[(len(daily) - 1) // 3], samples)
         else:
             value = (p90([x for w in window for x in w]), samples)
         self.cache[day] = value
@@ -155,7 +157,7 @@ def sweep(stage, times):
         while leaving and leaving[0][0] <= t:
             _, enter = heapq.heappop(leaving)
             del active[bisect.bisect_left(active, enter)]
-        yield t, active[bisect.bisect_left(active, t - PARKED):]
+        yield t, active[bisect.bisect_left(active, t - PARKED[stage.stage]):]
 
 
 def series(stage, start, end, step=STEP):
@@ -212,7 +214,7 @@ def assess(store, repos, now, live, history_days=90, days=()):
     for name in JUDGED:
         stage = Stage(name, gathered[name])
         live_ages = [now - epoch(r["stage_since"]) for r in live if r["stage"] == name and epoch(r["stage_since"]) is not None
-                     and now - epoch(r["stage_since"]) <= PARKED]
+                     and now - epoch(r["stage_since"]) <= PARKED[name]]
         points = series(stage, now - history_days * DAY, now)
         held = [p for p in points if p[0] > now - HOLD]
         state, facts, reason = stage.judge(now, next(a for _, a in sweep(stage, [now])), live_ages)
