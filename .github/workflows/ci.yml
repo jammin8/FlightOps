@@ -86,7 +86,7 @@ jobs:
           kill $pid 2>/dev/null && { echo "snapshot timed out"; exit 1; }
           wait $pid
           test "$(ls "$RUNNER_TEMP/snapshots/live" | wc -l)" -eq 4
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: snapshots
